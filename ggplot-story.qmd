@@ -1,0 +1,797 @@
+---
+title: Spotify Plotting Example
+subtitle: "Skeleton for the scrolly-telling project"
+format:
+  closeread-html:
+    cr-section:
+      layout: overlay-left
+    cr-style:
+      narrative-background-color-overlay: transparent
+      narrative-background-color-sidebar: transparent
+      section-background-color: transparent
+      narrative-text-color-overlay: black
+knitr:
+  opts_chunk: 
+    dev.args:
+      bg: transparent
+comments:
+  hypothesis: true
+---
+
+**Adapted from sample document from <https://closeread.dev/gallery/demos/build-up-plots/>**
+
+```{r}
+#| label: setup
+#| echo: true
+#| output: false
+library(tidyverse)
+tuesdata <- tidytuesdayR::tt_load('2020-01-21') 
+spotify_songs <- tuesdata$spotify_songs
+```
+
+Rationale: 
+
+1. Spotify launched in the United States on July 14, 2011. We are focusing on the songs from the 2010s.
+
+2. According to [Wikipedia, 2010s in music](https://en.wikipedia.org/wiki/2010s_in_music), the dominant music genres in the 2010s are pop, hip-hop, and electronic dance music (EDM). To make the plots simpler, we focus on `edm` and `pop` (hip-hop is not a defined genre in the dataset.)
+
+```{r}
+#| label: original-plot
+#| echo: true
+# data preprocessing
+spotify_songs <- spotify_songs |>
+  na.omit() |>
+  mutate(
+    year = as.numeric(substr(track_album_release_date, 1, 4)),
+    decade = floor(year / 10) * 10,
+    era = ifelse(year > 2000, "Post-Millennium", "Pre-Millennium")
+  )
+
+spotify_songs_10s <- spotify_songs |>
+  filter(decade == 2010) |>
+  mutate(
+    half_decade = ifelse(year <= 2014, "First Half 2010s", "Second Half 2010s"),
+    popularity_level = ifelse(track_popularity > 60, "popular", "not popular")
+  )
+```
+
+```{r}
+# plot 1
+spotify_songs_10s |>  
+  filter(playlist_genre %in% c("pop", "edm")) |>
+  ggplot(aes(x = loudness, y = energy)) +
+  geom_point(
+    aes(color = factor(playlist_genre)), alpha = 0.3
+  ) +
+  xlab("Loudness") +
+  ylab("Energy") +
+  ggtitle("Loudness vs Energy by Genre")
+```
+
+```{r}
+#| label: original-plot-2
+#| echo: false
+#| eval: false
+# plot 2
+spotify_songs_10s |>  
+  filter(playlist_genre %in% c("r&b", "edm")) |>
+  ggplot(aes(x = loudness, y = energy)) +
+  geom_point(
+    aes(color = factor(playlist_genre)), alpha = 0.3
+  ) +
+  xlab("Loudness") +
+  ylab("Energy") +
+  ggtitle("Loudness vs Energy by Genre")
+```
+
+\
+\
+
+::::{.cr-section}
+
+Here is a `dplyr` pipeline that processes a data frame containing information on songs on Spotify, from the 2010s. We load and process the `spotify_songs` dataframe to filter and transform data related to songs released in the 2010s, and store the resulant dataset as `spotify_songs_2010s`. @cr-dplyr
+
+In the first line we load the `tidyverse` package, which contains the `ggplot2` and `dplyr` packages we need. [@cr-dplyr]{highlight="1"}
+
+We then load the data frame `spotify_songs`. The second line uses the `tidytuesdayR` package to load data from the TidyTuesday project for the date specified, January 21, 2020. The third line extracts the `spotify_songs` dataset from the loaded data and stores it in the variable `spotify_songs.` This dataset is now ready for analysis or manipulation in R. [@cr-dplyr]{highlight="2,3"}
+
+The main block of code is referred as a pipeline or chain. Each line starts with a function and ends with a pipe operator, `|>`. The pipe operator in R is used to pass one expression as the input to the next expression, creating a sequence of operations that's easy to read and manage.  [@cr-dplyr]{highlight="4-17"}
+
+This line removes all rows from the `spotify_songs` data frame that contain `NA` values in any column.[@cr-dplyr]{highlight="6"}
+
+The next few lines of code begins a call to `mutate()`, which is used to add new variables to the data frame or transform existing ones. In this function, we first extract the first four characters of the track_album_release_date and convert them into a numeric format to represent the release year of the track, then determine the decade by dividing the year by 10, using `floor()` to round down to the nearest whole number, and finally multiplying by 10 to standardize the result to the nearest decade. [@cr-dplyr]{highlight="7-10"}
+
+Finally, we use the `filter()` function to retain only those rows in the data frame where the decade column equals 2010. Thus, it narrows down the dataset to only include songs released during the 2010s. [@cr-dplyr]{highlight="11"}
+
+As we only want to focus on songs with genre "pop" and "edm", we use the `filter()` function again to filter out these songs. [@cr-dplyr]{highlight="12"}
+
+With the dataset ready, we now start building the ggplot. [@cr-dplyr]{highlight="14"}
+
+:::{#cr-dplyr}
+```{r}
+#| echo: true
+#| message: false
+
+library(tidyverse)
+tuesdata <- tidytuesdayR::tt_load('2020-01-21') 
+spotify_songs <- tuesdata$spotify_songs
+
+spotify_songs_10s <- spotify_songs |>
+  na.omit() |>
+  mutate(
+    year = as.numeric(substr(track_album_release_date, 1, 4)),
+    decade = floor(year / 10) * 10
+  ) |>
+  filter(decade == 2010) |>
+  filter(playlist_genre %in% c("pop", "edm"))
+
+head(spotify_songs_10s)
+```
+:::
+
+**Start with the `spotify_songs_10s` data frame.** [@cr-plot-1]{highlight="2"}
+```{r}
+#| echo: true
+#| message: false
+#| eval: false
+
+ggplot(
+  data = spotify_songs_10s, 
+)
+```
+
+:::{#cr-plot-1}
+```{r}
+#| echo: false
+#| message: false
+#| eval: true
+
+ggplot(
+  data = spotify_songs_10s, 
+)
+```
+
+```{r}
+#| echo: true
+#| message: false
+#| eval: false
+
+ggplot(
+  spotify_songs_10s, 
+  aes(
+    x = loudness, 
+    y = energy
+  )
+) +
+  geom_point(
+    aes(color = (playlist_genre)), 
+    alpha = 0.3
+  ) +
+  labs(
+    title = "Loudness and Energy",
+    subtitle = "Pop and EDM music",
+    x = "Loudness (dB)", 
+    y = "Perceived Level of Energy",
+    color = "Genre",
+    caption = "Source: TidyTuesday"
+  ) +
+  scale_color_viridis_d()
+```
+:::
+
+Start with the `spotify_songs_10s` data frame. **Map `loudness` to the x-axis**. [@cr-plot-2]{highlight="4"}
+
+:::{#cr-plot-2}
+```{r}
+#| echo: false
+#| message: false
+#| eval: true
+
+ggplot(
+  data = spotify_songs_10s, 
+  mapping = aes(x = loudness)
+)
+```
+
+```{r}
+#| echo: true
+#| message: false
+#| eval: false
+
+ggplot(
+  spotify_songs_10s, 
+  aes(
+    x = loudness, 
+    y = energy
+  )
+) +
+  geom_point(
+    aes(color = (playlist_genre)), 
+    alpha = 0.3
+  ) +
+  labs(
+    title = "Loudness and Energy",
+    subtitle = "Pop and EDM music",
+    x = "Loudness (dB)", 
+    y = "Perceived Level of Energy",
+    color = "Genre",
+    caption = "Source: TidyTuesday"
+  ) +
+  scale_color_viridis_d()
+```
+:::
+
+Start with the `spotify_songs_10s` data frame. **Map `loudness` to the x-axis and map `energy` to the y-axis.** [@cr-plot-3]{highlight="4,5"}
+
+:::{#cr-plot-3}
+```{r}
+#| echo: false
+#| message: false
+#| eval: true
+
+ggplot(
+  data = spotify_songs_10s, 
+  mapping = aes(
+    x = loudness,
+    y = energy
+  )
+)
+```
+
+```{r}
+#| echo: true
+#| message: false
+#| eval: false
+
+ggplot(
+  spotify_songs_10s, 
+  aes(
+    x = loudness, 
+    y = energy
+  )
+) +
+  geom_point(
+    aes(color = (playlist_genre)), 
+    alpha = 0.3
+  ) +
+  labs(
+    title = "Loudness and Energy",
+    subtitle = "Pop and EDM music",
+    x = "Loudness (dB)", 
+    y = "Perceived Level of Energy",
+    color = "Genre",
+    caption = "Source: TidyTuesday"
+  ) +
+  scale_color_viridis_d()
+```
+:::
+
+Start with the `spotify_songs_10s` data frame. Map `loudness` to the x-axis and map `energy` to the y-axis. **Represent each observation with a point**. [@cr-plot-4]{highlight="8,11"}
+
+:::{#cr-plot-4}
+```{r}
+#| echo: false
+#| message: false
+#| eval: true
+
+ggplot(
+  data = spotify_songs_10s, 
+  mapping = aes(
+    x = loudness,
+    y = energy
+  )
+) +
+  geom_point()
+```
+
+```{r}
+#| echo: true
+#| message: false
+#| eval: false
+
+ggplot(
+  spotify_songs_10s, 
+  aes(
+    x = loudness, 
+    y = energy
+  )
+) +
+  geom_point(
+    aes(color = (playlist_genre)), 
+    alpha = 0.3
+  ) +
+  labs(
+    title = "Loudness and Energy",
+    subtitle = "Pop and EDM music",
+    x = "Loudness (dB)", 
+    y = "Perceived Level of Energy",
+    color = "Genre",
+    caption = "Source: TidyTuesday"
+  ) +
+  scale_color_viridis_d()
+```
+:::
+
+Start with the `spotify_songs_10s` data frame. Map `loudness` to the x-axis and map `energy` to the y-axis. Represent each observation with a point **and map species to the color of each point**. [@cr-plot-5]{highlight="9"}
+
+:::{#cr-plot-5}
+```{r}
+#| echo: false
+#| message: false
+#| eval: true
+
+ggplot(
+  data = spotify_songs_10s, 
+  mapping = aes(
+    x = loudness,
+    y = energy
+  )
+) +
+  geom_point(
+    aes(color = (playlist_genre))
+  )
+#
+```
+
+```{r}
+#| echo: true
+#| message: false
+#| eval: false
+
+ggplot(
+  spotify_songs_10s, 
+  aes(
+    x = loudness, 
+    y = energy
+  )
+) +
+  geom_point(
+    aes(color = (playlist_genre)), 
+    alpha = 0.3
+  ) +
+  labs(
+    title = "Loudness and Energy",
+    subtitle = "Pop and EDM music",
+    x = "Loudness (dB)", 
+    y = "Perceived Level of Energy",
+    color = "Genre",
+    caption = "Source: TidyTuesday"
+  ) +
+  scale_color_viridis_d()
+```
+:::
+
+Start with the `spotify_songs_10s` data frame. Map `loudness` to the x-axis and map `energy` to the y-axis. Represent each observation with a point and map species to the color of each point. **Adjust the alpha parameter to 0.3 to make the points slightly transparent**. [@cr-plot-6]{highlight="10"}
+
+:::{#cr-plot-6}
+```{r}
+#| echo: false
+#| message: false
+#| eval: true
+
+ggplot(
+  spotify_songs_10s, 
+  aes(
+    x = loudness, 
+    y = energy
+  )
+) +
+  geom_point(
+    aes(color = (playlist_genre)), 
+    alpha = 0.3
+  )
+```
+
+```{r}
+#| echo: true
+#| message: false
+#| eval: false
+
+ggplot(
+  spotify_songs_10s, 
+  aes(
+    x = loudness, 
+    y = energy
+  )
+) +
+  geom_point(
+    aes(color = (playlist_genre)), 
+    alpha = 0.3
+  ) +
+  labs(
+    title = "Loudness and Energy",
+    subtitle = "Pop and EDM music",
+    x = "Loudness (dB)", 
+    y = "Perceived Level of Energy",
+    color = "Genre",
+    caption = "Source: TidyTuesday"
+  ) +
+  scale_color_viridis_d()
+```
+:::
+
+Start with the `spotify_songs_10s` data frame. Map `loudness` to the x-axis and map `energy` to the y-axis. Represent each observation with a point and map species to the color of each point. Adjust the alpha parameter to 0.3 to make the points slightly transparent. **Next, we add titles, subtitles, and axis labels**. [@cr-plot-7]{highlight="12,19"}
+
+:::{#cr-plot-7}
+```{r}
+#| echo: false
+#| message: false
+#| eval: true
+
+ggplot(
+  spotify_songs_10s, 
+  aes(
+    x = loudness, 
+    y = energy
+  )
+) +
+  geom_point(
+    aes(color = (playlist_genre)), 
+    alpha = 0.3
+  ) +
+  labs(
+    
+  )
+```
+
+```{r}
+#| echo: true
+#| message: false
+#| eval: false
+
+ggplot(
+  spotify_songs_10s, 
+  aes(
+    x = loudness, 
+    y = energy
+  )
+) +
+  geom_point(
+    aes(color = (playlist_genre)), 
+    alpha = 0.3
+  ) +
+  labs(
+    title = "Loudness and Energy",
+    subtitle = "Pop and EDM music",
+    x = "Loudness (dB)", 
+    y = "Perceived Level of Energy",
+    color = "Genre",
+    caption = "Source: TidyTuesday"
+  ) +
+  scale_color_viridis_d()
+```
+:::
+
+Start with the `spotify_songs_10s` data frame. Map `loudness` to the x-axis and map `energy` to the y-axis. Represent each observation with a point and map species to the color of each point. Adjust the alpha parameter to 0.3 to make the points slightly transparent. Next, we add titles, subtitles, and axis labels. **Title the plot "Loudness and Energy"**. [@cr-plot-8]{highlight="13"}
+
+:::{#cr-plot-8}
+```{r}
+#| echo: false
+#| message: false
+#| eval: true
+
+ggplot(
+  spotify_songs_10s, 
+  aes(
+    x = loudness, 
+    y = energy
+  )
+) +
+  geom_point(
+    aes(color = (playlist_genre)), 
+    alpha = 0.3
+  ) +
+  labs(
+    title = "Loudness and Energy"
+  )
+```
+
+```{r}
+#| echo: true
+#| message: false
+#| eval: false
+
+ggplot(
+  spotify_songs_10s, 
+  aes(
+    x = loudness, 
+    y = energy
+  )
+) +
+  geom_point(
+    aes(color = (playlist_genre)), 
+    alpha = 0.3
+  ) +
+  labs(
+    title = "Loudness and Energy",
+    subtitle = "Pop and EDM music",
+    x = "Loudness (dB)", 
+    y = "Perceived Level of Energy",
+    color = "Genre",
+    caption = "Source: TidyTuesday"
+  ) +
+  scale_color_viridis_d()
+```
+:::
+
+Start with the `spotify_songs_10s` data frame. Map `loudness` to the x-axis and map `energy` to the y-axis. Represent each observation with a point and map species to the color of each point. Adjust the alpha parameter to 0.3 to make the points slightly transparent. Next, we add titles, subtitles, and axis labels. Title the plot "Loudness and Energy", **add the subtitle "Pop and EDM music"**. [@cr-plot-9]{highlight="14"}
+
+:::{#cr-plot-9}
+```{r}
+#| echo: false
+#| message: false
+#| eval: true
+
+ggplot(
+  spotify_songs_10s, 
+  aes(
+    x = loudness, 
+    y = energy
+  )
+) +
+  geom_point(
+    aes(color = (playlist_genre)), 
+    alpha = 0.3
+  ) +
+  labs(
+    title = "Loudness and Energy",
+    subtitle = "Pop and EDM music"
+  )
+```
+
+```{r}
+#| echo: true
+#| message: false
+#| eval: false
+
+ggplot(
+  spotify_songs_10s, 
+  aes(
+    x = loudness, 
+    y = energy
+  )
+) +
+  geom_point(
+    aes(color = (playlist_genre)), 
+    alpha = 0.3
+  ) +
+  labs(
+    title = "Loudness and Energy",
+    subtitle = "Pop and EDM music",
+    x = "Loudness (dB)", 
+    y = "Perceived Level of Energy",
+    color = "Genre",
+    caption = "Source: TidyTuesday"
+  ) +
+  scale_color_viridis_d()
+```
+:::
+
+Start with the `spotify_songs_10s` data frame. Map `loudness` to the x-axis and map `energy` to the y-axis. Represent each observation with a point and map species to the color of each point. Adjust the alpha parameter to 0.3 to make the points slightly transparent. Next, we add titles, subtitles, and axis labels. Title the plot "Loudness and Energy", add the subtitle "Pop and EDM music", **label the x and y axes as "Loudness (dB)" and "Perceived Level of Energy", respectively**. [@cr-plot-10]{highlight="15-16"}
+
+:::{#cr-plot-10}
+```{r}
+#| echo: false
+#| message: false
+#| eval: true
+
+ggplot(
+  spotify_songs_10s, 
+  aes(
+    x = loudness, 
+    y = energy
+  )
+) +
+  geom_point(
+    aes(color = (playlist_genre)), 
+    alpha = 0.3
+  ) +
+  labs(
+    title = "Loudness and Energy",
+    subtitle = "Pop and EDM music",
+    x = "Loudness (dB)", 
+    y = "Perceived Level of Energy"
+  )
+```
+
+```{r}
+#| echo: true
+#| message: false
+#| eval: false
+
+ggplot(
+  spotify_songs_10s, 
+  aes(
+    x = loudness, 
+    y = energy
+  )
+) +
+  geom_point(
+    aes(color = (playlist_genre)), 
+    alpha = 0.3
+  ) +
+  labs(
+    title = "Loudness and Energy",
+    subtitle = "Pop and EDM music",
+    x = "Loudness (dB)", 
+    y = "Perceived Level of Energy",
+    color = "Genre",
+    caption = "Source: TidyTuesday"
+  ) +
+  scale_color_viridis_d()
+```
+:::
+
+Start with the `spotify_songs_10s` data frame. Map `loudness` to the x-axis and map `energy` to the y-axis. Represent each observation with a point and map species to the color of each point. Adjust the alpha parameter to 0.3 to make the points slightly transparent. Next, we add titles, subtitles, and axis labels. Title the plot "Loudness and Energy", add the subtitle "Pop and EDM music", label the x and y axes as "Loudness (dB)" and "Perceived Level of Energy", respectively, **label the legend “Genre”** [@cr-plot-11]{highlight="17"}
+
+:::{#cr-plot-11}
+```{r}
+#| echo: false
+#| message: false
+#| eval: true
+
+ggplot(
+  spotify_songs_10s, 
+  aes(
+    x = loudness, 
+    y = energy
+  )
+) +
+  geom_point(
+    aes(color = (playlist_genre)), 
+    alpha = 0.3
+  ) +
+  labs(
+    title = "Loudness and Energy",
+    subtitle = "Pop and EDM music",
+    x = "Loudness (dB)", 
+    y = "Perceived Level of Energy",
+    color = "Genre"
+  )
+```
+
+```{r}
+#| echo: true
+#| message: false
+#| eval: false
+
+ggplot(
+  spotify_songs_10s, 
+  aes(
+    x = loudness, 
+    y = energy
+  )
+) +
+  geom_point(
+    aes(color = (playlist_genre)), 
+    alpha = 0.3
+  ) +
+  labs(
+    title = "Loudness and Energy",
+    subtitle = "Pop and EDM music",
+    x = "Loudness (dB)", 
+    y = "Perceived Level of Energy",
+    color = "Genre",
+    caption = "Source: TidyTuesday"
+  ) +
+  scale_color_viridis_d()
+```
+:::
+
+Start with the `spotify_songs_10s` data frame. Map `loudness` to the x-axis and map `energy` to the y-axis. Represent each observation with a point and map species to the color of each point. Adjust the alpha parameter to 0.3 to make the points slightly transparent. Next, we add titles, subtitles, and axis labels. Title the plot "Loudness and Energy", add the subtitle "Pop and EDM music", label the x and y axes as "Loudness (dB)" and "Perceived Level of Energy", respectively, label the legend “Genre”, **and add a caption for the data source**. [@cr-plot-12]{highlight="18"}
+
+:::{#cr-plot-12}
+```{r}
+#| echo: false
+#| message: false
+#| eval: true
+
+ggplot(
+  spotify_songs_10s, 
+  aes(
+    x = loudness, 
+    y = energy
+  )
+) +
+  geom_point(
+    aes(color = (playlist_genre)), 
+    alpha = 0.3
+  ) +
+  labs(
+    title = "Loudness and Energy",
+    subtitle = "Pop and EDM music",
+    x = "Loudness (dB)", 
+    y = "Perceived Level of Energy",
+    color = "Genre",
+    caption = "Source: TidyTuesday"
+  )
+```
+
+```{r}
+#| echo: true
+#| message: false
+#| eval: false
+
+ggplot(
+  spotify_songs_10s, 
+  aes(
+    x = loudness, 
+    y = energy
+  )
+) +
+  geom_point(
+    aes(color = (playlist_genre)), 
+    alpha = 0.3
+  ) +
+  labs(
+    title = "Loudness and Energy",
+    subtitle = "Pop and EDM music",
+    x = "Loudness (dB)", 
+    y = "Perceived Level of Energy",
+    color = "Genre",
+    caption = "Source: TidyTuesday"
+  ) +
+  scale_color_viridis_d()
+```
+:::
+
+Start with the `spotify_songs_10s` data frame. Map `loudness` to the x-axis and map `energy` to the y-axis. Represent each observation with a point and map species to the color of each point. Adjust the alpha parameter to 0.3 to make the points slightly transparent. Next, we add titles, subtitles, and axis labels. Title the plot "Loudness and Energy", add the subtitle "Pop and EDM music", label the x and y axes as "Loudness (dB)" and "Perceived Level of Energy", respectively, label the legend “Genre”, and add a caption for the data source. **Finally, use a discrete color scale that is designed to be perceived by viewers with common forms of color blindness**. [@cr-plot-13]{highlight="20"}
+
+:::{#cr-plot-13}
+```{r}
+#| echo: false
+#| message: false
+#| eval: true
+
+ggplot(
+  spotify_songs_10s, 
+  aes(
+    x = loudness, 
+    y = energy
+  )
+) +
+  geom_point(
+    aes(color = (playlist_genre)), 
+    alpha = 0.3
+  ) +
+  labs(
+    title = "Loudness and Energy",
+    subtitle = "Pop and EDM music",
+    x = "Loudness (dB)", 
+    y = "Perceived Level of Energy",
+    color = "Genre",
+    caption = "Source: TidyTuesday"
+  ) +
+  scale_color_viridis_d()
+```
+
+```{r}
+#| echo: true
+#| message: false
+#| eval: false
+
+ggplot(
+  spotify_songs_10s, 
+  aes(
+    x = loudness, 
+    y = energy
+  )
+) +
+  geom_point(
+    aes(color = (playlist_genre)), 
+    alpha = 0.3
+  ) +
+  labs(
+    title = "Loudness and Energy",
+    subtitle = "Pop and EDM music",
+    x = "Loudness (dB)", 
+    y = "Perceived Level of Energy",
+    color = "Genre",
+    caption = "Source: TidyTuesday"
+  ) +
+  scale_color_viridis_d()
+```
+:::
+::::
+\
+\
