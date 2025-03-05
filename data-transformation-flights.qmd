@@ -1,0 +1,114 @@
+---
+title: Flights Data Transformation Example
+subtitle: "Skeleton for the scrolly-telling project"
+format:
+  closeread-html:
+    cr-section:
+      layout: overlay-left
+    cr-style:
+      narrative-background-color-overlay: transparent
+      narrative-background-color-sidebar: transparent
+      section-background-color: transparent
+      narrative-text-color-overlay: black
+knitr:
+  opts_chunk: 
+    dev.args:
+      bg: transparent
+comments:
+  hypothesis: true
+---
+
+**Adapted from sample document from <https://closeread.dev/gallery/demos/build-up-plots/>**
+
+```{r}
+#| label: setup
+#| echo: true
+#| output: false
+library(tidyverse)
+library(arrow)
+```
+
+::::{.cr-section}
+
+In the first line we load the `tidyverse` package, which contains the `ggplot2` and `dplyr` packages we need. [@cr-dplyr]{highlight="1"}
+
+We then load the data frame `flights`. This dataset is now ready for analysis or manipulation in R. [@cr-dplyr]{highlight="2"}
+
+The main block of code is referred as a pipeline or chain. Each line starts with a function and ends with a pipe operator, `|>`. The pipe operator in R is used to pass one expression as the input to the next expression, creating a sequence of operations that's easy to read and manage.  [@cr-dplyr]{highlight="4-16"}
+
+We use the `filter()` function to retain only those rows in the data frame where `Origin` is "RDU", `DestState` is either "NC" or "CA", and with month equals to 11, as we are only focusing the flights departing from RDU, with destinations in North Carolina or in California, in November 2023. [@cr-dplyr]{highlight="5-9"}
+
+We want to select the variables that are used in the data visualization: `DepDelay`, `ArrDelay`, `DestState`. [@cr-dplyr]{highlight="10-12"}
+
+We then rename the variable `DestState` to "Destination_State". [@cr-dplyr]{highlight="13-15"}
+
+We finally remove all rows from the `spotify_songs` data frame that contain `NA` values in any column.[@cr-dplyr]{highlight="16"}
+
+We use `head()` to display the first five rows of the dataset after transformation.[@cr-dplyr]{highlight="17"}
+
+:::{#cr-dplyr}
+```{r}
+#| echo: true
+#| message: false
+
+# Keep this pipe and show it step by step
+# include more variables in select() to identify the flights e.g. flight number, date, destination cities
+
+library(tidyverse)
+flights <- read_parquet("Year=2023/data_0.parquet")
+
+flights_rdu <- flights |>
+  filter(
+    Origin == "RDU",
+    DestState %in% c("NC", "CA"), # NC and CA
+    Month == 11
+  ) |>
+  select(
+    c("DepDelay", "ArrDelay", "DestState")
+  ) |>
+  rename(
+    "Destination_State" = DestState
+  )
+
+flights_rdu
+```
+:::
+
+:::{cr-arrange}
+```{r}
+#| echo: true
+#| message: false
+
+# add arrange and relocate at the end
+
+flights_rdu <- flights |>
+  filter(
+    Origin == "RDU",
+    DestState %in% c("NC", "CA"), # NC and CA
+    Month == 11
+  ) |>
+  select(
+    c("DepDelay", "ArrDelay", "DestState")
+  ) |>
+  rename(
+    "Destination_State" = DestState
+  ) |>
+  relocate(
+    Destination_State, .before = DepDelay
+  ) |>
+  arrange(
+    desc(DepDelay)
+  )
+
+flights_rdu
+```
+:::
+
+:::{cr-slice}
+```{r}
+slice_head(flights_rdu, n=3)
+```
+:::
+::::
+
+**Insert inline code cell here**
