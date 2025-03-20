@@ -41,11 +41,10 @@ The packages we used in this tutorial for plotting include **ggplot2**, **ggthem
 #| echo: false
 # preprocess
 
-flights <- read_csv(here::here("closereads", "data", "flights-2023.csv"))
+flights <- read_csv(here::here("closereads", "data", "rdu-flights-23.csv"))
 
 flights_rdu <- flights |>
   filter(
-    origin == "RDU",
     dest_state %in% c("NC", "CA"), # NC and CA
     month == 11
   ) |>
