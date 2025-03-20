@@ -23,70 +23,41 @@ Data Dictionary: <https://www.transtats.bts.gov/Fields.asp?gnoyr_VQ=FGJ>
 #| message: false
 #| echo: false
 # load the libraries
-library(arrow)
 library(tidyverse)
 library(ggthemes)
-library(janitor)
-library(utils)
 ```
 
 ## Introduction
+
 This project uses a dataset from the American Statistical Association's Data Expo, which provides comprehensive flight information covering various aspects of flight operations. The dataset contains data about flights across the United States, recording details such as departure times, scheduled and actual arrival times, flight durations, distances, and reasons for delays.
 
 ## Data
+
 In this tutorial, we'll focus specifically on the flights departing from Raleigh-Durham International Airport (RDU) and heading to destinations in North Carolina and California. You'll learn how to visualize data to uncover patterns in departure and arrival delays. By the end of this tutorial, you should be able to craft visual narratives that are informative and visually appealing, providing you with a fundamental skill set critical in the field of data science.
 
 The packages we used in this tutorial for plotting include **ggplot2**, **ggthemes**. In our visualization, we explore the relationship between departure delays (`dep_delay`) and arrival delays (`arr_delay`) for flights from Raleigh-Durham International Airport (RDU) to destinations in North Carolina and California. The graph you will learn to create visually compares the length of departure delays to arrival delays.
 
-## Plot
-
-We'll start by loading our data, then move on to constructing our plot using ggplot2. This will involve mapping our variables to the appropriate axes, customizing the aesthetic elements of our plot, and refining our visual with tools designed to enhance clarity and impact. The resultant plot is provided below, along with a full narrative on how it is constructed.
-
-```{r}
-#| echo: false
-
-# load 2023 flight data, and write into a csv file, hidden from readers
-base_url <- "https://blobs.duckdb.org/flight-data-partitioned/"
-files <- paste0("Year=", 2023, "/data_0.parquet")
-
-dir.create(dirname(files), showWarnings = FALSE, recursive = TRUE)
-
-# download the file
-out <- curl::multi_download(paste0(base_url, files), files, resume = TRUE)
-
-# read the Parquet file
-flights <- read_parquet(files)
-# rename all the variables into snake_case
-flights <- clean_names(flights) |>
-  rename("day_of_month" = dayof_month)
-
-# write into csv file
-# write_csv(flights, "flights_2023.csv")
-```
-
-```{r}
-# read data
-# using read_csv() is extremely slow for some reason?
-# flights <- read_csv("flights_2023.csv")
-```
-
 ```{r}
 #| echo: false
 # preprocess
+
+flights <- read_csv(here::here("closereads", "data", "flights-2023.csv"))
+
 flights_rdu <- flights |>
   filter(
     origin == "RDU",
     dest_state %in% c("NC", "CA"), # NC and CA
     month == 11
   ) |>
-  select(
-    c("flight_date", "dest_city_name", "dep_delay", "arr_delay", "dest_state")
-  ) |>
+  select(flight_date, dest_city_name, dep_delay, arr_delay, dest_state) |>
   rename(
     "destination_state" = dest_state
-  ) |>
-  na.omit()
+  )
 ```
+
+## Plot
+
+We'll start by loading our data, then move on to constructing our plot using ggplot2. This will involve mapping our variables to the appropriate axes, customizing the aesthetic elements of our plot, and refining our visual with tools designed to enhance clarity and impact. The resultant plot is provided below, along with a full narrative on how it is constructed.
 
 Start with the `flights_rdu` data frame. Map `dep_delay` to the x-axis and map `arr_delay` to the y-axis. Represent each observation with a point and map species to the color of each point. Adjust the alpha parameter to 0.5 to make the points slightly transparent. Next, we add titles, subtitles, and axis labels. Title the plot "Departure Delay and Arrival Delay", add the subtitle "Flights from RDU to NC and CA", label the x and y axes as "Departure Delay (min)" and "Arrival Delay (min)", respectively, label the legend “destination_state”, and add a caption for the data source. Finally, use a discrete color scale that is designed to be perceived by viewers with common forms of color blindness. Change the theme of the plot using `theme_minimal()`.
 
@@ -118,7 +89,8 @@ ggplot(
 ## How to read the scrolly-telling story
 
 Before we start, let's look at how to read the scrolly-telling story. As you progress through the narrative, you'll notice that the code that creates the exact plot displayed is included as part of the narrative column on the left. On the right, below the plot, we include the code that creates the resultant visualization, with the code necessary to achieve the described step highlighted. For instance, in the current step where we discuss adding titles, subtitles, and axis labels, the corresponding labs() function in the code chunk is highlighted to indicate exactly where and how these elements are integrated into the plot.
-![Scrolly-telling demonstration](read-ggplot.png)
+
+![Scrolly-telling demonstration](images/read-ggplot.png)
 
 
 ::::{.cr-section}
@@ -1134,9 +1106,3 @@ In this demo, we learned about how to build a ggplot using the RDU flights datas
 <input type="text" id="inputText" name="inputText" placeholder="Type something..."
        style="width: 50%; height: 200px; font-size: 20px; padding: 10px; border: 2px solid #000000; border-radius: 4px;">
        
-```{webr}
-print(1)
-```
-
-\
-\
