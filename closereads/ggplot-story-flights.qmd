@@ -1,6 +1,6 @@
 ---
-title: Flights Data Plotting Example
-subtitle: "Skeleton for the scrolly-telling project"
+title: Visualizing RDU flights
+subtitle: An introduction to ggplot2
 format:
   closeread-html:
     cr-section:
@@ -17,15 +17,8 @@ knitr:
 comments:
   hypothesis: true
 ---
-Data Dictionary: <https://www.transtats.bts.gov/Fields.asp?gnoyr_VQ=FGJ>
 
-```{r}
-#| message: false
-#| echo: false
-# load the libraries
-library(tidyverse)
-library(ggthemes)
-```
+<!-- Data Dictionary: <https://www.transtats.bts.gov/Fields.asp?gnoyr_VQ=FGJ> -->
 
 ## Introduction
 
@@ -35,21 +28,29 @@ This project uses a dataset from the American Statistical Association's Data Exp
 
 In this tutorial, we'll focus specifically on the flights departing from Raleigh-Durham International Airport (RDU) and heading to destinations in North Carolina and California. You'll learn how to visualize data to uncover patterns in departure and arrival delays. By the end of this tutorial, you should be able to craft visual narratives that are informative and visually appealing, providing you with a fundamental skill set critical in the field of data science.
 
-The packages we used in this tutorial for plotting include **ggplot2**, **ggthemes**. In our visualization, we explore the relationship between departure delays (`dep_delay`) and arrival delays (`arr_delay`) for flights from Raleigh-Durham International Airport (RDU) to destinations in North Carolina and California. The graph you will learn to create visually compares the length of departure delays to arrival delays.
+The packages we used in this tutorial for plotting include **ggplot2** and **ggthemes**. 
 
 ```{r}
-#| echo: false
-# preprocess
+#| label: load-packages
+#| message: false
+library(tidyverse)
+library(ggthemes)
+```
 
+In our visualization, we explore the relationship between departure delays (`dep_delay`) and arrival delays (`arr_delay`) for flights from Raleigh-Durham International Airport (RDU) to destinations in North Carolina and California. The graph you will learn to create visually compares the length of departure delays to arrival delays.
+
+```{r}
+#| label: data-prep
+#| echo: false
 flights <- read_csv(here::here("closereads", "data", "rdu-flights-23.csv"))
 
 flights_rdu <- flights |>
   filter(
-    dest_state %in% c("NC", "CA"), # NC and CA
-    month == 11
+    month == 11, # November
+    dest_state %in% c("NC", "CA") # NC and CA
   ) |>
   select(flight_date, dest_city_name, dep_delay, arr_delay, dest_state) |>
-  rename("destination_state" = dest_state)
+  rename(destination_state = dest_state)
 ```
 
 ## Plot
@@ -59,7 +60,7 @@ We'll start by loading our data, then move on to constructing our plot using ggp
 Start with the `flights_rdu` data frame. Map `dep_delay` to the x-axis and map `arr_delay` to the y-axis. Represent each observation with a point and map species to the color of each point. Adjust the alpha parameter to 0.5 to make the points slightly transparent. Next, we add titles, subtitles, and axis labels. Title the plot "Departure Delay and Arrival Delay", add the subtitle "Flights from RDU to NC and CA", label the x and y axes as "Departure Delay (min)" and "Arrival Delay (min)", respectively, label the legend “destination_state”, and add a caption for the data source. Finally, use a discrete color scale that is designed to be perceived by viewers with common forms of color blindness. Change the theme of the plot using `theme_minimal()`.
 
 ```{r}
-# target plot
+#| label: target-plot
 ggplot(
   flights_rdu, 
   aes(
@@ -68,7 +69,7 @@ ggplot(
   )
 ) +
   geom_point(
-    aes(color = (destination_state)), 
+    aes(color = destination_state), 
     alpha = 0.5
   ) +
   labs(
@@ -79,7 +80,7 @@ ggplot(
     color = "destination_state",
     caption = "Source: The Annual Data Challenge Expo"
   ) +
-  scale_colour_colorblind() +
+  scale_color_colorblind() +
   theme_minimal()
 ```
 
@@ -97,7 +98,6 @@ Before we start, let's look at how to read the scrolly-telling story. As you pro
 #| echo: true
 #| message: false
 #| eval: false
-
 ggplot(
   data = flights_rdu, 
 )
@@ -108,7 +108,6 @@ ggplot(
 #| echo: false
 #| message: false
 #| eval: true
-
 ggplot(
   data = flights_rdu, 
 )
@@ -118,7 +117,6 @@ ggplot(
 #| echo: true
 #| message: false
 #| eval: false
-
 ggplot(
   flights_rdu, 
   aes(
@@ -127,7 +125,7 @@ ggplot(
   )
 ) +
   geom_point(
-    aes(color = (destination_state)), 
+    aes(color = destination_state), 
     alpha = 0.5
   ) +
   labs(
@@ -138,7 +136,7 @@ ggplot(
     color = "destination_state",
     caption = "Source: The Annual Data Challenge Expo"
   ) +
-  scale_colour_colorblind() +
+  scale_color_colorblind() +
   theme_minimal()
 ```
 :::
@@ -149,7 +147,6 @@ Start with the `flights_rdu` data frame. **Map `dep_delay` to the x-axis**.
 #| echo: true
 #| message: false
 #| eval: false
-
 ggplot(
   data = flights_rdu, 
   mapping = aes(x = dep_delay)
@@ -172,7 +169,6 @@ ggplot(
 #| echo: true
 #| message: false
 #| eval: false
-
 ggplot(
   flights_rdu, 
   aes(
@@ -181,7 +177,7 @@ ggplot(
   )
 ) +
   geom_point(
-    aes(color = (destination_state)), 
+    aes(color = destination_state), 
     alpha = 0.5
   ) +
   labs(
@@ -192,7 +188,7 @@ ggplot(
     color = "destination_state",
     caption = "Source: The Annual Data Challenge Expo"
   ) +
-  scale_colour_colorblind() +
+  scale_color_colorblind() +
   theme_minimal()
 ```
 :::
@@ -202,7 +198,6 @@ Start with the `flights_rdu` data frame. Map `dep_delay` to the x-axis and **map
 #| echo: true
 #| message: false
 #| eval: false
-
 ggplot(
   data = flights_rdu, 
   mapping = aes(
@@ -217,7 +212,6 @@ ggplot(
 #| echo: false
 #| message: false
 #| eval: true
-
 ggplot(
   data = flights_rdu, 
   mapping = aes(
@@ -231,7 +225,6 @@ ggplot(
 #| echo: true
 #| message: false
 #| eval: false
-
 ggplot(
   flights_rdu, 
   aes(
@@ -240,7 +233,7 @@ ggplot(
   )
 ) +
   geom_point(
-    aes(color = (destination_state)), 
+    aes(color = destination_state), 
     alpha = 0.5
   ) +
   labs(
@@ -251,7 +244,7 @@ ggplot(
     color = "destination_state",
     caption = "Source: The Annual Data Challenge Expo"
   ) +
-  scale_colour_colorblind() +
+  scale_color_colorblind() +
   theme_minimal()
 ```
 :::
@@ -262,7 +255,6 @@ Start with the `flights_rdu` data frame. Map `dep_delay` to the x-axis and map `
 #| echo: true
 #| message: false
 #| eval: false
-
 ggplot(
   flights_rdu, 
   aes(
@@ -278,7 +270,6 @@ ggplot(
 #| echo: false
 #| message: false
 #| eval: true
-
 ggplot(
   flights_rdu, 
   aes(
@@ -293,7 +284,6 @@ ggplot(
 #| echo: true
 #| message: false
 #| eval: false
-
 ggplot(
   flights_rdu, 
   aes(
@@ -302,7 +292,7 @@ ggplot(
   )
 ) +
   geom_point(
-    aes(color = (destination_state)), 
+    aes(color = destination_state), 
     alpha = 0.5
   ) +
   labs(
@@ -313,7 +303,7 @@ ggplot(
     color = "destination_state",
     caption = "Source: The Annual Data Challenge Expo"
   ) +
-  scale_colour_colorblind() +
+  scale_color_colorblind() +
   theme_minimal()
 ```
 :::
@@ -324,7 +314,6 @@ Start with the `flights_rdu` data frame. Map `dep_delay` to the x-axis and map `
 #| echo: true
 #| message: false
 #| eval: false
-
 ggplot(
   flights_rdu, 
   aes(
@@ -333,7 +322,7 @@ ggplot(
   )
 ) +
   geom_point(
-    aes(color = (destination_state))
+    aes(color = destination_state)
   )
 ```
 :::
@@ -342,7 +331,6 @@ ggplot(
 #| echo: false
 #| message: false
 #| eval: true
-
 ggplot(
   flights_rdu, 
   aes(
@@ -351,7 +339,7 @@ ggplot(
   )
 ) +
   geom_point(
-    aes(color = (destination_state))
+    aes(color = destination_state)
   )
 ```
 
@@ -359,7 +347,6 @@ ggplot(
 #| echo: true
 #| message: false
 #| eval: false
-
 ggplot(
   flights_rdu, 
   aes(
@@ -368,7 +355,7 @@ ggplot(
   )
 ) +
   geom_point(
-    aes(color = (destination_state)), 
+    aes(color = destination_state), 
     alpha = 0.5
   ) +
   labs(
@@ -379,7 +366,7 @@ ggplot(
     color = "destination_state",
     caption = "Source: The Annual Data Challenge Expo"
   ) +
-  scale_colour_colorblind() +
+  scale_color_colorblind() +
   theme_minimal()
 ```
 :::
@@ -389,7 +376,6 @@ Start with the `flights_rdu` data frame. Map `dep_delay` to the x-axis and map `
 #| echo: true
 #| message: false
 #| eval: false
-
 ggplot(
   flights_rdu, 
   aes(
@@ -398,7 +384,7 @@ ggplot(
   )
 ) +
   geom_point(
-    aes(color = (destination_state)), 
+    aes(color = destination_state), 
     alpha = 0.5
   )
 ```
@@ -408,7 +394,6 @@ ggplot(
 #| echo: false
 #| message: false
 #| eval: true
-
 ggplot(
   flights_rdu, 
   aes(
@@ -417,7 +402,7 @@ ggplot(
   )
 ) +
   geom_point(
-    aes(color = (destination_state)), 
+    aes(color = destination_state), 
     alpha = 0.5
   )
 ```
@@ -426,7 +411,6 @@ ggplot(
 #| echo: true
 #| message: false
 #| eval: false
-
 ggplot(
   flights_rdu, 
   aes(
@@ -435,7 +419,7 @@ ggplot(
   )
 ) +
   geom_point(
-    aes(color = (destination_state)), 
+    aes(color = destination_state), 
     alpha = 0.5
   ) +
   labs(
@@ -446,7 +430,7 @@ ggplot(
     color = "destination_state",
     caption = "Source: The Annual Data Challenge Expo"
   ) +
-  scale_colour_colorblind() +
+  scale_color_colorblind() +
   theme_minimal()
 ```
 :::
@@ -456,7 +440,6 @@ Start with the `flights_rdu` data frame. Map `dep_delay` to the x-axis and map `
 #| echo: true
 #| message: false
 #| eval: false
-
 ggplot(
   flights_rdu, 
   aes(
@@ -465,7 +448,7 @@ ggplot(
   )
 ) +
   geom_point(
-    aes(color = (destination_state)), 
+    aes(color = destination_state), 
     alpha = 0.5
   ) +
   labs(
@@ -478,7 +461,6 @@ ggplot(
 #| echo: false
 #| message: false
 #| eval: true
-
 ggplot(
   flights_rdu, 
   aes(
@@ -487,7 +469,7 @@ ggplot(
   )
 ) +
   geom_point(
-    aes(color = (destination_state)), 
+    aes(color = destination_state), 
     alpha = 0.5
   ) +
   labs(
@@ -499,7 +481,6 @@ ggplot(
 #| echo: true
 #| message: false
 #| eval: false
-
 ggplot(
   flights_rdu, 
   aes(
@@ -508,7 +489,7 @@ ggplot(
   )
 ) +
   geom_point(
-    aes(color = (destination_state)), 
+    aes(color = destination_state), 
     alpha = 0.5
   ) +
   labs(
@@ -519,7 +500,7 @@ ggplot(
     color = "destination_state",
     caption = "Source: The Annual Data Challenge Expo"
   ) +
-  scale_colour_colorblind() +
+  scale_color_colorblind() +
   theme_minimal()
 ```
 :::
@@ -530,7 +511,6 @@ Start with the `flights_rdu` data frame. Map `dep_delay` to the x-axis and map `
 #| echo: true
 #| message: false
 #| eval: false
-
 ggplot(
   flights_rdu, 
   aes(
@@ -539,7 +519,7 @@ ggplot(
   )
 ) +
   geom_point(
-    aes(color = (destination_state)), 
+    aes(color = destination_state), 
     alpha = 0.5
   ) +
   labs(
@@ -552,7 +532,6 @@ ggplot(
 #| echo: false
 #| message: false
 #| eval: true
-
 ggplot(
   flights_rdu, 
   aes(
@@ -561,7 +540,7 @@ ggplot(
   )
 ) +
   geom_point(
-    aes(color = (destination_state)), 
+    aes(color = destination_state), 
     alpha = 0.5
   ) +
   labs(
@@ -573,7 +552,6 @@ ggplot(
 #| echo: true
 #| message: false
 #| eval: false
-
 ggplot(
   flights_rdu, 
   aes(
@@ -582,7 +560,7 @@ ggplot(
   )
 ) +
   geom_point(
-    aes(color = (destination_state)), 
+    aes(color = destination_state), 
     alpha = 0.5
   ) +
   labs(
@@ -593,7 +571,7 @@ ggplot(
     color = "destination_state",
     caption = "Source: The Annual Data Challenge Expo"
   ) +
-  scale_colour_colorblind() +
+  scale_color_colorblind() +
   theme_minimal()
 ```
 :::
@@ -603,7 +581,6 @@ Start with the `flights_rdu` data frame. Map `dep_delay` to the x-axis and map `
 #| echo: true
 #| message: false
 #| eval: false
-
 ggplot(
   flights_rdu, 
   aes(
@@ -612,7 +589,7 @@ ggplot(
   )
 ) +
   geom_point(
-    aes(color = (destination_state)), 
+    aes(color = destination_state), 
     alpha = 0.5
   ) +
   labs(
@@ -626,7 +603,6 @@ ggplot(
 #| echo: false
 #| message: false
 #| eval: true
-
 ggplot(
   flights_rdu, 
   aes(
@@ -635,7 +611,7 @@ ggplot(
   )
 ) +
   geom_point(
-    aes(color = (destination_state)), 
+    aes(color = destination_state), 
     alpha = 0.5
   ) +
   labs(
@@ -648,7 +624,6 @@ ggplot(
 #| echo: true
 #| message: false
 #| eval: false
-
 ggplot(
   flights_rdu, 
   aes(
@@ -657,7 +632,7 @@ ggplot(
   )
 ) +
   geom_point(
-    aes(color = (destination_state)), 
+    aes(color = destination_state), 
     alpha = 0.5
   ) +
   labs(
@@ -668,7 +643,7 @@ ggplot(
     color = "destination_state",
     caption = "Source: The Annual Data Challenge Expo"
   ) +
-  scale_colour_colorblind() +
+  scale_color_colorblind() +
   theme_minimal()
 ```
 :::
@@ -679,7 +654,6 @@ Start with the `flights_rdu` data frame. Map `dep_delay` to the x-axis and map `
 #| echo: true
 #| message: false
 #| eval: false
-
 ggplot(
   flights_rdu, 
   aes(
@@ -688,7 +662,7 @@ ggplot(
   )
 ) +
   geom_point(
-    aes(color = (destination_state)), 
+    aes(color = destination_state), 
     alpha = 0.5
   ) +
   labs(
@@ -705,7 +679,6 @@ ggplot(
 #| echo: false
 #| message: false
 #| eval: true
-
 ggplot(
   flights_rdu, 
   aes(
@@ -714,7 +687,7 @@ ggplot(
   )
 ) +
   geom_point(
-    aes(color = (destination_state)), 
+    aes(color = destination_state), 
     alpha = 0.5
   ) +
   labs(
@@ -729,7 +702,6 @@ ggplot(
 #| echo: true
 #| message: false
 #| eval: false
-
 ggplot(
   flights_rdu, 
   aes(
@@ -738,7 +710,7 @@ ggplot(
   )
 ) +
   geom_point(
-    aes(color = (destination_state)), 
+    aes(color = destination_state), 
     alpha = 0.5
   ) +
   labs(
@@ -749,7 +721,7 @@ ggplot(
     color = "destination_state",
     caption = "Source: The Annual Data Challenge Expo"
   ) +
-  scale_colour_colorblind() +
+  scale_color_colorblind() +
   theme_minimal()
 ```
 :::
@@ -760,7 +732,6 @@ Start with the `flights_rdu` data frame. Map `dep_delay` to the x-axis and map `
 #| echo: true
 #| message: false
 #| eval: false
-
 ggplot(
   flights_rdu, 
   aes(
@@ -769,7 +740,7 @@ ggplot(
   )
 ) +
   geom_point(
-    aes(color = (destination_state)), 
+    aes(color = destination_state), 
     alpha = 0.5
   ) +
   labs(
@@ -787,7 +758,6 @@ ggplot(
 #| echo: false
 #| message: false
 #| eval: true
-
 ggplot(
   flights_rdu, 
   aes(
@@ -796,7 +766,7 @@ ggplot(
   )
 ) +
   geom_point(
-    aes(color = (destination_state)), 
+    aes(color = destination_state), 
     alpha = 0.5
   ) +
   labs(
@@ -812,7 +782,6 @@ ggplot(
 #| echo: true
 #| message: false
 #| eval: false
-
 ggplot(
   flights_rdu, 
   aes(
@@ -821,7 +790,7 @@ ggplot(
   )
 ) +
   geom_point(
-    aes(color = (destination_state)), 
+    aes(color = destination_state), 
     alpha = 0.5
   ) +
   labs(
@@ -832,7 +801,7 @@ ggplot(
     color = "destination_state",
     caption = "Source: The Annual Data Challenge Expo"
   ) +
-  scale_colour_colorblind() +
+  scale_color_colorblind() +
   theme_minimal()
 ```
 :::
@@ -843,7 +812,6 @@ Start with the `flights_rdu` data frame. Map `dep_delay` to the x-axis and map `
 #| echo: true
 #| message: false
 #| eval: false
-
 ggplot(
   flights_rdu, 
   aes(
@@ -852,7 +820,7 @@ ggplot(
   )
 ) +
   geom_point(
-    aes(color = (destination_state)), 
+    aes(color = destination_state), 
     alpha = 0.5
   ) +
   labs(
@@ -870,7 +838,6 @@ ggplot(
 #| echo: false
 #| message: false
 #| eval: true
-
 ggplot(
   flights_rdu, 
   aes(
@@ -879,7 +846,7 @@ ggplot(
   )
 ) +
   geom_point(
-    aes(color = (destination_state)), 
+    aes(color = destination_state), 
     alpha = 0.5
   ) +
   labs(
@@ -896,7 +863,6 @@ ggplot(
 #| echo: true
 #| message: false
 #| eval: false
-
 ggplot(
   flights_rdu, 
   aes(
@@ -905,7 +871,7 @@ ggplot(
   )
 ) +
   geom_point(
-    aes(color = (destination_state)), 
+    aes(color = destination_state), 
     alpha = 0.5
   ) +
   labs(
@@ -916,7 +882,7 @@ ggplot(
     color = "destination_state",
     caption = "Source: The Annual Data Challenge Expo"
   ) +
-  scale_colour_colorblind() +
+  scale_color_colorblind() +
   theme_minimal()
 ```
 :::
@@ -926,7 +892,6 @@ Start with the `flights_rdu` data frame. Map `dep_delay` to the x-axis and map `
 #| echo: true
 #| message: false
 #| eval: false
-
 ggplot(
   flights_rdu, 
   aes(
@@ -935,7 +900,7 @@ ggplot(
   )
 ) +
   geom_point(
-    aes(color = (destination_state)), 
+    aes(color = destination_state), 
     alpha = 0.5
   ) +
   labs(
@@ -946,7 +911,7 @@ ggplot(
     color = "destination_state",
     caption = "Source: The Annual Data Challenge Expo"
   ) +
-  scale_colour_colorblind()
+  scale_color_colorblind()
 ```
 :::
 :::{#cr-plot-13}
@@ -954,7 +919,6 @@ ggplot(
 #| echo: false
 #| message: false
 #| eval: true
-
 ggplot(
   flights_rdu, 
   aes(
@@ -963,7 +927,7 @@ ggplot(
   )
 ) +
   geom_point(
-    aes(color = (destination_state)), 
+    aes(color = destination_state), 
     alpha = 0.5
   ) +
   labs(
@@ -974,14 +938,13 @@ ggplot(
     color = "destination_state",
     caption = "Source: The Annual Data Challenge Expo"
   ) +
-  scale_colour_colorblind()
+  scale_color_colorblind()
 ```
 
 ```{r}
 #| echo: true
 #| message: false
 #| eval: false
-
 ggplot(
   flights_rdu, 
   aes(
@@ -990,7 +953,7 @@ ggplot(
   )
 ) +
   geom_point(
-    aes(color = (destination_state)), 
+    aes(color = destination_state), 
     alpha = 0.5
   ) +
   labs(
@@ -1001,7 +964,7 @@ ggplot(
     color = "destination_state",
     caption = "Source: The Annual Data Challenge Expo"
   ) +
-  scale_colour_colorblind() +
+  scale_color_colorblind() +
   theme_minimal()
 ```
 :::
@@ -1011,7 +974,6 @@ Start with the `flights_rdu` data frame. Map `dep_delay` to the x-axis and map `
 #| echo: true
 #| message: false
 #| eval: false
-
 ggplot(
   flights_rdu, 
   aes(
@@ -1020,7 +982,7 @@ ggplot(
   )
 ) +
   geom_point(
-    aes(color = (destination_state)), 
+    aes(color = destination_state), 
     alpha = 0.5
   ) +
   labs(
@@ -1031,7 +993,7 @@ ggplot(
     color = "destination_state",
     caption = "Source: The Annual Data Challenge Expo"
   ) +
-  scale_colour_colorblind() +
+  scale_color_colorblind() +
   theme_minimal()
 ```
 :::
@@ -1041,7 +1003,6 @@ ggplot(
 #| echo: false
 #| message: false
 #| eval: true
-
 ggplot(
   flights_rdu, 
   aes(
@@ -1050,7 +1011,7 @@ ggplot(
   )
 ) +
   geom_point(
-    aes(color = (destination_state)), 
+    aes(color = destination_state), 
     alpha = 0.5
   ) +
   labs(
@@ -1061,7 +1022,7 @@ ggplot(
     color = "destination_state",
     caption = "Source: The Annual Data Challenge Expo"
   ) +
-  scale_colour_colorblind() +
+  scale_color_colorblind() +
   theme_minimal()
 ```
 
@@ -1069,7 +1030,6 @@ ggplot(
 #| echo: true
 #| message: false
 #| eval: false
-
 ggplot(
   flights_rdu, 
   aes(
@@ -1078,7 +1038,7 @@ ggplot(
   )
 ) +
   geom_point(
-    aes(color = (destination_state)), 
+    aes(color = destination_state), 
     alpha = 0.5
   ) +
   labs(
@@ -1089,17 +1049,14 @@ ggplot(
     color = "destination_state",
     caption = "Source: The Annual Data Challenge Expo"
   ) +
-  scale_colour_colorblind() +
+  scale_color_colorblind() +
   theme_minimal()
 ```
 :::
 ::::
 
-
 ## Notes
 
 In this demo, we learned about how to build a ggplot using the RDU flights dataset as an example. Please write down something that you have learned...
 
-<input type="text" id="inputText" name="inputText" placeholder="Type something..."
-       style="width: 50%; height: 200px; font-size: 20px; padding: 10px; border: 2px solid #000000; border-radius: 4px;">
-       
+<input type="text" id="inputText" name="inputText" placeholder="Type something..." style="width: 50%; height: 200px; font-size: 20px; padding: 10px; border: 2px solid #000000; border-radius: 4px;">
