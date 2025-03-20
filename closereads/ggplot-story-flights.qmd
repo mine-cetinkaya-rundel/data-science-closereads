@@ -49,9 +49,7 @@ flights_rdu <- flights |>
     month == 11
   ) |>
   select(flight_date, dest_city_name, dep_delay, arr_delay, dest_state) |>
-  rename(
-    "destination_state" = dest_state
-  )
+  rename("destination_state" = dest_state)
 ```
 
 ## Plot
