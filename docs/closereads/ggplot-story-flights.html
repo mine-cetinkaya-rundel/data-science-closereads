@@ -129,10 +129,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       <!-- user-provided yaml closeread style options -->
       <style>
         :root {
-          --cr-section-background-color: transparent;
---cr-narrative-text-color-overlay: black;
+          --cr-narrative-background-color-overlay: transparent;
 --cr-narrative-background-color-sidebar: transparent;
---cr-narrative-background-color-overlay: transparent;
+--cr-section-background-color: transparent;
+--cr-narrative-text-color-overlay: black;
         }
       </style>
     
@@ -206,7 +206,7 @@ date  (1): flight_date
 </div>
 <div class="cr-section cr-column-screen overlay-left">
 <div class="narrative-col">
-<div class="trigger new-trigger" data-highlight="2" data-focus-on="cr-plot-1">
+<div class="trigger new-trigger" data-focus-on="cr-plot-1" data-highlight="2">
 <div class="narrative">
 <p><strong>Start with the <code>flights_rdu</code> data frame.</strong> ::: {.cell}</p>
 <div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(</span>

@@ -130,8 +130,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       <style>
         :root {
           --cr-section-background-color: transparent;
---cr-narrative-background-color-overlay: transparent;
 --cr-narrative-background-color-sidebar: transparent;
+--cr-narrative-background-color-overlay: transparent;
 --cr-narrative-text-color-overlay: black;
         }
       </style>
@@ -164,42 +164,42 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 <div class="cr-section cr-column-screen overlay-left">
 <div class="narrative-col">
-<div class="trigger new-trigger" data-highlight="1" data-focus-on="cr-dplyr">
+<div class="trigger new-trigger" data-focus-on="cr-dplyr" data-highlight="1">
 <div class="narrative">
 <p>In the first line we load the <code>tidyverse</code> package, which contains the <code>ggplot2</code> and <code>dplyr</code> packages we need.</p>
 </div>
 </div>
-<div class="trigger new-trigger" data-highlight="2" data-focus-on="cr-dplyr">
+<div class="trigger new-trigger" data-focus-on="cr-dplyr" data-highlight="2">
 <div class="narrative">
 <p>We then load the data frame <code>flights</code>. This dataset is now ready for analysis or manipulation in R.</p>
 </div>
 </div>
-<div class="trigger new-trigger" data-highlight="4-16" data-focus-on="cr-dplyr">
+<div class="trigger new-trigger" data-focus-on="cr-dplyr" data-highlight="4-16">
 <div class="narrative">
 <p>The main block of code is referred as a pipeline or chain. Each line starts with a function and ends with a pipe operator, <code>|&gt;</code>. The pipe operator in R is used to pass one expression as the input to the next expression, creating a sequence of operations that’s easy to read and manage.</p>
 </div>
 </div>
-<div class="trigger new-trigger" data-highlight="5-9" data-focus-on="cr-dplyr">
+<div class="trigger new-trigger" data-focus-on="cr-dplyr" data-highlight="5-9">
 <div class="narrative">
 <p>We use the <code>filter()</code> function to retain only those rows in the data frame where <code>Origin</code> is “RDU”, <code>DestState</code> is either “NC” or “CA”, and with month equals to 11, as we are only focusing the flights departing from RDU, with destinations in North Carolina or in California, in November 2023.</p>
 </div>
 </div>
-<div class="trigger new-trigger" data-highlight="10-12" data-focus-on="cr-dplyr">
+<div class="trigger new-trigger" data-focus-on="cr-dplyr" data-highlight="10-12">
 <div class="narrative">
 <p>We want to select the variables that are used in the data visualization: <code>DepDelay</code>, <code>ArrDelay</code>, <code>DestState</code>.</p>
 </div>
 </div>
-<div class="trigger new-trigger" data-highlight="13-15" data-focus-on="cr-dplyr">
+<div class="trigger new-trigger" data-focus-on="cr-dplyr" data-highlight="13-15">
 <div class="narrative">
 <p>We then rename the variable <code>DestState</code> to “Destination_State”.</p>
 </div>
 </div>
-<div class="trigger new-trigger" data-highlight="16" data-focus-on="cr-dplyr">
+<div class="trigger new-trigger" data-focus-on="cr-dplyr" data-highlight="16">
 <div class="narrative">
 <p>We finally remove all rows from the <code>spotify_songs</code> data frame that contain <code>NA</code> values in any column.</p>
 </div>
 </div>
-<div class="trigger new-trigger" data-highlight="17" data-focus-on="cr-dplyr">
+<div class="trigger new-trigger" data-focus-on="cr-dplyr" data-highlight="17">
 <div class="narrative">
 <p>We use <code>head()</code> to display the first five rows of the dataset after transformation.</p>
 </div>
