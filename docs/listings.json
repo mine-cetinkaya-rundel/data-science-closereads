@@ -2,8 +2,8 @@
   {
     "listing": "/index.html",
     "items": [
-      "/closereads/data-transformation-flights.html",
-      "/closereads/ggplot-story-flights.html"
+      "/closereads/ggplot-story-flights.html",
+      "/closereads/data-transformation-flights.html"
     ]
   }
 ]
