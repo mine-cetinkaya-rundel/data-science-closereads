@@ -1,0 +1,4 @@
+- source: ggplot-story-flights.qmd
+  quarto-pub:
+    - id: 18dab3e6-9ea6-458d-8faa-bf66dd283c10
+      url: 'https://ziyanwang1.quarto.pub/flights-data-plotting-example'
