@@ -1,6 +1,8 @@
 ---
 title: Flights Data Transformation Example
-subtitle: "Skeleton for the scrolly-telling project"
+subtitle: Add subtitle
+description: Add a description
+order: 2
 format:
   closeread-html:
     cr-section:
@@ -16,6 +18,8 @@ knitr:
       bg: transparent
 comments:
   hypothesis: true
+execute: 
+  eval: false
 ---
 
 **Adapted from sample document from <https://closeread.dev/gallery/demos/build-up-plots/>**
@@ -25,7 +29,6 @@ comments:
 #| echo: true
 #| output: false
 library(tidyverse)
-library(arrow)
 ```
 
 ::::{.cr-section}
@@ -55,13 +58,13 @@ We use `head()` to display the first five rows of the dataset after transformati
 # include more variables in select() to identify the flights e.g. flight number, date, destination cities
 
 library(tidyverse)
-flights <- read_parquet("Year=2023/data_0.parquet")
+flights <- read_csv(here::here("closereads", "data/rdu-flights-23.csv"))
 
 flights_rdu <- flights |>
   filter(
-    Origin == "RDU",
-    DestState %in% c("NC", "CA"), # NC and CA
-    Month == 11
+    origin == "RDU",
+    dest_state %in% c("NC", "CA"), # NC and CA
+    month == 11
   ) |>
   select(
     c("DepDelay", "ArrDelay", "DestState")

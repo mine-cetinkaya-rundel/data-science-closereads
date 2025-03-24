@@ -1,6 +1,8 @@
 ---
 title: Visualizing RDU flights
 subtitle: An introduction to ggplot2
+description: Add a description
+order: 1
 format:
   closeread-html:
     cr-section:
