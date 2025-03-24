@@ -131,7 +131,7 @@ ggplot(
     alpha = 0.5
   ) +
   labs(
-    title = "dep_delay and Energy",
+    title = "Departure Delay and Arrival Delay",
     subtitle = "Flights from RDU to NC and CA",
     x = "Departure Delay (min)", 
     y = "Arrival Delay (min)",
@@ -143,7 +143,7 @@ ggplot(
 ```
 :::
 
-:::{focus-on="cr-plot-2" highlight="3"}
+:::{focus-on="cr-plot-2" highlight="3,4,6"}
 Start with the `flights_rdu` data frame. **Map `dep_delay` to the x-axis**.
 ```{r}
 #| echo: true
@@ -183,7 +183,7 @@ ggplot(
     alpha = 0.5
   ) +
   labs(
-    title = "dep_delay and Energy",
+    title = "Departure Delay and Arrival Delay",
     subtitle = "Flights from RDU to NC and CA",
     x = "Departure Delay (min)", 
     y = "Arrival Delay (min)",
@@ -194,7 +194,7 @@ ggplot(
   theme_minimal()
 ```
 :::
-:::{focus-on="cr-plot-3" highlight="4,5"}
+:::{focus-on="cr-plot-3" highlight="3-6"}
 Start with the `flights_rdu` data frame. Map `dep_delay` to the x-axis and **map `arr_delay` to the y-axis**.
 ```{r}
 #| echo: true
@@ -203,6 +203,19 @@ Start with the `flights_rdu` data frame. Map `dep_delay` to the x-axis and **map
 ggplot(
   data = flights_rdu, 
   mapping = aes(
+    x = dep_delay,
+    y = arr_delay
+  )
+)
+```
+Typically, when using `ggplot()`, the arguments `data` and `mapping` are often omitted for brevity and readability, assuming the context is clear. Instead, you would see the function call simplified as follows:
+```{r}
+#| echo: true
+#| message: false
+#| eval: false
+ggplot(
+  flights_rdu, 
+  aes(
     x = dep_delay,
     y = arr_delay
   )
@@ -239,7 +252,7 @@ ggplot(
     alpha = 0.5
   ) +
   labs(
-    title = "dep_delay and Energy",
+    title = "Departure Delay and Arrival Delay",
     subtitle = "Flights from RDU to NC and CA",
     x = "Departure Delay (min)", 
     y = "Arrival Delay (min)",
@@ -298,7 +311,7 @@ ggplot(
     alpha = 0.5
   ) +
   labs(
-    title = "dep_delay and Energy",
+    title = "Departure Delay and Arrival Delay",
     subtitle = "Flights from RDU to NC and CA",
     x = "Departure Delay (min)", 
     y = "Arrival Delay (min)",
@@ -361,7 +374,7 @@ ggplot(
     alpha = 0.5
   ) +
   labs(
-    title = "dep_delay and Energy",
+    title = "Departure Delay and Arrival Delay",
     subtitle = "Flights from RDU to NC and CA",
     x = "Departure Delay (min)", 
     y = "Arrival Delay (min)",
@@ -425,7 +438,7 @@ ggplot(
     alpha = 0.5
   ) +
   labs(
-    title = "dep_delay and Energy",
+    title = "Departure Delay and Arrival Delay",
     subtitle = "Flights from RDU to NC and CA",
     x = "Departure Delay (min)", 
     y = "Arrival Delay (min)",
@@ -436,8 +449,9 @@ ggplot(
   theme_minimal()
 ```
 :::
-:::{focus-on="cr-plot-7" highlight="12,19"}
-Start with the `flights_rdu` data frame. Map `dep_delay` to the x-axis and map `arr_delay` to the y-axis. Represent each observation with a point and map species to the color of each point. Adjust the alpha parameter to 0.5 to make the points slightly transparent. **Next, we add titles, subtitles, and axis labels**.
+
+:::{focus-on="cr-plot-7" highlight="13"}
+Start with the `flights_rdu` data frame. Map `dep_delay` to the x-axis and map `arr_delay` to the y-axis. Represent each observation with a point and map species to the color of each point. Adjust the alpha parameter to 0.5 to make the points slightly transparent. Next, we add titles, subtitles, and axis labels. **Title the plot "Departure Delay and Arrival Delay"**.
 ```{r}
 #| echo: true
 #| message: false
@@ -454,7 +468,7 @@ ggplot(
     alpha = 0.5
   ) +
   labs(
-    
+    title = "Departure Delay and Arrival Delay"
   )
 ```
 :::
@@ -475,7 +489,7 @@ ggplot(
     alpha = 0.5
   ) +
   labs(
-    
+    title = "Departure Delay and Arrival Delay"
   )
 ```
 
@@ -495,7 +509,7 @@ ggplot(
     alpha = 0.5
   ) +
   labs(
-    title = "dep_delay and Energy",
+    title = "Departure Delay and Arrival Delay",
     subtitle = "Flights from RDU to NC and CA",
     x = "Departure Delay (min)", 
     y = "Arrival Delay (min)",
@@ -506,9 +520,8 @@ ggplot(
   theme_minimal()
 ```
 :::
-
-:::{focus-on="cr-plot-8" highlight="13"}
-Start with the `flights_rdu` data frame. Map `dep_delay` to the x-axis and map `arr_delay` to the y-axis. Represent each observation with a point and map species to the color of each point. Adjust the alpha parameter to 0.5 to make the points slightly transparent. Next, we add titles, subtitles, and axis labels. **Title the plot "Departure Delay and Arrival Delay"**.
+:::{focus-on="cr-plot-8" highlight="14"}
+Start with the `flights_rdu` data frame. Map `dep_delay` to the x-axis and map `arr_delay` to the y-axis. Represent each observation with a point and map species to the color of each point. Adjust the alpha parameter to 0.5 to make the points slightly transparent. Next, we add titles, subtitles, and axis labels. Title the plot "Departure Delay and Arrival Delay", **add the subtitle "Flights from RDU to NC and CA"**.
 ```{r}
 #| echo: true
 #| message: false
@@ -525,7 +538,8 @@ ggplot(
     alpha = 0.5
   ) +
   labs(
-    title = "dep_delay and Energy"
+    title = "Departure Delay and Arrival Delay",
+    subtitle = "Flights from RDU to NC and CA"
   )
 ```
 :::
@@ -546,78 +560,7 @@ ggplot(
     alpha = 0.5
   ) +
   labs(
-    title = "dep_delay and Energy"
-  )
-```
-
-```{r}
-#| echo: true
-#| message: false
-#| eval: false
-ggplot(
-  flights_rdu, 
-  aes(
-    x = dep_delay, 
-    y = arr_delay
-  )
-) +
-  geom_point(
-    aes(color = destination_state), 
-    alpha = 0.5
-  ) +
-  labs(
-    title = "dep_delay and Energy",
-    subtitle = "Flights from RDU to NC and CA",
-    x = "Departure Delay (min)", 
-    y = "Arrival Delay (min)",
-    color = "destination_state",
-    caption = "Source: The Annual Data Challenge Expo"
-  ) +
-  scale_color_colorblind() +
-  theme_minimal()
-```
-:::
-:::{focus-on="cr-plot-9" highlight="14"}
-Start with the `flights_rdu` data frame. Map `dep_delay` to the x-axis and map `arr_delay` to the y-axis. Represent each observation with a point and map species to the color of each point. Adjust the alpha parameter to 0.5 to make the points slightly transparent. Next, we add titles, subtitles, and axis labels. Title the plot "Departure Delay and Arrival Delay", **add the subtitle "Flights from RDU to NC and CA"**.
-```{r}
-#| echo: true
-#| message: false
-#| eval: false
-ggplot(
-  flights_rdu, 
-  aes(
-    x = dep_delay, 
-    y = arr_delay
-  )
-) +
-  geom_point(
-    aes(color = destination_state), 
-    alpha = 0.5
-  ) +
-  labs(
-    title = "dep_delay and Energy",
-    subtitle = "Flights from RDU to NC and CA"
-  )
-```
-:::
-:::{#cr-plot-9}
-```{r}
-#| echo: false
-#| message: false
-#| eval: true
-ggplot(
-  flights_rdu, 
-  aes(
-    x = dep_delay, 
-    y = arr_delay
-  )
-) +
-  geom_point(
-    aes(color = destination_state), 
-    alpha = 0.5
-  ) +
-  labs(
-    title = "dep_delay and Energy",
+    title = "Departure Delay and Arrival Delay",
     subtitle = "Flights from RDU to NC and CA"
   )
 ```
@@ -638,7 +581,7 @@ ggplot(
     alpha = 0.5
   ) +
   labs(
-    title = "dep_delay and Energy",
+    title = "Departure Delay and Arrival Delay",
     subtitle = "Flights from RDU to NC and CA",
     x = "Departure Delay (min)", 
     y = "Arrival Delay (min)",
@@ -650,7 +593,7 @@ ggplot(
 ```
 :::
 
-:::{focus-on="cr-plot-10" highlight="15-16"}
+:::{focus-on="cr-plot-9" highlight="15-16"}
 Start with the `flights_rdu` data frame. Map `dep_delay` to the x-axis and map `arr_delay` to the y-axis. Represent each observation with a point and map species to the color of each point. Adjust the alpha parameter to 0.5 to make the points slightly transparent. Next, we add titles, subtitles, and axis labels. Title the plot "Departure Delay and Arrival Delay", add the subtitle "Flights from RDU to NC and CA", **label the x and y axes as "Departure Delay (min)" and "Arrival Delay (min)", respectively**.
 ```{r}
 #| echo: true
@@ -668,10 +611,89 @@ ggplot(
     alpha = 0.5
   ) +
   labs(
-    title = "dep_delay and Energy",
+    title = "Departure Delay and Arrival Delay",
     subtitle = "Flights from RDU to NC and CA",
     x = "Departure Delay (min)", 
     y = "Arrival Delay (min)"
+  )
+```
+:::
+
+:::{#cr-plot-9}
+```{r}
+#| echo: false
+#| message: false
+#| eval: true
+ggplot(
+  flights_rdu, 
+  aes(
+    x = dep_delay, 
+    y = arr_delay
+  )
+) +
+  geom_point(
+    aes(color = destination_state), 
+    alpha = 0.5
+  ) +
+  labs(
+    title = "Departure Delay and Arrival Delay",
+    subtitle = "Flights from RDU to NC and CA",
+    x = "Departure Delay (min)", 
+    y = "Arrival Delay (min)"
+  )
+```
+
+```{r}
+#| echo: true
+#| message: false
+#| eval: false
+ggplot(
+  flights_rdu, 
+  aes(
+    x = dep_delay, 
+    y = arr_delay
+  )
+) +
+  geom_point(
+    aes(color = destination_state), 
+    alpha = 0.5
+  ) +
+  labs(
+    title = "Departure Delay and Arrival Delay",
+    subtitle = "Flights from RDU to NC and CA",
+    x = "Departure Delay (min)", 
+    y = "Arrival Delay (min)",
+    color = "destination_state",
+    caption = "Source: The Annual Data Challenge Expo"
+  ) +
+  scale_color_colorblind() +
+  theme_minimal()
+```
+:::
+
+:::{focus-on="cr-plot-10" highlight="17"}
+Start with the `flights_rdu` data frame. Map `dep_delay` to the x-axis and map `arr_delay` to the y-axis. Represent each observation with a point and map species to the color of each point. Adjust the alpha parameter to 0.5 to make the points slightly transparent. Next, we add titles, subtitles, and axis labels. Title the plot "Departure Delay and Arrival Delay", add the subtitle "Flights from RDU to NC and CA", label the x and y axes as "Departure Delay (min)" and "Arrival Delay (min)", respectively, **label the legend “destination_state”**.
+```{r}
+#| echo: true
+#| message: false
+#| eval: false
+ggplot(
+  flights_rdu, 
+  aes(
+    x = dep_delay, 
+    y = arr_delay
+  )
+) +
+  geom_point(
+    aes(color = destination_state), 
+    alpha = 0.5
+  ) +
+  labs(
+    title = "Departure Delay and Arrival Delay",
+    subtitle = "Flights from RDU to NC and CA",
+    x = "Departure Delay (min)", 
+    y = "Arrival Delay (min)",
+    color = "destination_state"
   )
 ```
 :::
@@ -693,86 +715,7 @@ ggplot(
     alpha = 0.5
   ) +
   labs(
-    title = "dep_delay and Energy",
-    subtitle = "Flights from RDU to NC and CA",
-    x = "Departure Delay (min)", 
-    y = "Arrival Delay (min)"
-  )
-```
-
-```{r}
-#| echo: true
-#| message: false
-#| eval: false
-ggplot(
-  flights_rdu, 
-  aes(
-    x = dep_delay, 
-    y = arr_delay
-  )
-) +
-  geom_point(
-    aes(color = destination_state), 
-    alpha = 0.5
-  ) +
-  labs(
-    title = "dep_delay and Energy",
-    subtitle = "Flights from RDU to NC and CA",
-    x = "Departure Delay (min)", 
-    y = "Arrival Delay (min)",
-    color = "destination_state",
-    caption = "Source: The Annual Data Challenge Expo"
-  ) +
-  scale_color_colorblind() +
-  theme_minimal()
-```
-:::
-
-:::{focus-on="cr-plot-11" highlight="17"}
-Start with the `flights_rdu` data frame. Map `dep_delay` to the x-axis and map `arr_delay` to the y-axis. Represent each observation with a point and map species to the color of each point. Adjust the alpha parameter to 0.5 to make the points slightly transparent. Next, we add titles, subtitles, and axis labels. Title the plot "Departure Delay and Arrival Delay", add the subtitle "Flights from RDU to NC and CA", label the x and y axes as "Departure Delay (min)" and "Arrival Delay (min)", respectively, **label the legend “destination_state”**.
-```{r}
-#| echo: true
-#| message: false
-#| eval: false
-ggplot(
-  flights_rdu, 
-  aes(
-    x = dep_delay, 
-    y = arr_delay
-  )
-) +
-  geom_point(
-    aes(color = destination_state), 
-    alpha = 0.5
-  ) +
-  labs(
-    title = "dep_delay and Energy",
-    subtitle = "Flights from RDU to NC and CA",
-    x = "Departure Delay (min)", 
-    y = "Arrival Delay (min)",
-    color = "destination_state"
-  )
-```
-:::
-
-:::{#cr-plot-11}
-```{r}
-#| echo: false
-#| message: false
-#| eval: true
-ggplot(
-  flights_rdu, 
-  aes(
-    x = dep_delay, 
-    y = arr_delay
-  )
-) +
-  geom_point(
-    aes(color = destination_state), 
-    alpha = 0.5
-  ) +
-  labs(
-    title = "dep_delay and Energy",
+    title = "Departure Delay and Arrival Delay",
     subtitle = "Flights from RDU to NC and CA",
     x = "Departure Delay (min)", 
     y = "Arrival Delay (min)",
@@ -796,7 +739,7 @@ ggplot(
     alpha = 0.5
   ) +
   labs(
-    title = "dep_delay and Energy",
+    title = "Departure Delay and Arrival Delay",
     subtitle = "Flights from RDU to NC and CA",
     x = "Departure Delay (min)", 
     y = "Arrival Delay (min)",
@@ -808,7 +751,7 @@ ggplot(
 ```
 :::
 
-:::{focus-on="cr-plot-12" highlight="18"}
+:::{focus-on="cr-plot-11" highlight="18"}
 Start with the `flights_rdu` data frame. Map `dep_delay` to the x-axis and map `arr_delay` to the y-axis. Represent each observation with a point and map species to the color of each point. Adjust the alpha parameter to 0.5 to make the points slightly transparent. Next, we add titles, subtitles, and axis labels. Title the plot "Departure Delay and Arrival Delay", add the subtitle "Flights from RDU to NC and CA", label the x and y axes as "Departure Delay (min)" and "Arrival Delay (min)", respectively, label the legend “destination_state”, and **add a caption for the data source**.
 ```{r}
 #| echo: true
@@ -826,13 +769,94 @@ ggplot(
     alpha = 0.5
   ) +
   labs(
-    title = "dep_delay and Energy",
+    title = "Departure Delay and Arrival Delay",
     subtitle = "Flights from RDU to NC and CA",
     x = "Departure Delay (min)", 
     y = "Arrival Delay (min)",
     color = "destination_state",
     caption = "Source: The Annual Data Challenge Expo"
   )
+```
+:::
+:::{#cr-plot-11}
+```{r}
+#| echo: false
+#| message: false
+#| eval: true
+ggplot(
+  flights_rdu, 
+  aes(
+    x = dep_delay, 
+    y = arr_delay
+  )
+) +
+  geom_point(
+    aes(color = destination_state), 
+    alpha = 0.5
+  ) +
+  labs(
+    title = "Departure Delay and Arrival Delay",
+    subtitle = "Flights from RDU to NC and CA",
+    x = "Departure Delay (min)", 
+    y = "Arrival Delay (min)",
+    color = "destination_state",
+    caption = "Source: The Annual Data Challenge Expo"
+  )
+```
+
+```{r}
+#| echo: true
+#| message: false
+#| eval: false
+ggplot(
+  flights_rdu, 
+  aes(
+    x = dep_delay, 
+    y = arr_delay
+  )
+) +
+  geom_point(
+    aes(color = destination_state), 
+    alpha = 0.5
+  ) +
+  labs(
+    title = "Departure Delay and Arrival Delay",
+    subtitle = "Flights from RDU to NC and CA",
+    x = "Departure Delay (min)", 
+    y = "Arrival Delay (min)",
+    color = "destination_state",
+    caption = "Source: The Annual Data Challenge Expo"
+  ) +
+  scale_color_colorblind() +
+  theme_minimal()
+```
+:::
+:::{focus-on="cr-plot-12" highlight="20"}
+Start with the `flights_rdu` data frame. Map `dep_delay` to the x-axis and map `arr_delay` to the y-axis. Represent each observation with a point and map species to the color of each point. Adjust the alpha parameter to 0.5 to make the points slightly transparent. Next, we add titles, subtitles, and axis labels. Title the plot "Departure Delay and Arrival Delay", add the subtitle "Flights from RDU to NC and CA", label the x and y axes as "Departure Delay (min)" and "Arrival Delay (min)", respectively, label the legend “destination_state”, and add a caption for the data source. **Finally, use a discrete color scale that is designed to be perceived by viewers with common forms of color blindness**.
+```{r}
+#| echo: true
+#| message: false
+#| eval: false
+ggplot(
+  flights_rdu, 
+  aes(
+    x = dep_delay, 
+    y = arr_delay
+  )
+) +
+  geom_point(
+    aes(color = destination_state), 
+    alpha = 0.5
+  ) +
+  labs(
+    title = "Departure Delay and Arrival Delay",
+    subtitle = "Flights from RDU to NC and CA",
+    x = "Departure Delay (min)", 
+    y = "Arrival Delay (min)",
+    color = "destination_state",
+    caption = "Source: The Annual Data Challenge Expo"
+  ) +
+  scale_color_colorblind()
 ```
 :::
 :::{#cr-plot-12}
@@ -852,88 +876,7 @@ ggplot(
     alpha = 0.5
   ) +
   labs(
-    title = "dep_delay and Energy",
-    subtitle = "Flights from RDU to NC and CA",
-    x = "Departure Delay (min)", 
-    y = "Arrival Delay (min)",
-    color = "destination_state",
-    caption = "Source: The Annual Data Challenge Expo"
-  )
-```
-
-```{r}
-#| echo: true
-#| message: false
-#| eval: false
-ggplot(
-  flights_rdu, 
-  aes(
-    x = dep_delay, 
-    y = arr_delay
-  )
-) +
-  geom_point(
-    aes(color = destination_state), 
-    alpha = 0.5
-  ) +
-  labs(
-    title = "dep_delay and Energy",
-    subtitle = "Flights from RDU to NC and CA",
-    x = "Departure Delay (min)", 
-    y = "Arrival Delay (min)",
-    color = "destination_state",
-    caption = "Source: The Annual Data Challenge Expo"
-  ) +
-  scale_color_colorblind() +
-  theme_minimal()
-```
-:::
-:::{focus-on="cr-plot-13" highlight="20"}
-Start with the `flights_rdu` data frame. Map `dep_delay` to the x-axis and map `arr_delay` to the y-axis. Represent each observation with a point and map species to the color of each point. Adjust the alpha parameter to 0.5 to make the points slightly transparent. Next, we add titles, subtitles, and axis labels. Title the plot "Departure Delay and Arrival Delay", add the subtitle "Flights from RDU to NC and CA", label the x and y axes as "Departure Delay (min)" and "Arrival Delay (min)", respectively, label the legend “destination_state”, and add a caption for the data source. **Finally, use a discrete color scale that is designed to be perceived by viewers with common forms of color blindness**.
-```{r}
-#| echo: true
-#| message: false
-#| eval: false
-ggplot(
-  flights_rdu, 
-  aes(
-    x = dep_delay, 
-    y = arr_delay
-  )
-) +
-  geom_point(
-    aes(color = destination_state), 
-    alpha = 0.5
-  ) +
-  labs(
-    title = "dep_delay and Energy",
-    subtitle = "Flights from RDU to NC and CA",
-    x = "Departure Delay (min)", 
-    y = "Arrival Delay (min)",
-    color = "destination_state",
-    caption = "Source: The Annual Data Challenge Expo"
-  ) +
-  scale_color_colorblind()
-```
-:::
-:::{#cr-plot-13}
-```{r}
-#| echo: false
-#| message: false
-#| eval: true
-ggplot(
-  flights_rdu, 
-  aes(
-    x = dep_delay, 
-    y = arr_delay
-  )
-) +
-  geom_point(
-    aes(color = destination_state), 
-    alpha = 0.5
-  ) +
-  labs(
-    title = "dep_delay and Energy",
+    title = "Departure Delay and Arrival Delay",
     subtitle = "Flights from RDU to NC and CA",
     x = "Departure Delay (min)", 
     y = "Arrival Delay (min)",
@@ -959,7 +902,7 @@ ggplot(
     alpha = 0.5
   ) +
   labs(
-    title = "dep_delay and Energy",
+    title = "Departure Delay and Arrival Delay",
     subtitle = "Flights from RDU to NC and CA",
     x = "Departure Delay (min)", 
     y = "Arrival Delay (min)",
@@ -970,7 +913,7 @@ ggplot(
   theme_minimal()
 ```
 :::
-:::{focus-on="cr-plot-14" highlight="21"}
+:::{focus-on="cr-plot-13" highlight="21"}
 Start with the `flights_rdu` data frame. Map `dep_delay` to the x-axis and map `arr_delay` to the y-axis. Represent each observation with a point and map species to the color of each point. Adjust the alpha parameter to 0.5 to make the points slightly transparent. Next, we add titles, subtitles, and axis labels. Title the plot "Departure Delay and Arrival Delay", add the subtitle "Flights from RDU to NC and CA", label the x and y axes as "Departure Delay (min)" and "Arrival Delay (min)", respectively, label the legend “destination_state”, and add a caption for the data source. Finally, use a discrete color scale that is designed to be perceived by viewers with common forms of color blindness. **Change the theme of the plot using `theme_minimal()`**.
 ```{r}
 #| echo: true
@@ -988,7 +931,7 @@ ggplot(
     alpha = 0.5
   ) +
   labs(
-    title = "dep_delay and Energy",
+    title = "Departure Delay and Arrival Delay",
     subtitle = "Flights from RDU to NC and CA",
     x = "Departure Delay (min)", 
     y = "Arrival Delay (min)",
@@ -1000,7 +943,7 @@ ggplot(
 ```
 :::
 
-:::{#cr-plot-14}
+:::{#cr-plot-13}
 ```{r}
 #| echo: false
 #| message: false
@@ -1017,7 +960,7 @@ ggplot(
     alpha = 0.5
   ) +
   labs(
-    title = "dep_delay and Energy",
+    title = "Departure Delay and Arrival Delay",
     subtitle = "Flights from RDU to NC and CA",
     x = "Departure Delay (min)", 
     y = "Arrival Delay (min)",
@@ -1044,7 +987,7 @@ ggplot(
     alpha = 0.5
   ) +
   labs(
-    title = "dep_delay and Energy",
+    title = "Departure Delay and Arrival Delay",
     subtitle = "Flights from RDU to NC and CA",
     x = "Departure Delay (min)", 
     y = "Arrival Delay (min)",
@@ -1057,8 +1000,8 @@ ggplot(
 :::
 ::::
 
-## Notes
+## Reflection
 
-In this demo, we learned about how to build a ggplot using the RDU flights dataset as an example. Please write down something that you have learned...
+In this demonstration, you explored how to create a ggplot using the RDU flights dataset. As we wrap up, take a moment to reflect on and note down what you've learned from this example:
 
 <input type="text" id="inputText" name="inputText" placeholder="Type something..." style="width: 50%; height: 200px; font-size: 20px; padding: 10px; border: 2px solid #000000; border-radius: 4px;">
