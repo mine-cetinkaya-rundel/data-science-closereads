@@ -1,7 +1,6 @@
 ---
 title: Flights Data Transformation Example
-subtitle: Add subtitle
-description: Add a description
+subtitle: Skeleton for the scrolly-telling project
 order: 2
 format:
   closeread-html:
@@ -18,47 +17,81 @@ knitr:
       bg: transparent
 comments:
   hypothesis: true
-execute: 
-  eval: false
 ---
 
 **Adapted from sample document from <https://closeread.dev/gallery/demos/build-up-plots/>**
 
+**Weather data from: <https://www.wunderground.com/history/monthly/us/nc/durham/KRDU/date/2023-11>**
+
+
 ```{r}
 #| label: setup
-#| echo: true
+#| echo: false
 #| output: false
 library(tidyverse)
+library(arrow)
 ```
+
+
+# Recreating the dataframe used in the ggplot story
+
+Starting with a broad dataset of flight records, we refine our data to concentrate on flights departing from Raleigh-Durham International Airport (RDU) to North Carolina and California in November 2023. This process includes filtering, selecting, and renaming key variables to enhance clarity and utility. These steps are executed through a concise series of dplyr functions linked in a pipeline, which transforms the data to the dataset that supports our subsequent analysis in the **ggplot closeread story**.
 
 ::::{.cr-section}
 
-In the first line we load the `tidyverse` package, which contains the `ggplot2` and `dplyr` packages we need. [@cr-dplyr]{highlight="1"}
+We start by loading the `tidyverse` package, which contains the `ggplot2` and `dplyr` packages we need. [@cr-dplyr-1]{highlight="1"}
 
-We then load the data frame `flights`. This dataset is now ready for analysis or manipulation in R. [@cr-dplyr]{highlight="2"}
-
-The main block of code is referred as a pipeline or chain. Each line starts with a function and ends with a pipe operator, `|>`. The pipe operator in R is used to pass one expression as the input to the next expression, creating a sequence of operations that's easy to read and manage.  [@cr-dplyr]{highlight="4-16"}
-
-We use the `filter()` function to retain only those rows in the data frame where `Origin` is "RDU", `DestState` is either "NC" or "CA", and with month equals to 11, as we are only focusing the flights departing from RDU, with destinations in North Carolina or in California, in November 2023. [@cr-dplyr]{highlight="5-9"}
-
-We want to select the variables that are used in the data visualization: `DepDelay`, `ArrDelay`, `DestState`. [@cr-dplyr]{highlight="10-12"}
-
-We then rename the variable `DestState` to "Destination_State". [@cr-dplyr]{highlight="13-15"}
-
-We finally remove all rows from the `spotify_songs` data frame that contain `NA` values in any column.[@cr-dplyr]{highlight="16"}
-
-We use `head()` to display the first five rows of the dataset after transformation.[@cr-dplyr]{highlight="17"}
-
-:::{#cr-dplyr}
+:::{#cr-dplyr-1}
 ```{r}
 #| echo: true
 #| message: false
 
-# Keep this pipe and show it step by step
-# include more variables in select() to identify the flights e.g. flight number, date, destination cities
+library(tidyverse)
+```
+:::
+
+We then load the data frame `flights`. This dataset is now ready for analysis or manipulation in R. This data frame contains data with 59,416 rows and 110 columns. [@cr-dplyr-2]{highlight="2"}
+
+:::{#cr-dplyr-2}
+```{r}
+#| echo: true
+#| message: false
 
 library(tidyverse)
-flights <- read_csv(here::here("closereads", "data/rdu-flights-23.csv"))
+flights <- read_csv(here::here("data", "rdu-flights-23.csv"))
+
+flights # display the dataframe
+```
+:::
+
+We use the `filter()` function to retain only those rows in the data frame where `Origin` is "RDU", `DestState` is either "NC" or "CA", and with month equals to 11, as we are only focusing the flights departing from RDU, with destinations in North Carolina or in California, in November 2023. Looking at the tibble, we notice that the number of rows is reduced to 368. We can see that the `year` column now only contains **2023**, and the `month` column only contains **11**. The filtering is also reflected in the `flight_date` column.  [@cr-dplyr-3]{highlight="4-8"}
+
+:::{#cr-dplyr-3}
+```{r}
+#| echo: true
+#| message: false
+
+library(tidyverse)
+
+flights_rdu <- flights |>
+  filter(
+    origin == "RDU",
+    dest_state %in% c("NC", "CA"), # NC and CA
+    month == 11
+  )
+
+flights_rdu # display the dataframe
+```
+:::
+
+We want to select the variables that are used in the data visualization: `dep_delay`, `arr_delay`, `dest_state`, and other variables that help us identify the flights. After selecting the columns, the number of rows does not change, but the number of columns is reduced from 110 to 6. [@cr-dplyr-4]{highlight="9-16"}
+
+:::{#cr-dplyr-4}
+```{r}
+#| echo: true
+#| message: false
+
+library(tidyverse)
 
 flights_rdu <- flights |>
   filter(
@@ -67,17 +100,90 @@ flights_rdu <- flights |>
     month == 11
   ) |>
   select(
-    c("DepDelay", "ArrDelay", "DestState")
+    flight_date,
+    dest,
+    reporting_airline,
+    dep_delay,
+    arr_delay,
+    dest_state
+  )
+
+flights_rdu # display the dataframe
+```
+:::
+
+We can rename the variable `dest_state` to "destination_state" for clarity. Looking at the last column of the displayed tibble, we see that the variable is successfully renamed. [@cr-dplyr-5]{highlight="17-19"}
+
+:::{#cr-dplyr-5}
+```{r}
+#| echo: true
+#| message: false
+
+library(tidyverse)
+
+flights_rdu <- flights |>
+  filter(
+    origin == "RDU",
+    dest_state %in% c("NC", "CA"), # NC and CA
+    month == 11
+  ) |>
+  select(
+    flight_date,
+    dest,
+    reporting_airline,
+    dep_delay,
+    arr_delay,
+    dest_state
   ) |>
   rename(
-    "Destination_State" = DestState
+    "destination_state" = dest_state
+  )
+
+flights_rdu # display the dataframe
+```
+:::
+
+The main block of code is referred as a pipeline or chain. Each line starts with a function and ends with a pipe operator, `|>`. The pipe operator in R is used to pass one expression as the input to the next expression, creating a sequence of operations that's easy to read and manage.  [@cr-dplyr]{highlight="3-19"}
+
+:::{#cr-dplyr}
+```{r}
+#| echo: true
+#| message: false
+
+library(tidyverse)
+
+flights_rdu <- flights |>
+  filter(
+    origin == "RDU",
+    dest_state %in% c("NC", "CA"), # NC and CA
+    month == 11
+  ) |>
+  select(
+    flight_date,
+    dest,
+    reporting_airline,
+    dep_delay,
+    arr_delay,
+    dest_state
+  ) |>
+  rename(
+    "destination_state" = dest_state
   )
 
 flights_rdu
 ```
 :::
+::::
 
-:::{cr-arrange}
+# Other functions: `arrange`, `relocate`
+
+In the following section, we build on top of the current dataset and explore the utilization of two additional **dplyr** functions: `arrange` and `relocate.` `arrange` is used to sort data frames based on one or more columns, providing a logical sequence that can facilitate more insightful analysis. On the other hand, `relocate` is employed to adjust the order of columns within the data frame, enhancing readability and accessibility when navigating through the data.
+
+::::{.cr-section}
+
+The `relocate` function is being used here to adjust the position of the `destination_state` column within the dataframe. By specifying `.before = dep_delay`, the function moves the `destination_state` column to a position immediately before the `dep_delay` column. [@cr-additional-fn-1]{highlight="20-22"}
+
+:::{#cr-additional-fn-1}
 ```{r}
 #| echo: true
 #| message: false
@@ -86,32 +192,199 @@ flights_rdu
 
 flights_rdu <- flights |>
   filter(
-    Origin == "RDU",
-    DestState %in% c("NC", "CA"), # NC and CA
-    Month == 11
+    origin == "RDU",
+    dest_state %in% c("NC", "CA"), # NC and CA
+    month == 11
   ) |>
   select(
-    c("DepDelay", "ArrDelay", "DestState")
+    flight_date,
+    dest,
+    reporting_airline,
+    dep_delay,
+    arr_delay,
+    dest_state
   ) |>
   rename(
-    "Destination_State" = DestState
+    "destination_state" = dest_state
   ) |>
   relocate(
-    Destination_State, .before = DepDelay
-  ) |>
-  arrange(
-    desc(DepDelay)
+    destination_state, .before = dep_delay
   )
 
 flights_rdu
 ```
 :::
 
-:::{cr-slice}
+The `arrange` function is then utilized to sort the dataframe based on the `dep_delay` column in descending order. By using `desc(dep_delay)`, it ensures that the entries with the longest departure delays are listed at the top of the data frame. [@cr-additional-fn-2]{highlight="23-25"}
+
+:::{#cr-additional-fn-2}
 ```{r}
-slice_head(flights_rdu, n=3)
+#| echo: true
+#| message: false
+
+# add arrange and relocate at the end
+
+flights_rdu <- flights |>
+  filter(
+    origin == "RDU",
+    dest_state %in% c("NC", "CA"), # NC and CA
+    month == 11
+  ) |>
+  select(
+    flight_date,
+    dest,
+    reporting_airline,
+    dep_delay,
+    arr_delay,
+    dest_state
+  ) |>
+  rename(
+    "destination_state" = dest_state
+  ) |>
+  relocate(
+    destination_state, .before = dep_delay
+  ) |>
+  arrange(
+    desc(dep_delay)
+  )
+
+flights_rdu
+```
+:::
+
+Note that we can use the `arrange` function to sort the dataframe by more than one variable, allowing for a multi-level sort order. In the example below, we sort the data frame primarily by `flight_date` and secondarily by `dep_delay`, descending. This sorting order helps to organize the data chronologically while also categorizing flights by departure delay within each date, providing a structured view of flight operations over time. [@cr-additional-fn-3]{highlight="23-25"}
+
+:::{#cr-additional-fn-3}
+```{r}
+#| echo: true
+#| message: false
+
+# add arrange and relocate at the end
+
+flights_rdu <- flights |>
+  filter(
+    origin == "RDU",
+    dest_state %in% c("NC", "CA"), # NC and CA
+    month == 11
+  ) |>
+  select(
+    flight_date,
+    dest,
+    reporting_airline,
+    dep_delay,
+    arr_delay,
+    dest_state
+  ) |>
+  rename(
+    "destination_state" = dest_state
+  ) |>
+  relocate(
+    destination_state, .before = dep_delay
+  ) |>
+  arrange(
+    flight_date, desc(dep_delay)
+  )
+
+flights_rdu
 ```
 :::
 ::::
 
-**Insert inline code cell here**
+# Join
+Next, we will explore the use of join operations, a technique that allows us to merge data from different sources based on common attributes. By applying join operations, we can enrich our dataset by combining related data from separate tables, thereby enhancing the depth and breadth of our analysis. We will demonstrate various types of JOINs and illustrate how they can be strategically employed to integrate and synchronize disparate data sources effectively.
+
+## Lookup table
+The first way of utilizing join we will explore is by employing it as a lookup table. This approach enhances our primary dataset by integrating additional information that expands upon existing data. Using a lookup table is particularly effective for associating concise data entries, such as codes or identifiers, with more descriptive attributes stored in a separate table. We will demonstrate this by joining our flights data with an `airline_codes` table, where airline identifiers are linked with their full names, transforming our dataset into a more reader-friendly format.
+
+Before we start, below is what the `airline_codes` looks like:
+
+```{r}
+#| echo: false
+#| message: false
+#| 
+library(janitor)
+airline_codes <- read.csv("data/Airline_Codes.csv") |> clean_names()
+```
+
+```{r}
+airline_codes
+```
+
+::::{.cr-section}
+
+We use a `left_join` function from the `dplyr` package to merge the `flights_rdu` data frame with the `airline_codes` lookup table. It includes all records from the 'left' table (the `flights_rdu` table being passed down the pipeline), and the matched records from the 'right' table (`airline_codes`). If there is no match, the result is still a row in the output, but with NULL values in the columns of the 'right' table. [@cr-join-airlinecode-1]{highlight="2-3"}
+
+:::{#cr-join-airlinecode-1}
+```{r}
+#| echo: true
+flights_rdu_joined_airline <- flights_rdu |>
+  left_join(
+    airline_codes, 
+    by = c("reporting_airline" = "code")
+  )
+
+flights_rdu_joined_airline
+```
+:::
+
+This operation is based on matching the `reporting_airline` column from the `flights_rdu` dataframe with the `code` column in the `airline_codes` table. This type of join ensures that all records from the `flights_rdu` data frame are preserved, and corresponding airline names are added where available. [@cr-join-airlinecode-2]{highlight="4"}
+
+:::{#cr-join-airlinecode-2}
+```{r}
+#| echo: true
+flights_rdu_joined_airline <- flights_rdu |>
+  left_join(
+    airline_codes, 
+    by = c("reporting_airline" = "code")
+  )
+
+flights_rdu_joined_airline
+```
+:::
+
+After merging, we use the `rename` function to change the column name from `description` to `airline_name`, enhancing the readability of the dataframe. [@cr-join-airlinecode-3]{highlight="6-8"}
+
+:::{#cr-join-airlinecode-3}
+```{r}
+#| echo: true
+flights_rdu_joined_airline <- flights_rdu |>
+  left_join(
+    airline_codes, 
+    by = c("reporting_airline" = "code")
+  ) |>
+  rename(
+    airline_name = description
+  )
+
+flights_rdu_joined_airline
+```
+:::
+::::
+
+## Enriching dataframe by joining another table
+For this part of the analysis, we are merging weather data with our flight dataset to enrich it with environmental conditions that could impact flight schedules and performance. The `weather_df` data frame contains various weather metrics like temperature, dew point, humidity, wind speed, pressure, and precipitation, recorded on specific dates of November, 2023.
+
+```{r}
+#| echo: false
+#| message: false
+
+weather_data <- read.csv("data/weather_data.csv") |> clean_names() |>
+  mutate(time = date(time))
+```
+
+::::{.cr-section}
+
+We use a `right_join` to combine `flights_rdu` with `weather_data.` The join is based on matching `flight_date` in the flights data with `time` in the weather data. This method ensures all **date** is retained and supplemented with corresponding weather conditions and flight data where available.[@cr-join-weather-1]{highlight="2-5"}
+
+:::{#cr-join-weather-1}
+```{r}
+flights_rdu_joined_weather <- flights_rdu |>
+  right_join(
+    weather_data, 
+    by = c("flight_date" = "time")
+  ) 
+flights_rdu_joined_weather
+```
+:::
+
+::::
