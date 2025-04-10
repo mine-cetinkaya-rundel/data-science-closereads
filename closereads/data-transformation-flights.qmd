@@ -58,7 +58,7 @@ We then load the data frame `flights`. This dataset is now ready for analysis or
 #| message: false
 
 library(tidyverse)
-flights <- read_csv(here::here("data", "rdu-flights-23.csv"))
+flights <- read_csv(here::here("closereads", "data", "rdu-flights-23.csv"))
 
 flights # display the dataframe
 ```

@@ -6,7 +6,6 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
-<meta name="description" content="Add a description">
 
 <title>Flights Data Transformation Example</title>
 <style>
@@ -74,9 +73,6 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <script src="../site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
 <link href="../site_libs/bootstrap/bootstrap-ecab3d01edc22a8b07c778f864461f49.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
-<script src="../site_libs/quarto-contrib/intersection-observer-polyfill-1.0.0/intersection-observer.js"></script>
-<script src="../site_libs/quarto-contrib/scrollama-3.2.0/scrollama.min.js"></script>
-<script src="../site_libs/quarto-contrib/closeread-0.1.0/closeread.js"></script>
 <script id="quarto-search-options" type="application/json">{
   "location": "sidebar",
   "copy-button": false,
@@ -110,48 +106,30 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     document.body.classList.add('hypothesis-enabled');
   });
 </script>
-<meta cr-debug-mode="false">
-<meta cr-remove-header-space="false">
 
 
-<link rel="stylesheet" href="../site_libs/quarto-contrib/quarto-project/qmd-lab/closeread/closeread.css">
 </head>
 
-<body class="quarto-light">
+<body class="fullcontent quarto-light">
 
 <div id="quarto-search-results"></div>
 <!-- content -->
-<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-full">
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
 <!-- sidebar -->
 <!-- margin-sidebar -->
     
 <!-- main -->
-<main class="content column-page" id="quarto-document-content">
-      <!-- user-provided yaml closeread style options -->
-      <style>
-        :root {
-          --cr-narrative-background-color-sidebar: transparent;
---cr-section-background-color: transparent;
---cr-narrative-background-color-overlay: transparent;
---cr-narrative-text-color-overlay: black;
-        }
-      </style>
-    
+<main class="content" id="quarto-document-content">
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
 <h1 class="title">Flights Data Transformation Example</h1>
-<p class="subtitle lead">Add subtitle</p>
-</div>
-
-<div>
-  <div class="description">
-    Add a description
-  </div>
+<p class="subtitle lead">Skeleton for the scrolly-telling project</p>
 </div>
 
 
-<div class="quarto-title-meta column-page">
+
+<div class="quarto-title-meta">
 
     
   
@@ -164,117 +142,570 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 
 <p><strong>Adapted from sample document from <a href="https://closeread.dev/gallery/demos/build-up-plots/" class="uri">https://closeread.dev/gallery/demos/build-up-plots/</a></strong></p>
+<p><strong>Weather data from: <a href="https://www.wunderground.com/history/monthly/us/nc/durham/KRDU/date/2023-11" class="uri">https://www.wunderground.com/history/monthly/us/nc/durham/KRDU/date/2023-11</a></strong></p>
+<section id="recreating-the-dataframe-used-in-the-ggplot-story" class="level1">
+<h1>Recreating the dataframe used in the ggplot story</h1>
+<p>Starting with a broad dataset of flight records, we refine our data to concentrate on flights departing from Raleigh-Durham International Airport (RDU) to North Carolina and California in November 2023. This process includes filtering, selecting, and renaming key variables to enhance clarity and utility. These steps are executed through a concise series of dplyr functions linked in a pipeline, which transforms the data to the dataset that supports our subsequent analysis in the <strong>ggplot closeread story</strong>.</p>
+<div class="cr-section">
+<p>We start by loading the <code>tidyverse</code> package, which contains the <code>ggplot2</code> and <code>dplyr</code> packages we need. <span data-highlight="1"><span class="citation" data-cites="cr-dplyr-1">@cr-dplyr-1</span></span></p>
+<div id="cr-dplyr-1">
 <div class="cell">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div class="cr-section cr-column-screen overlay-left">
-<div class="narrative-col">
-<div class="trigger new-trigger" data-focus-on="cr-dplyr" data-highlight="1">
-<div class="narrative">
-<p>In the first line we load the <code>tidyverse</code> package, which contains the <code>ggplot2</code> and <code>dplyr</code> packages we need.</p>
 </div>
-</div>
-<div class="trigger new-trigger" data-focus-on="cr-dplyr" data-highlight="2">
-<div class="narrative">
-<p>We then load the data frame <code>flights</code>. This dataset is now ready for analysis or manipulation in R.</p>
-</div>
-</div>
-<div class="trigger new-trigger" data-focus-on="cr-dplyr" data-highlight="4-16">
-<div class="narrative">
-<p>The main block of code is referred as a pipeline or chain. Each line starts with a function and ends with a pipe operator, <code>|&gt;</code>. The pipe operator in R is used to pass one expression as the input to the next expression, creating a sequence of operations that’s easy to read and manage.</p>
-</div>
-</div>
-<div class="trigger new-trigger" data-focus-on="cr-dplyr" data-highlight="5-9">
-<div class="narrative">
-<p>We use the <code>filter()</code> function to retain only those rows in the data frame where <code>Origin</code> is “RDU”, <code>DestState</code> is either “NC” or “CA”, and with month equals to 11, as we are only focusing the flights departing from RDU, with destinations in North Carolina or in California, in November 2023.</p>
-</div>
-</div>
-<div class="trigger new-trigger" data-focus-on="cr-dplyr" data-highlight="10-12">
-<div class="narrative">
-<p>We want to select the variables that are used in the data visualization: <code>DepDelay</code>, <code>ArrDelay</code>, <code>DestState</code>.</p>
-</div>
-</div>
-<div class="trigger new-trigger" data-focus-on="cr-dplyr" data-highlight="13-15">
-<div class="narrative">
-<p>We then rename the variable <code>DestState</code> to “Destination_State”.</p>
-</div>
-</div>
-<div class="trigger new-trigger" data-focus-on="cr-dplyr" data-highlight="16">
-<div class="narrative">
-<p>We finally remove all rows from the <code>spotify_songs</code> data frame that contain <code>NA</code> values in any column.</p>
-</div>
-</div>
-<div class="trigger new-trigger" data-focus-on="cr-dplyr" data-highlight="17">
-<div class="narrative">
-<p>We use <code>head()</code> to display the first five rows of the dataset after transformation.</p>
-</div>
-</div>
-<div class="trigger">
-<div class="{cr-arrange} narrative">
+<p>We then load the data frame <code>flights</code>. This dataset is now ready for analysis or manipulation in R. This data frame contains data with 59,416 rows and 110 columns. <span data-highlight="2"><span class="citation" data-cites="cr-dplyr-2">@cr-dplyr-2</span></span></p>
+<div id="cr-dplyr-2">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># add arrange and relocate at the end</span></span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>flights_rdu <span class="ot">&lt;-</span> flights <span class="sc">|&gt;</span></span>
-<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(</span>
-<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>    Origin <span class="sc">==</span> <span class="st">"RDU"</span>,</span>
-<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>    DestState <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">"NC"</span>, <span class="st">"CA"</span>), <span class="co"># NC and CA</span></span>
-<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>    Month <span class="sc">==</span> <span class="dv">11</span></span>
-<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">|&gt;</span></span>
-<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(</span>
-<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>    <span class="fu">c</span>(<span class="st">"DepDelay"</span>, <span class="st">"ArrDelay"</span>, <span class="st">"DestState"</span>)</span>
-<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">|&gt;</span></span>
-<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rename</span>(</span>
-<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Destination_State"</span> <span class="ot">=</span> DestState</span>
-<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">|&gt;</span></span>
-<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">relocate</span>(</span>
-<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a>    Destination_State, <span class="at">.before =</span> DepDelay</span>
-<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">|&gt;</span></span>
-<span id="cb2-18"><a href="#cb2-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(</span>
-<span id="cb2-19"><a href="#cb2-19" aria-hidden="true" tabindex="-1"></a>    <span class="fu">desc</span>(DepDelay)</span>
-<span id="cb2-20"><a href="#cb2-20" aria-hidden="true" tabindex="-1"></a>  )</span>
-<span id="cb2-21"><a href="#cb2-21" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-22"><a href="#cb2-22" aria-hidden="true" tabindex="-1"></a>flights_rdu</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>flights <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(here<span class="sc">::</span><span class="fu">here</span>(<span class="st">"closereads"</span>, <span class="st">"data"</span>, <span class="st">"rdu-flights-23.csv"</span>))</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>flights <span class="co"># display the dataframe</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 59,416 × 110
+    year quarter month day_of_month day_of_week flight_date reporting_airline
+   &lt;dbl&gt;   &lt;dbl&gt; &lt;dbl&gt;        &lt;dbl&gt;       &lt;dbl&gt; &lt;date&gt;      &lt;chr&gt;            
+ 1  2023       1     1            9           1 2023-01-09  9E               
+ 2  2023       1     1           10           2 2023-01-10  9E               
+ 3  2023       1     1           11           3 2023-01-11  9E               
+ 4  2023       1     1           12           4 2023-01-12  9E               
+ 5  2023       1     1           13           5 2023-01-13  9E               
+ 6  2023       1     1           14           6 2023-01-14  9E               
+ 7  2023       1     1           15           7 2023-01-15  9E               
+ 8  2023       1     1           16           1 2023-01-16  9E               
+ 9  2023       1     1           17           2 2023-01-17  9E               
+10  2023       1     1           18           3 2023-01-18  9E               
+# ℹ 59,406 more rows
+# ℹ 103 more variables: dot_id_reporting_airline &lt;dbl&gt;,
+#   iata_code_reporting_airline &lt;chr&gt;, tail_number &lt;chr&gt;,
+#   flight_number_reporting_airline &lt;dbl&gt;, origin_airport_id &lt;dbl&gt;,
+#   origin_airport_seq_id &lt;dbl&gt;, origin_city_market_id &lt;dbl&gt;, origin &lt;chr&gt;,
+#   origin_city_name &lt;chr&gt;, origin_state &lt;chr&gt;, origin_state_fips &lt;dbl&gt;,
+#   origin_state_name &lt;chr&gt;, origin_wac &lt;dbl&gt;, dest_airport_id &lt;dbl&gt;, …</code></pre>
 </div>
 </div>
 </div>
-<div class="trigger">
-<div class="{cr-slice} narrative">
-
-</div>
-</div>
-</div>
-<div class="sticky-col">
-<div class="sticky-col-stack">
-<div id="cr-dplyr" class="sticky">
+<p>We use the <code>filter()</code> function to retain only those rows in the data frame where <code>Origin</code> is “RDU”, <code>DestState</code> is either “NC” or “CA”, and with month equals to 11, as we are only focusing the flights departing from RDU, with destinations in North Carolina or in California, in November 2023. Looking at the tibble, we notice that the number of rows is reduced to 368. We can see that the <code>year</code> column now only contains <strong>2023</strong>, and the <code>month</code> column only contains <strong>11</strong>. The filtering is also reflected in the <code>flight_date</code> column. <span data-highlight="4-8"><span class="citation" data-cites="cr-dplyr-3">@cr-dplyr-3</span></span></p>
+<div id="cr-dplyr-3">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Keep this pipe and show it step by step</span></span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="co"># include more variables in select() to identify the flights e.g. flight number, date, destination cities</span></span>
-<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
-<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>flights <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(here<span class="sc">::</span><span class="fu">here</span>(<span class="st">"closereads"</span>, <span class="st">"data/rdu-flights-23.csv"</span>))</span>
-<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>flights_rdu <span class="ot">&lt;-</span> flights <span class="sc">|&gt;</span></span>
-<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(</span>
-<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>    origin <span class="sc">==</span> <span class="st">"RDU"</span>,</span>
-<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>    dest_state <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">"NC"</span>, <span class="st">"CA"</span>), <span class="co"># NC and CA</span></span>
-<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>    month <span class="sc">==</span> <span class="dv">11</span></span>
-<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">|&gt;</span></span>
-<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(</span>
-<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a>    <span class="fu">c</span>(<span class="st">"DepDelay"</span>, <span class="st">"ArrDelay"</span>, <span class="st">"DestState"</span>)</span>
-<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">|&gt;</span></span>
-<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rename</span>(</span>
-<span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Destination_State"</span> <span class="ot">=</span> DestState</span>
-<span id="cb3-18"><a href="#cb3-18" aria-hidden="true" tabindex="-1"></a>  )</span>
-<span id="cb3-19"><a href="#cb3-19" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-20"><a href="#cb3-20" aria-hidden="true" tabindex="-1"></a>flights_rdu</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>flights_rdu <span class="ot">&lt;-</span> flights <span class="sc">|&gt;</span></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(</span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>    origin <span class="sc">==</span> <span class="st">"RDU"</span>,</span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>    dest_state <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">"NC"</span>, <span class="st">"CA"</span>), <span class="co"># NC and CA</span></span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>    month <span class="sc">==</span> <span class="dv">11</span></span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a>flights_rdu <span class="co"># display the dataframe</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 368 × 110
+    year quarter month day_of_month day_of_week flight_date reporting_airline
+   &lt;dbl&gt;   &lt;dbl&gt; &lt;dbl&gt;        &lt;dbl&gt;       &lt;dbl&gt; &lt;date&gt;      &lt;chr&gt;            
+ 1  2023       4    11            1           3 2023-11-01  AA               
+ 2  2023       4    11            2           4 2023-11-02  AA               
+ 3  2023       4    11            3           5 2023-11-03  AA               
+ 4  2023       4    11            4           6 2023-11-04  AA               
+ 5  2023       4    11           25           6 2023-11-25  AA               
+ 6  2023       4    11           26           7 2023-11-26  AA               
+ 7  2023       4    11            1           3 2023-11-01  AA               
+ 8  2023       4    11            2           4 2023-11-02  AA               
+ 9  2023       4    11            3           5 2023-11-03  AA               
+10  2023       4    11            4           6 2023-11-04  AA               
+# ℹ 358 more rows
+# ℹ 103 more variables: dot_id_reporting_airline &lt;dbl&gt;,
+#   iata_code_reporting_airline &lt;chr&gt;, tail_number &lt;chr&gt;,
+#   flight_number_reporting_airline &lt;dbl&gt;, origin_airport_id &lt;dbl&gt;,
+#   origin_airport_seq_id &lt;dbl&gt;, origin_city_market_id &lt;dbl&gt;, origin &lt;chr&gt;,
+#   origin_city_name &lt;chr&gt;, origin_state &lt;chr&gt;, origin_state_fips &lt;dbl&gt;,
+#   origin_state_name &lt;chr&gt;, origin_wac &lt;dbl&gt;, dest_airport_id &lt;dbl&gt;, …</code></pre>
+</div>
+</div>
+</div>
+<p>We want to select the variables that are used in the data visualization: <code>dep_delay</code>, <code>arr_delay</code>, <code>dest_state</code>, and other variables that help us identify the flights. After selecting the columns, the number of rows does not change, but the number of columns is reduced from 110 to 6. <span data-highlight="9-16"><span class="citation" data-cites="cr-dplyr-4">@cr-dplyr-4</span></span></p>
+<div id="cr-dplyr-4">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>flights_rdu <span class="ot">&lt;-</span> flights <span class="sc">|&gt;</span></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(</span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>    origin <span class="sc">==</span> <span class="st">"RDU"</span>,</span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>    dest_state <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">"NC"</span>, <span class="st">"CA"</span>), <span class="co"># NC and CA</span></span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>    month <span class="sc">==</span> <span class="dv">11</span></span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">|&gt;</span></span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(</span>
+<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a>    flight_date,</span>
+<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a>    dest,</span>
+<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a>    reporting_airline,</span>
+<span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a>    dep_delay,</span>
+<span id="cb6-14"><a href="#cb6-14" aria-hidden="true" tabindex="-1"></a>    arr_delay,</span>
+<span id="cb6-15"><a href="#cb6-15" aria-hidden="true" tabindex="-1"></a>    dest_state</span>
+<span id="cb6-16"><a href="#cb6-16" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb6-17"><a href="#cb6-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-18"><a href="#cb6-18" aria-hidden="true" tabindex="-1"></a>flights_rdu <span class="co"># display the dataframe</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 368 × 6
+   flight_date dest  reporting_airline dep_delay arr_delay dest_state
+   &lt;date&gt;      &lt;chr&gt; &lt;chr&gt;                 &lt;dbl&gt;     &lt;dbl&gt; &lt;chr&gt;     
+ 1 2023-11-01  LAX   AA                       -2         1 CA        
+ 2 2023-11-02  LAX   AA                       -7       -22 CA        
+ 3 2023-11-03  LAX   AA                       -4       -29 CA        
+ 4 2023-11-04  LAX   AA                       -8       -27 CA        
+ 5 2023-11-25  CLT   AA                       -4         3 NC        
+ 6 2023-11-26  CLT   AA                       18        23 NC        
+ 7 2023-11-01  CLT   AA                       -7        -8 NC        
+ 8 2023-11-02  CLT   AA                       -7        -9 NC        
+ 9 2023-11-03  CLT   AA                       47        29 NC        
+10 2023-11-04  CLT   AA                       19         5 NC        
+# ℹ 358 more rows</code></pre>
+</div>
+</div>
+</div>
+<p>We can rename the variable <code>dest_state</code> to “destination_state” for clarity. Looking at the last column of the displayed tibble, we see that the variable is successfully renamed. <span data-highlight="17-19"><span class="citation" data-cites="cr-dplyr-5">@cr-dplyr-5</span></span></p>
+<div id="cr-dplyr-5">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>flights_rdu <span class="ot">&lt;-</span> flights <span class="sc">|&gt;</span></span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(</span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>    origin <span class="sc">==</span> <span class="st">"RDU"</span>,</span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>    dest_state <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">"NC"</span>, <span class="st">"CA"</span>), <span class="co"># NC and CA</span></span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a>    month <span class="sc">==</span> <span class="dv">11</span></span>
+<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">|&gt;</span></span>
+<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(</span>
+<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a>    flight_date,</span>
+<span id="cb8-11"><a href="#cb8-11" aria-hidden="true" tabindex="-1"></a>    dest,</span>
+<span id="cb8-12"><a href="#cb8-12" aria-hidden="true" tabindex="-1"></a>    reporting_airline,</span>
+<span id="cb8-13"><a href="#cb8-13" aria-hidden="true" tabindex="-1"></a>    dep_delay,</span>
+<span id="cb8-14"><a href="#cb8-14" aria-hidden="true" tabindex="-1"></a>    arr_delay,</span>
+<span id="cb8-15"><a href="#cb8-15" aria-hidden="true" tabindex="-1"></a>    dest_state</span>
+<span id="cb8-16"><a href="#cb8-16" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">|&gt;</span></span>
+<span id="cb8-17"><a href="#cb8-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rename</span>(</span>
+<span id="cb8-18"><a href="#cb8-18" aria-hidden="true" tabindex="-1"></a>    <span class="st">"destination_state"</span> <span class="ot">=</span> dest_state</span>
+<span id="cb8-19"><a href="#cb8-19" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb8-20"><a href="#cb8-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-21"><a href="#cb8-21" aria-hidden="true" tabindex="-1"></a>flights_rdu <span class="co"># display the dataframe</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 368 × 6
+   flight_date dest  reporting_airline dep_delay arr_delay destination_state
+   &lt;date&gt;      &lt;chr&gt; &lt;chr&gt;                 &lt;dbl&gt;     &lt;dbl&gt; &lt;chr&gt;            
+ 1 2023-11-01  LAX   AA                       -2         1 CA               
+ 2 2023-11-02  LAX   AA                       -7       -22 CA               
+ 3 2023-11-03  LAX   AA                       -4       -29 CA               
+ 4 2023-11-04  LAX   AA                       -8       -27 CA               
+ 5 2023-11-25  CLT   AA                       -4         3 NC               
+ 6 2023-11-26  CLT   AA                       18        23 NC               
+ 7 2023-11-01  CLT   AA                       -7        -8 NC               
+ 8 2023-11-02  CLT   AA                       -7        -9 NC               
+ 9 2023-11-03  CLT   AA                       47        29 NC               
+10 2023-11-04  CLT   AA                       19         5 NC               
+# ℹ 358 more rows</code></pre>
+</div>
+</div>
+</div>
+<p>The main block of code is referred as a pipeline or chain. Each line starts with a function and ends with a pipe operator, <code>|&gt;</code>. The pipe operator in R is used to pass one expression as the input to the next expression, creating a sequence of operations that’s easy to read and manage. <span data-highlight="3-19"><span class="citation" data-cites="cr-dplyr">@cr-dplyr</span></span></p>
+<div id="cr-dplyr">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>flights_rdu <span class="ot">&lt;-</span> flights <span class="sc">|&gt;</span></span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(</span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>    origin <span class="sc">==</span> <span class="st">"RDU"</span>,</span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>    dest_state <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">"NC"</span>, <span class="st">"CA"</span>), <span class="co"># NC and CA</span></span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a>    month <span class="sc">==</span> <span class="dv">11</span></span>
+<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">|&gt;</span></span>
+<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(</span>
+<span id="cb10-10"><a href="#cb10-10" aria-hidden="true" tabindex="-1"></a>    flight_date,</span>
+<span id="cb10-11"><a href="#cb10-11" aria-hidden="true" tabindex="-1"></a>    dest,</span>
+<span id="cb10-12"><a href="#cb10-12" aria-hidden="true" tabindex="-1"></a>    reporting_airline,</span>
+<span id="cb10-13"><a href="#cb10-13" aria-hidden="true" tabindex="-1"></a>    dep_delay,</span>
+<span id="cb10-14"><a href="#cb10-14" aria-hidden="true" tabindex="-1"></a>    arr_delay,</span>
+<span id="cb10-15"><a href="#cb10-15" aria-hidden="true" tabindex="-1"></a>    dest_state</span>
+<span id="cb10-16"><a href="#cb10-16" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">|&gt;</span></span>
+<span id="cb10-17"><a href="#cb10-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rename</span>(</span>
+<span id="cb10-18"><a href="#cb10-18" aria-hidden="true" tabindex="-1"></a>    <span class="st">"destination_state"</span> <span class="ot">=</span> dest_state</span>
+<span id="cb10-19"><a href="#cb10-19" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb10-20"><a href="#cb10-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-21"><a href="#cb10-21" aria-hidden="true" tabindex="-1"></a>flights_rdu</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 368 × 6
+   flight_date dest  reporting_airline dep_delay arr_delay destination_state
+   &lt;date&gt;      &lt;chr&gt; &lt;chr&gt;                 &lt;dbl&gt;     &lt;dbl&gt; &lt;chr&gt;            
+ 1 2023-11-01  LAX   AA                       -2         1 CA               
+ 2 2023-11-02  LAX   AA                       -7       -22 CA               
+ 3 2023-11-03  LAX   AA                       -4       -29 CA               
+ 4 2023-11-04  LAX   AA                       -8       -27 CA               
+ 5 2023-11-25  CLT   AA                       -4         3 NC               
+ 6 2023-11-26  CLT   AA                       18        23 NC               
+ 7 2023-11-01  CLT   AA                       -7        -8 NC               
+ 8 2023-11-02  CLT   AA                       -7        -9 NC               
+ 9 2023-11-03  CLT   AA                       47        29 NC               
+10 2023-11-04  CLT   AA                       19         5 NC               
+# ℹ 358 more rows</code></pre>
 </div>
 </div>
 </div>
 </div>
+</section>
+<section id="other-functions-arrange-relocate" class="level1">
+<h1>Other functions: <code>arrange</code>, <code>relocate</code></h1>
+<p>In the following section, we build on top of the current dataset and explore the utilization of two additional <strong>dplyr</strong> functions: <code>arrange</code> and <code>relocate.</code> <code>arrange</code> is used to sort data frames based on one or more columns, providing a logical sequence that can facilitate more insightful analysis. On the other hand, <code>relocate</code> is employed to adjust the order of columns within the data frame, enhancing readability and accessibility when navigating through the data.</p>
+<div class="cr-section">
+<p>The <code>relocate</code> function is being used here to adjust the position of the <code>destination_state</code> column within the dataframe. By specifying <code>.before = dep_delay</code>, the function moves the <code>destination_state</code> column to a position immediately before the <code>dep_delay</code> column. <span data-highlight="20-22"><span class="citation" data-cites="cr-additional-fn-1">@cr-additional-fn-1</span></span></p>
+<div id="cr-additional-fn-1">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="co"># add arrange and relocate at the end</span></span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>flights_rdu <span class="ot">&lt;-</span> flights <span class="sc">|&gt;</span></span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(</span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>    origin <span class="sc">==</span> <span class="st">"RDU"</span>,</span>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a>    dest_state <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">"NC"</span>, <span class="st">"CA"</span>), <span class="co"># NC and CA</span></span>
+<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a>    month <span class="sc">==</span> <span class="dv">11</span></span>
+<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">|&gt;</span></span>
+<span id="cb12-9"><a href="#cb12-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(</span>
+<span id="cb12-10"><a href="#cb12-10" aria-hidden="true" tabindex="-1"></a>    flight_date,</span>
+<span id="cb12-11"><a href="#cb12-11" aria-hidden="true" tabindex="-1"></a>    dest,</span>
+<span id="cb12-12"><a href="#cb12-12" aria-hidden="true" tabindex="-1"></a>    reporting_airline,</span>
+<span id="cb12-13"><a href="#cb12-13" aria-hidden="true" tabindex="-1"></a>    dep_delay,</span>
+<span id="cb12-14"><a href="#cb12-14" aria-hidden="true" tabindex="-1"></a>    arr_delay,</span>
+<span id="cb12-15"><a href="#cb12-15" aria-hidden="true" tabindex="-1"></a>    dest_state</span>
+<span id="cb12-16"><a href="#cb12-16" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">|&gt;</span></span>
+<span id="cb12-17"><a href="#cb12-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rename</span>(</span>
+<span id="cb12-18"><a href="#cb12-18" aria-hidden="true" tabindex="-1"></a>    <span class="st">"destination_state"</span> <span class="ot">=</span> dest_state</span>
+<span id="cb12-19"><a href="#cb12-19" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">|&gt;</span></span>
+<span id="cb12-20"><a href="#cb12-20" aria-hidden="true" tabindex="-1"></a>  <span class="fu">relocate</span>(</span>
+<span id="cb12-21"><a href="#cb12-21" aria-hidden="true" tabindex="-1"></a>    destination_state, <span class="at">.before =</span> dep_delay</span>
+<span id="cb12-22"><a href="#cb12-22" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb12-23"><a href="#cb12-23" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-24"><a href="#cb12-24" aria-hidden="true" tabindex="-1"></a>flights_rdu</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 368 × 6
+   flight_date dest  reporting_airline destination_state dep_delay arr_delay
+   &lt;date&gt;      &lt;chr&gt; &lt;chr&gt;             &lt;chr&gt;                 &lt;dbl&gt;     &lt;dbl&gt;
+ 1 2023-11-01  LAX   AA                CA                       -2         1
+ 2 2023-11-02  LAX   AA                CA                       -7       -22
+ 3 2023-11-03  LAX   AA                CA                       -4       -29
+ 4 2023-11-04  LAX   AA                CA                       -8       -27
+ 5 2023-11-25  CLT   AA                NC                       -4         3
+ 6 2023-11-26  CLT   AA                NC                       18        23
+ 7 2023-11-01  CLT   AA                NC                       -7        -8
+ 8 2023-11-02  CLT   AA                NC                       -7        -9
+ 9 2023-11-03  CLT   AA                NC                       47        29
+10 2023-11-04  CLT   AA                NC                       19         5
+# ℹ 358 more rows</code></pre>
 </div>
-<p><strong>Insert inline code cell here</strong></p>
+</div>
+</div>
+<p>The <code>arrange</code> function is then utilized to sort the dataframe based on the <code>dep_delay</code> column in descending order. By using <code>desc(dep_delay)</code>, it ensures that the entries with the longest departure delays are listed at the top of the data frame. <span data-highlight="23-25"><span class="citation" data-cites="cr-additional-fn-2">@cr-additional-fn-2</span></span></p>
+<div id="cr-additional-fn-2">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="co"># add arrange and relocate at the end</span></span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>flights_rdu <span class="ot">&lt;-</span> flights <span class="sc">|&gt;</span></span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(</span>
+<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a>    origin <span class="sc">==</span> <span class="st">"RDU"</span>,</span>
+<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a>    dest_state <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">"NC"</span>, <span class="st">"CA"</span>), <span class="co"># NC and CA</span></span>
+<span id="cb14-7"><a href="#cb14-7" aria-hidden="true" tabindex="-1"></a>    month <span class="sc">==</span> <span class="dv">11</span></span>
+<span id="cb14-8"><a href="#cb14-8" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">|&gt;</span></span>
+<span id="cb14-9"><a href="#cb14-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(</span>
+<span id="cb14-10"><a href="#cb14-10" aria-hidden="true" tabindex="-1"></a>    flight_date,</span>
+<span id="cb14-11"><a href="#cb14-11" aria-hidden="true" tabindex="-1"></a>    dest,</span>
+<span id="cb14-12"><a href="#cb14-12" aria-hidden="true" tabindex="-1"></a>    reporting_airline,</span>
+<span id="cb14-13"><a href="#cb14-13" aria-hidden="true" tabindex="-1"></a>    dep_delay,</span>
+<span id="cb14-14"><a href="#cb14-14" aria-hidden="true" tabindex="-1"></a>    arr_delay,</span>
+<span id="cb14-15"><a href="#cb14-15" aria-hidden="true" tabindex="-1"></a>    dest_state</span>
+<span id="cb14-16"><a href="#cb14-16" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">|&gt;</span></span>
+<span id="cb14-17"><a href="#cb14-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rename</span>(</span>
+<span id="cb14-18"><a href="#cb14-18" aria-hidden="true" tabindex="-1"></a>    <span class="st">"destination_state"</span> <span class="ot">=</span> dest_state</span>
+<span id="cb14-19"><a href="#cb14-19" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">|&gt;</span></span>
+<span id="cb14-20"><a href="#cb14-20" aria-hidden="true" tabindex="-1"></a>  <span class="fu">relocate</span>(</span>
+<span id="cb14-21"><a href="#cb14-21" aria-hidden="true" tabindex="-1"></a>    destination_state, <span class="at">.before =</span> dep_delay</span>
+<span id="cb14-22"><a href="#cb14-22" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">|&gt;</span></span>
+<span id="cb14-23"><a href="#cb14-23" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(</span>
+<span id="cb14-24"><a href="#cb14-24" aria-hidden="true" tabindex="-1"></a>    <span class="fu">desc</span>(dep_delay)</span>
+<span id="cb14-25"><a href="#cb14-25" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb14-26"><a href="#cb14-26" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-27"><a href="#cb14-27" aria-hidden="true" tabindex="-1"></a>flights_rdu</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 368 × 6
+   flight_date dest  reporting_airline destination_state dep_delay arr_delay
+   &lt;date&gt;      &lt;chr&gt; &lt;chr&gt;             &lt;chr&gt;                 &lt;dbl&gt;     &lt;dbl&gt;
+ 1 2023-11-09  LAX   AA                CA                      209       215
+ 2 2023-11-19  CLT   AA                NC                      174       166
+ 3 2023-11-21  CLT   AA                NC                      166       159
+ 4 2023-11-22  CLT   AA                NC                      150       144
+ 5 2023-11-29  CLT   AA                NC                      137       146
+ 6 2023-11-29  CLT   AA                NC                      102        98
+ 7 2023-11-25  CLT   AA                NC                       78        72
+ 8 2023-11-30  LAX   AA                CA                       72        62
+ 9 2023-11-22  CLT   AA                NC                       71        57
+10 2023-11-07  CLT   AA                NC                       71        60
+# ℹ 358 more rows</code></pre>
+</div>
+</div>
+</div>
+<p>Note that we can use the <code>arrange</code> function to sort the dataframe by more than one variable, allowing for a multi-level sort order. In the example below, we sort the data frame primarily by <code>flight_date</code> and secondarily by <code>dep_delay</code>, descending. This sorting order helps to organize the data chronologically while also categorizing flights by departure delay within each date, providing a structured view of flight operations over time. <span data-highlight="23-25"><span class="citation" data-cites="cr-additional-fn-3">@cr-additional-fn-3</span></span></p>
+<div id="cr-additional-fn-3">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="co"># add arrange and relocate at the end</span></span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>flights_rdu <span class="ot">&lt;-</span> flights <span class="sc">|&gt;</span></span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(</span>
+<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a>    origin <span class="sc">==</span> <span class="st">"RDU"</span>,</span>
+<span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a>    dest_state <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">"NC"</span>, <span class="st">"CA"</span>), <span class="co"># NC and CA</span></span>
+<span id="cb16-7"><a href="#cb16-7" aria-hidden="true" tabindex="-1"></a>    month <span class="sc">==</span> <span class="dv">11</span></span>
+<span id="cb16-8"><a href="#cb16-8" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">|&gt;</span></span>
+<span id="cb16-9"><a href="#cb16-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(</span>
+<span id="cb16-10"><a href="#cb16-10" aria-hidden="true" tabindex="-1"></a>    flight_date,</span>
+<span id="cb16-11"><a href="#cb16-11" aria-hidden="true" tabindex="-1"></a>    dest,</span>
+<span id="cb16-12"><a href="#cb16-12" aria-hidden="true" tabindex="-1"></a>    reporting_airline,</span>
+<span id="cb16-13"><a href="#cb16-13" aria-hidden="true" tabindex="-1"></a>    dep_delay,</span>
+<span id="cb16-14"><a href="#cb16-14" aria-hidden="true" tabindex="-1"></a>    arr_delay,</span>
+<span id="cb16-15"><a href="#cb16-15" aria-hidden="true" tabindex="-1"></a>    dest_state</span>
+<span id="cb16-16"><a href="#cb16-16" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">|&gt;</span></span>
+<span id="cb16-17"><a href="#cb16-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rename</span>(</span>
+<span id="cb16-18"><a href="#cb16-18" aria-hidden="true" tabindex="-1"></a>    <span class="st">"destination_state"</span> <span class="ot">=</span> dest_state</span>
+<span id="cb16-19"><a href="#cb16-19" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">|&gt;</span></span>
+<span id="cb16-20"><a href="#cb16-20" aria-hidden="true" tabindex="-1"></a>  <span class="fu">relocate</span>(</span>
+<span id="cb16-21"><a href="#cb16-21" aria-hidden="true" tabindex="-1"></a>    destination_state, <span class="at">.before =</span> dep_delay</span>
+<span id="cb16-22"><a href="#cb16-22" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">|&gt;</span></span>
+<span id="cb16-23"><a href="#cb16-23" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(</span>
+<span id="cb16-24"><a href="#cb16-24" aria-hidden="true" tabindex="-1"></a>    flight_date, <span class="fu">desc</span>(dep_delay)</span>
+<span id="cb16-25"><a href="#cb16-25" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb16-26"><a href="#cb16-26" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-27"><a href="#cb16-27" aria-hidden="true" tabindex="-1"></a>flights_rdu</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 368 × 6
+   flight_date dest  reporting_airline destination_state dep_delay arr_delay
+   &lt;date&gt;      &lt;chr&gt; &lt;chr&gt;             &lt;chr&gt;                 &lt;dbl&gt;     &lt;dbl&gt;
+ 1 2023-11-01  CLT   AA                NC                       58        50
+ 2 2023-11-01  CLT   AA                NC                       20         8
+ 3 2023-11-01  LAX   DL                CA                       16        -6
+ 4 2023-11-01  CLT   AA                NC                        0        -3
+ 5 2023-11-01  CLT   AA                NC                       -1        -2
+ 6 2023-11-01  CLT   AA                NC                       -1       -16
+ 7 2023-11-01  LAX   AA                CA                       -2         1
+ 8 2023-11-01  SFO   UA                CA                       -2       -21
+ 9 2023-11-01  CLT   AA                NC                       -4       -10
+10 2023-11-01  CLT   AA                NC                       -5        -3
+# ℹ 358 more rows</code></pre>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section id="join" class="level1">
+<h1>Join</h1>
+<p>Next, we will explore the use of join operations, a technique that allows us to merge data from different sources based on common attributes. By applying join operations, we can enrich our dataset by combining related data from separate tables, thereby enhancing the depth and breadth of our analysis. We will demonstrate various types of JOINs and illustrate how they can be strategically employed to integrate and synchronize disparate data sources effectively.</p>
+<section id="lookup-table" class="level2">
+<h2 class="anchored" data-anchor-id="lookup-table">Lookup table</h2>
+<p>The first way of utilizing join we will explore is by employing it as a lookup table. This approach enhances our primary dataset by integrating additional information that expands upon existing data. Using a lookup table is particularly effective for associating concise data entries, such as codes or identifiers, with more descriptive attributes stored in a separate table. We will demonstrate this by joining our flights data with an <code>airline_codes</code> table, where airline identifiers are linked with their full names, transforming our dataset into a more reader-friendly format.</p>
+<p>Before we start, below is what the <code>airline_codes</code> looks like:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>airline_codes</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>     code
+1      9E
+2      AA
+3      AS
+4      B6
+5      CO
+6      DH
+7      DL
+8      EA
+9      EV
+10     F9
+11     FL
+12     G4
+13     HA
+14     HP
+15     KH
+16 ML (1)
+17     MQ
+18     NK
+19     NW
+20     OH
+21     OO
+22 PA (1)
+23     PI
+24     PS
+25     QX
+26     TW
+27     TZ
+28     UA
+29     US
+30     VX
+31     WN
+32     XE
+33     YV
+34     YX
+                                                                          description
+1                                                                   Endeavor Air Inc.
+2                                                              American Airlines Inc.
+3                                                                Alaska Airlines Inc.
+4                                                                     JetBlue Airways
+5                                                          Continental Air Lines Inc.
+6                                                                    Independence Air
+7                                                                Delta Air Lines Inc.
+8                                                              Eastern Air Lines Inc.
+9                                                  ExpressJet Airlines LLC d/b/a aha!
+10                                                             Frontier Airlines Inc.
+11                                                        AirTran Airways Corporation
+12                                                                      Allegiant Air
+13                                                             Hawaiian Airlines Inc.
+14 America West Airlines Inc. (Merged with US Airways 9/05. Stopped reporting 10/07.)
+15                                                                    Aloha Air Cargo
+16                                                           Midway Airlines Inc. (1)
+17                                                                          Envoy Air
+18                                                                   Spirit Air Lines
+19                                                            Northwest Airlines Inc.
+20                                                                  PSA Airlines Inc.
+21                                                              SkyWest Airlines Inc.
+22                                                     Pan American World Airways (1)
+23                                                             Piedmont Aviation Inc.
+24                                                     Ukraine International Airlines
+25                                                                        Horizon Air
+26                                                            Trans World Airways LLC
+27                                                             ATA Airlines d/b/a ATA
+28                                                              United Air Lines Inc.
+29                                                                    US Airways Inc.
+30                                                                     Virgin America
+31                                                             Southwest Airlines Co.
+32                                                           ExpressJet Airlines Inc.
+33                                                                 Mesa Airlines Inc.
+34                                                                   Republic Airline</code></pre>
+</div>
+</div>
+<div class="cr-section">
+<p>We use a <code>left_join</code> function from the <code>dplyr</code> package to merge the <code>flights_rdu</code> data frame with the <code>airline_codes</code> lookup table. It includes all records from the ‘left’ table (the <code>flights_rdu</code> table being passed down the pipeline), and the matched records from the ‘right’ table (<code>airline_codes</code>). If there is no match, the result is still a row in the output, but with NULL values in the columns of the ‘right’ table. <span data-highlight="2-3"><span class="citation" data-cites="cr-join-airlinecode-1">@cr-join-airlinecode-1</span></span></p>
+<div id="cr-join-airlinecode-1">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>flights_rdu_joined_airline <span class="ot">&lt;-</span> flights_rdu <span class="sc">|&gt;</span></span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">left_join</span>(</span>
+<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a>    airline_codes, </span>
+<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">by =</span> <span class="fu">c</span>(<span class="st">"reporting_airline"</span> <span class="ot">=</span> <span class="st">"code"</span>)</span>
+<span id="cb20-5"><a href="#cb20-5" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb20-6"><a href="#cb20-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-7"><a href="#cb20-7" aria-hidden="true" tabindex="-1"></a>flights_rdu_joined_airline</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 368 × 7
+   flight_date dest  reporting_airline destination_state dep_delay arr_delay
+   &lt;date&gt;      &lt;chr&gt; &lt;chr&gt;             &lt;chr&gt;                 &lt;dbl&gt;     &lt;dbl&gt;
+ 1 2023-11-01  CLT   AA                NC                       58        50
+ 2 2023-11-01  CLT   AA                NC                       20         8
+ 3 2023-11-01  LAX   DL                CA                       16        -6
+ 4 2023-11-01  CLT   AA                NC                        0        -3
+ 5 2023-11-01  CLT   AA                NC                       -1        -2
+ 6 2023-11-01  CLT   AA                NC                       -1       -16
+ 7 2023-11-01  LAX   AA                CA                       -2         1
+ 8 2023-11-01  SFO   UA                CA                       -2       -21
+ 9 2023-11-01  CLT   AA                NC                       -4       -10
+10 2023-11-01  CLT   AA                NC                       -5        -3
+# ℹ 358 more rows
+# ℹ 1 more variable: description &lt;chr&gt;</code></pre>
+</div>
+</div>
+</div>
+<p>This operation is based on matching the <code>reporting_airline</code> column from the <code>flights_rdu</code> dataframe with the <code>code</code> column in the <code>airline_codes</code> table. This type of join ensures that all records from the <code>flights_rdu</code> data frame are preserved, and corresponding airline names are added where available. <span data-highlight="4"><span class="citation" data-cites="cr-join-airlinecode-2">@cr-join-airlinecode-2</span></span></p>
+<div id="cr-join-airlinecode-2">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a>flights_rdu_joined_airline <span class="ot">&lt;-</span> flights_rdu <span class="sc">|&gt;</span></span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">left_join</span>(</span>
+<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a>    airline_codes, </span>
+<span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">by =</span> <span class="fu">c</span>(<span class="st">"reporting_airline"</span> <span class="ot">=</span> <span class="st">"code"</span>)</span>
+<span id="cb22-5"><a href="#cb22-5" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb22-6"><a href="#cb22-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-7"><a href="#cb22-7" aria-hidden="true" tabindex="-1"></a>flights_rdu_joined_airline</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 368 × 7
+   flight_date dest  reporting_airline destination_state dep_delay arr_delay
+   &lt;date&gt;      &lt;chr&gt; &lt;chr&gt;             &lt;chr&gt;                 &lt;dbl&gt;     &lt;dbl&gt;
+ 1 2023-11-01  CLT   AA                NC                       58        50
+ 2 2023-11-01  CLT   AA                NC                       20         8
+ 3 2023-11-01  LAX   DL                CA                       16        -6
+ 4 2023-11-01  CLT   AA                NC                        0        -3
+ 5 2023-11-01  CLT   AA                NC                       -1        -2
+ 6 2023-11-01  CLT   AA                NC                       -1       -16
+ 7 2023-11-01  LAX   AA                CA                       -2         1
+ 8 2023-11-01  SFO   UA                CA                       -2       -21
+ 9 2023-11-01  CLT   AA                NC                       -4       -10
+10 2023-11-01  CLT   AA                NC                       -5        -3
+# ℹ 358 more rows
+# ℹ 1 more variable: description &lt;chr&gt;</code></pre>
+</div>
+</div>
+</div>
+<p>After merging, we use the <code>rename</code> function to change the column name from <code>description</code> to <code>airline_name</code>, enhancing the readability of the dataframe. <span data-highlight="6-8"><span class="citation" data-cites="cr-join-airlinecode-3">@cr-join-airlinecode-3</span></span></p>
+<div id="cr-join-airlinecode-3">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a>flights_rdu_joined_airline <span class="ot">&lt;-</span> flights_rdu <span class="sc">|&gt;</span></span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">left_join</span>(</span>
+<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a>    airline_codes, </span>
+<span id="cb24-4"><a href="#cb24-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">by =</span> <span class="fu">c</span>(<span class="st">"reporting_airline"</span> <span class="ot">=</span> <span class="st">"code"</span>)</span>
+<span id="cb24-5"><a href="#cb24-5" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">|&gt;</span></span>
+<span id="cb24-6"><a href="#cb24-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rename</span>(</span>
+<span id="cb24-7"><a href="#cb24-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">airline_name =</span> description</span>
+<span id="cb24-8"><a href="#cb24-8" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb24-9"><a href="#cb24-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-10"><a href="#cb24-10" aria-hidden="true" tabindex="-1"></a>flights_rdu_joined_airline</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 368 × 7
+   flight_date dest  reporting_airline destination_state dep_delay arr_delay
+   &lt;date&gt;      &lt;chr&gt; &lt;chr&gt;             &lt;chr&gt;                 &lt;dbl&gt;     &lt;dbl&gt;
+ 1 2023-11-01  CLT   AA                NC                       58        50
+ 2 2023-11-01  CLT   AA                NC                       20         8
+ 3 2023-11-01  LAX   DL                CA                       16        -6
+ 4 2023-11-01  CLT   AA                NC                        0        -3
+ 5 2023-11-01  CLT   AA                NC                       -1        -2
+ 6 2023-11-01  CLT   AA                NC                       -1       -16
+ 7 2023-11-01  LAX   AA                CA                       -2         1
+ 8 2023-11-01  SFO   UA                CA                       -2       -21
+ 9 2023-11-01  CLT   AA                NC                       -4       -10
+10 2023-11-01  CLT   AA                NC                       -5        -3
+# ℹ 358 more rows
+# ℹ 1 more variable: airline_name &lt;chr&gt;</code></pre>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section id="enriching-dataframe-by-joining-another-table" class="level2">
+<h2 class="anchored" data-anchor-id="enriching-dataframe-by-joining-another-table">Enriching dataframe by joining another table</h2>
+<p>For this part of the analysis, we are merging weather data with our flight dataset to enrich it with environmental conditions that could impact flight schedules and performance. The <code>weather_df</code> data frame contains various weather metrics like temperature, dew point, humidity, wind speed, pressure, and precipitation, recorded on specific dates of November, 2023.</p>
+<div class="cr-section">
+<p>We use a <code>right_join</code> to combine <code>flights_rdu</code> with <code>weather_data.</code> The join is based on matching <code>flight_date</code> in the flights data with <code>time</code> in the weather data. This method ensures all <strong>date</strong> is retained and supplemented with corresponding weather conditions and flight data where available.<span data-highlight="2-5"><span class="citation" data-cites="cr-join-weather-1">@cr-join-weather-1</span></span></p>
+<div id="cr-join-weather-1">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a>flights_rdu_joined_weather <span class="ot">&lt;-</span> flights_rdu <span class="sc">|&gt;</span></span>
+<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">right_join</span>(</span>
+<span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a>    weather_data, </span>
+<span id="cb26-4"><a href="#cb26-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">by =</span> <span class="fu">c</span>(<span class="st">"flight_date"</span> <span class="ot">=</span> <span class="st">"time"</span>)</span>
+<span id="cb26-5"><a href="#cb26-5" aria-hidden="true" tabindex="-1"></a>  ) </span>
+<span id="cb26-6"><a href="#cb26-6" aria-hidden="true" tabindex="-1"></a>flights_rdu_joined_weather</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 368 × 12
+   flight_date dest  reporting_airline destination_state dep_delay arr_delay
+   &lt;date&gt;      &lt;chr&gt; &lt;chr&gt;             &lt;chr&gt;                 &lt;dbl&gt;     &lt;dbl&gt;
+ 1 2023-11-01  CLT   AA                NC                       58        50
+ 2 2023-11-01  CLT   AA                NC                       20         8
+ 3 2023-11-01  LAX   DL                CA                       16        -6
+ 4 2023-11-01  CLT   AA                NC                        0        -3
+ 5 2023-11-01  CLT   AA                NC                       -1        -2
+ 6 2023-11-01  CLT   AA                NC                       -1       -16
+ 7 2023-11-01  LAX   AA                CA                       -2         1
+ 8 2023-11-01  SFO   UA                CA                       -2       -21
+ 9 2023-11-01  CLT   AA                NC                       -4       -10
+10 2023-11-01  CLT   AA                NC                       -5        -3
+# ℹ 358 more rows
+# ℹ 6 more variables: temperature &lt;dbl&gt;, dew_point &lt;dbl&gt;, humidity &lt;dbl&gt;,
+#   wind_speed &lt;dbl&gt;, pressure &lt;dbl&gt;, precipitation &lt;dbl&gt;</code></pre>
+</div>
+</div>
+</div>
+</div>
 
 
+</section>
+</section>
 
 </main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
