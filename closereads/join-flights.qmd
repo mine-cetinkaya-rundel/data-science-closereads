@@ -72,12 +72,12 @@ airline_codes <- read_csv("data/airline_codes.csv") |>
 ```
 
 ```{r}
-airline_codes
+print(airline_codes)
 ```
 
 ::::{.cr-section}
 
-We use a `left_join` function from the `dplyr` package to merge the `flights_rdu` data frame with the `airline_codes` lookup table. It includes all records from the 'left' table (the `flights_rdu` table being passed down the pipeline), and the matched records from the 'right' table (`airline_codes`). If there is no match, the result is still a row in the output, but with NULL values in the columns of the 'right' table. [@cr-join-airlinecode-1]{highlight="2-3"}
+We use a `left_join` function from the `dplyr` package to merge the `flights_rdu` data frame with the `airline_codes` lookup table. It includes all records from the 'left' table (the `flights_rdu` table being passed down the pipeline), and the matched records from the 'right' table (`airline_codes`). If there is no match, the result is still a row in the output, but with NULL values in the columns of the 'right' table. [@cr-join-airlinecode-1]{highlight="2-3, 5"}
 
 :::{#cr-join-airlinecode-1}
 ```{r}
@@ -90,7 +90,7 @@ flights_rdu_joined_airline <- flights_rdu |>
 ```
 :::
 
-This operation is based on matching the `reporting_airline` column from the `flights_rdu` dataframe with the `code` column in the `airline_codes` table. This type of join ensures that all records from the `flights_rdu` data frame are preserved, and corresponding airline names are added where available. The number of rows remains the same at 368, while the number of columns increases—from 9 to 10 after adding new airline description fields.[@cr-join-airlinecode-2]{highlight="4"}
+This operation is based on matching the `reporting_airline` column from the `flights_rdu` dataframe with the `code` column in the `airline_codes` table. This type of join ensures that all records from the `flights_rdu` data frame are preserved, and corresponding airline names are added where available. The number of rows remains the same at 368, while the number of columns increases—from 6 to 7 after adding new airline description fields. Note that after merging, we move `airline_name` after `reporting_airline` using `relocate`, enhancing the readability of the dataframe.[@cr-join-airlinecode-2]{highlight="4"}
 
 :::{#cr-join-airlinecode-2}
 ```{r}
@@ -100,34 +100,7 @@ flights_rdu_joined_airline <- flights_rdu |>
     airline_codes, 
     by = join_by(reporting_airline == code)
   ) |>
-  rename(
-    airline_name = description
-  ) |>
-  relocate(
-    airline_name, .after = reporting_airline
-  )
-
-flights_rdu_joined_airline
-```
-:::
-
-Note that after merging, we use the `rename` function to change the column name from `description` to `airline_name`, and move `airline_name` after `reporting_airline` using `relocate`, enhancing the readability of the dataframe.
-[@cr-join-airlinecode-3]{highlight="6-11"}
-
-:::{#cr-join-airlinecode-3}
-```{r}
-#| echo: true
-flights_rdu_joined_airline <- flights_rdu |>
-  left_join(
-    airline_codes, 
-    by = join_by(reporting_airline == code)
-  ) |>
-  rename(
-    airline_name = description
-  ) |>
-  relocate(
-    airline_name, .after = reporting_airline
-  )
+  relocate(airline_name, .after = reporting_airline)
 
 flights_rdu_joined_airline
 ```
@@ -171,7 +144,7 @@ weather_data <- read.csv("data/weather_data.csv") |> clean_names() |>
 ```
 
 ```{r}
-weather_data
+print(weather_data)
 ```
 
 ::::{.cr-section}
@@ -189,8 +162,7 @@ flights_rdu_joined_weather <- flights_rdu |>
 ```
 :::
 
-After performing the `right_join`, the resulting dataset changes from 368 rows and 10 columns to 355 rows and 15 columns. The increase in columns comes from the additional weather-related variables—such as temperature, humidity, wind speed, and precipitation—added from the `weather_data` table.
-The decrease in rows occurs because the flight date 2023-11-02 in `flights_rdu` did not have matching weather records, and since a `right_join` only keeps rows where the key exists in the right-hand table (`weather_data`), those unmatched flight rows are dropped.[@cr-join-weather-2]{highlight="1"}
+After performing the `right_join`, the resulting dataset changes from 368 rows and 6 columns to 355 rows and 12 columns. The increase in columns comes from the additional weather-related variables—such as temperature, humidity, wind speed, and precipitation—added from the `weather_data` table. The decrease in rows occurs because the flight date 2023-11-02 in `flights_rdu` did not have matching weather records, and since a `right_join` only keeps rows where the key exists in the right-hand table (`weather_data`), those unmatched flight rows are dropped.[@cr-join-weather-2]{highlight="1"}
 
 :::{#cr-join-weather-2}
 ```{r}

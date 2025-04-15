@@ -128,10 +128,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       <!-- user-provided yaml closeread style options -->
       <style>
         :root {
-          --cr-narrative-text-color-overlay: black;
---cr-section-background-color: transparent;
+          --cr-narrative-background-color-sidebar: transparent;
 --cr-narrative-background-color-overlay: transparent;
---cr-narrative-background-color-sidebar: transparent;
+--cr-section-background-color: transparent;
+--cr-narrative-text-color-overlay: black;
         }
       </style>
     
@@ -168,7 +168,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div class="cell">
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 33 × 2
-   code  description                       
+   code  airline_name                      
    &lt;chr&gt; &lt;chr&gt;                             
  1 9E    Endeavor Air Inc.                 
  2 AA    American Airlines Inc.            
@@ -185,19 +185,14 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 <div class="cr-section cr-column-screen overlay-left">
 <div class="narrative-col">
-<div class="trigger new-trigger" data-focus-on="cr-join-airlinecode-1" data-highlight="2-3">
+<div class="trigger new-trigger" data-highlight="2-3, 5" data-focus-on="cr-join-airlinecode-1">
 <div class="narrative">
 <p>We use a <code>left_join</code> function from the <code>dplyr</code> package to merge the <code>flights_rdu</code> data frame with the <code>airline_codes</code> lookup table. It includes all records from the ‘left’ table (the <code>flights_rdu</code> table being passed down the pipeline), and the matched records from the ‘right’ table (<code>airline_codes</code>). If there is no match, the result is still a row in the output, but with NULL values in the columns of the ‘right’ table.</p>
 </div>
 </div>
-<div class="trigger new-trigger" data-focus-on="cr-join-airlinecode-2" data-highlight="4">
+<div class="trigger new-trigger" data-highlight="4" data-focus-on="cr-join-airlinecode-2">
 <div class="narrative">
-<p>This operation is based on matching the <code>reporting_airline</code> column from the <code>flights_rdu</code> dataframe with the <code>code</code> column in the <code>airline_codes</code> table. This type of join ensures that all records from the <code>flights_rdu</code> data frame are preserved, and corresponding airline names are added where available. The number of rows remains the same at 368, while the number of columns increases—from 9 to 10 after adding new airline description fields.</p>
-</div>
-</div>
-<div class="trigger new-trigger" data-focus-on="cr-join-airlinecode-3" data-highlight="6-11">
-<div class="narrative">
-<p>Note that after merging, we use the <code>rename</code> function to change the column name from <code>description</code> to <code>airline_name</code>, and move <code>airline_name</code> after <code>reporting_airline</code> using <code>relocate</code>, enhancing the readability of the dataframe. </p>
+<p>This operation is based on matching the <code>reporting_airline</code> column from the <code>flights_rdu</code> dataframe with the <code>code</code> column in the <code>airline_codes</code> table. This type of join ensures that all records from the <code>flights_rdu</code> data frame are preserved, and corresponding airline names are added where available. The number of rows remains the same at 368, while the number of columns increases—from 6 to 7 after adding new airline description fields. Note that after merging, we move <code>airline_name</code> after <code>reporting_airline</code> using <code>relocate</code>, enhancing the readability of the dataframe.</p>
 </div>
 </div>
 </div>
@@ -219,48 +214,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>    airline_codes, </span>
 <span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">by =</span> <span class="fu">join_by</span>(reporting_airline <span class="sc">==</span> code)</span>
 <span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">|&gt;</span></span>
-<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rename</span>(</span>
-<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">airline_name =</span> description</span>
-<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">|&gt;</span></span>
-<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">relocate</span>(</span>
-<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>    airline_name, <span class="at">.after =</span> reporting_airline</span>
-<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>  )</span>
-<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a>flights_rdu_joined_airline</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code># A tibble: 368 × 7
-   flight_date dest  reporting_airline airline_name  destination_state dep_delay
-   &lt;date&gt;      &lt;chr&gt; &lt;chr&gt;             &lt;chr&gt;         &lt;chr&gt;                 &lt;dbl&gt;
- 1 2023-11-01  CLT   AA                American Air… NC                       58
- 2 2023-11-01  CLT   AA                American Air… NC                       20
- 3 2023-11-01  LAX   DL                Delta Air Li… CA                       16
- 4 2023-11-01  CLT   AA                American Air… NC                        0
- 5 2023-11-01  CLT   AA                American Air… NC                       -1
- 6 2023-11-01  CLT   AA                American Air… NC                       -1
- 7 2023-11-01  LAX   AA                American Air… CA                       -2
- 8 2023-11-01  SFO   UA                United Air L… CA                       -2
- 9 2023-11-01  CLT   AA                American Air… NC                       -4
-10 2023-11-01  CLT   AA                American Air… NC                       -5
-# ℹ 358 more rows
-# ℹ 1 more variable: arr_delay &lt;dbl&gt;</code></pre>
-</div>
-</div>
-</div>
-<div id="cr-join-airlinecode-3" class="sticky">
-<div class="cell">
-<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>flights_rdu_joined_airline <span class="ot">&lt;-</span> flights_rdu <span class="sc">|&gt;</span></span>
-<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">left_join</span>(</span>
-<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>    airline_codes, </span>
-<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">by =</span> <span class="fu">join_by</span>(reporting_airline <span class="sc">==</span> code)</span>
-<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">|&gt;</span></span>
-<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rename</span>(</span>
-<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">airline_name =</span> description</span>
-<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">|&gt;</span></span>
-<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">relocate</span>(</span>
-<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a>    airline_name, <span class="at">.after =</span> reporting_airline</span>
-<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a>  )</span>
-<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a>flights_rdu_joined_airline</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">relocate</span>(airline_name, <span class="at">.after =</span> reporting_airline)</span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>flights_rdu_joined_airline</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 368 × 7
    flight_date dest  reporting_airline airline_name  destination_state dep_delay
@@ -290,7 +246,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>We can do this using <code>anti_join()</code>. It is a a join operation that returns all rows from the first (left) table that do not have a match in the second (right) table.</p>
 <div class="cr-section cr-column-screen overlay-left">
 <div class="narrative-col">
-<div class="trigger new-trigger" data-focus-on="cr-join-airlinecode-4" data-highlight="2-5">
+<div class="trigger new-trigger" data-highlight="2-5" data-focus-on="cr-join-airlinecode-4">
 <div class="narrative">
 <p>Here, we apply anti_join() to the <code>airline_codes</code> table using <code>flights_rdu</code> as the reference. The result is a list of carriers that are defined in the lookup table but are not present in our filtered flight data. The number of rows in the output indicates how many codes were not used.</p>
 </div>
@@ -300,16 +256,16 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div class="sticky-col-stack">
 <div id="cr-join-airlinecode-4" class="sticky">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>unused_airlines <span class="ot">&lt;-</span> airline_codes <span class="sc">|&gt;</span></span>
-<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">anti_join</span>(</span>
-<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>    flights_rdu,</span>
-<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">by =</span> <span class="fu">join_by</span>(code <span class="sc">==</span> reporting_airline)</span>
-<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>  )</span>
-<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>unused_airlines</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>unused_airlines <span class="ot">&lt;-</span> airline_codes <span class="sc">|&gt;</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">anti_join</span>(</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>    flights_rdu,</span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">by =</span> <span class="fu">join_by</span>(code <span class="sc">==</span> reporting_airline)</span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>unused_airlines</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 30 × 2
-   code  description                       
+   code  airline_name                      
    &lt;chr&gt; &lt;chr&gt;                             
  1 9E    Endeavor Air Inc.                 
  2 AS    Alaska Airlines Inc.              
@@ -368,14 +324,19 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 <div class="cr-section cr-column-screen overlay-left">
 <div class="narrative-col">
-<div class="trigger new-trigger" data-focus-on="cr-join-weather-1" data-highlight="2-5">
+<div class="trigger new-trigger" data-highlight="2-5" data-focus-on="cr-join-weather-1">
 <div class="narrative">
 <p>We use a <code>right_join</code> to combine <code>flights_rdu</code> with <code>weather_data.</code> The join is based on matching <code>flight_date</code> in the flights data with <code>time</code> in the weather data. This ensures that all dates present in the <code>weather_data</code> dataset are retained, along with corresponding flight information when available.</p>
 </div>
 </div>
-<div class="trigger new-trigger" data-focus-on="cr-join-weather-2" data-highlight="1">
+<div class="trigger">
 <div class="narrative">
-<p>After performing the <code>right_join</code>, the resulting dataset changes from 368 rows and 10 columns to 355 rows and 15 columns. The increase in columns comes from the additional weather-related variables—such as temperature, humidity, wind speed, and precipitation—added from the <code>weather_data</code> table. The decrease in rows occurs because the flight date 2023-11-02 in <code>flights_rdu</code> did not have matching weather records, and since a <code>right_join</code> only keeps rows where the key exists in the right-hand table (<code>weather_data</code>), those unmatched flight rows are dropped.</p>
+<p>After performing the <code>right_join</code>, the resulting dataset changes from 368 rows and 6 columns to 355 rows and 12 columns. The increase in columns comes from the additional weather-related variables—such as temperature, humidity, wind speed, and precipitation—added from the <code>weather_data</code> table.</p>
+</div>
+</div>
+<div class="trigger new-trigger" data-highlight="1" data-focus-on="cr-join-weather-2">
+<div class="narrative">
+<p>The decrease in rows occurs because the flight date 2023-11-02 in <code>flights_rdu</code> did not have matching weather records, and since a <code>right_join</code> only keeps rows where the key exists in the right-hand table (<code>weather_data</code>), those unmatched flight rows are dropped.</p>
 </div>
 </div>
 </div>
@@ -383,11 +344,11 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div class="sticky-col-stack">
 <div id="cr-join-weather-1" class="sticky">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>flights_rdu_joined_weather <span class="ot">&lt;-</span> flights_rdu <span class="sc">|&gt;</span></span>
-<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">right_join</span>(</span>
-<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>    weather_data, </span>
-<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">by =</span> <span class="fu">join_by</span>(flight_date <span class="sc">==</span> time)</span>
-<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>  ) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>flights_rdu_joined_weather <span class="ot">&lt;-</span> flights_rdu <span class="sc">|&gt;</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">right_join</span>(</span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>    weather_data, </span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">by =</span> <span class="fu">join_by</span>(flight_date <span class="sc">==</span> time)</span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>  ) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </div>
 <div id="cr-join-weather-2" class="sticky">

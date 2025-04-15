@@ -129,8 +129,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       <style>
         :root {
           --cr-narrative-text-color-overlay: black;
---cr-section-background-color: transparent;
 --cr-narrative-background-color-overlay: transparent;
+--cr-section-background-color: transparent;
 --cr-narrative-background-color-sidebar: transparent;
         }
       </style>
@@ -162,12 +162,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>Starting with a broad dataset of flight records, we refine our data to concentrate on flights departing from Raleigh-Durham International Airport (RDU) to North Carolina and California in November 2023. This process includes filtering, selecting, and renaming key variables to enhance clarity and utility. These steps are executed through a concise series of dplyr functions linked in a pipeline, which transforms the data to the dataset that supports our subsequent analysis in the <strong>ggplot closeread story</strong>.</p>
 <div class="cr-section cr-column-screen overlay-left">
 <div class="narrative-col">
-<div class="trigger new-trigger" data-highlight="1" data-focus-on="cr-dplyr-1">
+<div class="trigger new-trigger" data-focus-on="cr-dplyr-1" data-highlight="1">
 <div class="narrative">
 <p>We start by loading the <code>tidyverse</code> package, which contains the <code>ggplot2</code> and <code>dplyr</code> packages we need.</p>
 </div>
 </div>
-<div class="trigger new-trigger" data-highlight="2" data-focus-on="cr-dplyr-2">
+<div class="trigger new-trigger" data-focus-on="cr-dplyr-2" data-highlight="2">
 <div class="narrative">
 <p>We then load the data frame <code>flights</code>. This dataset is now ready for analysis or manipulation in R. This data frame contains data with 59,416 rows and 110 columns.</p>
 </div>
@@ -177,37 +177,37 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>We use the <code>filter()</code> function to retain only those rows in the data frame where <code>Origin</code> is “RDU”, <code>DestState</code> is either “NC” or “CA”, and with month equals to 11, as we are only focusing the flights departing from RDU, with destinations in North Carolina or in California, in November 2023.</p>
 </div>
 </div>
-<div class="trigger new-trigger" data-highlight="4-6" data-focus-on="cr-dplyr-3a">
+<div class="trigger new-trigger" data-focus-on="cr-dplyr-3a" data-highlight="4-6">
 <div class="narrative">
 <p>We first filter the dataset to only include flights that departed from RDU. This reduces the data to only those flights originating from Raleigh-Durham International Airport. This initial filter reduces the number of rows from 59,416 to 7,937, keeping only flights with <code>origin == "RDU"</code>.</p>
 </div>
 </div>
-<div class="trigger new-trigger" data-highlight="5" data-focus-on="cr-dplyr-3b">
+<div class="trigger new-trigger" data-focus-on="cr-dplyr-3b" data-highlight="5">
 <div class="narrative">
 <p>Next, we further narrow the dataset to include only those flights whose destinations are in North Carolina (NC) or California (CA). This ensures we are focusing on flights between RDU and a specific set of states. This reduces the dataset from 7,937 rows to 622.</p>
 </div>
 </div>
-<div class="trigger new-trigger" data-highlight="5" data-focus-on="cr-dplyr-3c">
+<div class="trigger new-trigger" data-focus-on="cr-dplyr-3c" data-highlight="5">
 <div class="narrative">
 <p>Finally, we filter the dataset by month, keeping only those flights that took place in November (<code>month == 11</code>). This restricts the dataset to a single month’s worth of data for focused analysis. This brings the final row count down from 622 to 368, giving us the subset of interest: RDU departures to NC or CA in November 2023.</p>
 </div>
 </div>
-<div class="trigger new-trigger" data-highlight="4-8" data-focus-on="cr-dplyr-3">
+<div class="trigger new-trigger" data-focus-on="cr-dplyr-3" data-highlight="4-8">
 <div class="narrative">
 <p>While we demonstrated the filtering process step by step to better understand the impact of each condition, it’s important to note that in practice, we typically apply all three filters in a single <code>filter()</code> call.</p>
 </div>
 </div>
-<div class="trigger new-trigger" data-highlight="9-16" data-focus-on="cr-dplyr-4">
+<div class="trigger new-trigger" data-focus-on="cr-dplyr-4" data-highlight="9-16">
 <div class="narrative">
 <p>We want to select the variables that are used in the data visualization: <code>dep_delay</code>, <code>arr_delay</code>, <code>dest_state</code>, and other variables that help us identify the flights. After selecting the columns, the number of rows does not change, but the number of columns is reduced from 110 to 6.</p>
 </div>
 </div>
-<div class="trigger new-trigger" data-highlight="17-19" data-focus-on="cr-dplyr-5">
+<div class="trigger new-trigger" data-focus-on="cr-dplyr-5" data-highlight="17-19">
 <div class="narrative">
 <p>We can rename the variable <code>dest_state</code> to “destination_state” for clarity. Looking at the last column of the displayed tibble, we see that the variable is successfully renamed.</p>
 </div>
 </div>
-<div class="trigger new-trigger" data-highlight="3-19" data-focus-on="cr-dplyr">
+<div class="trigger new-trigger" data-focus-on="cr-dplyr" data-highlight="3-19">
 <div class="narrative">
 <p>The main block of code is referred as a pipeline or chain. Each line starts with a function and ends with a pipe operator, <code>|&gt;</code>. The pipe operator in R is used to pass one expression as the input to the next expression, creating a sequence of operations that’s easy to read and manage.</p>
 </div>
@@ -519,17 +519,17 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>In the following section, we build on top of the current dataset and explore the utilization of two additional <strong>dplyr</strong> functions: <code>arrange</code> and <code>relocate.</code> <code>arrange</code> is used to sort data frames based on one or more columns, providing a logical sequence that can facilitate more insightful analysis. On the other hand, <code>relocate</code> is employed to adjust the order of columns within the data frame, enhancing readability and accessibility when navigating through the data.</p>
 <div class="cr-section cr-column-screen overlay-left">
 <div class="narrative-col">
-<div class="trigger new-trigger" data-highlight="20-22" data-focus-on="cr-additional-fn-1">
+<div class="trigger new-trigger" data-focus-on="cr-additional-fn-1" data-highlight="20-22">
 <div class="narrative">
 <p>The <code>relocate</code> function is being used here to adjust the position of the <code>destination_state</code> column within the dataframe. By specifying <code>.before = dep_delay</code>, the function moves the <code>destination_state</code> column to a position immediately before the <code>dep_delay</code> column.</p>
 </div>
 </div>
-<div class="trigger new-trigger" data-highlight="23-25" data-focus-on="cr-additional-fn-2">
+<div class="trigger new-trigger" data-focus-on="cr-additional-fn-2" data-highlight="23-25">
 <div class="narrative">
 <p>The <code>arrange</code> function is then utilized to sort the dataframe based on the <code>dep_delay</code> column in descending order. By using <code>desc(dep_delay)</code>, it ensures that the entries with the longest departure delays are listed at the top of the data frame.</p>
 </div>
 </div>
-<div class="trigger new-trigger" data-highlight="23-25" data-focus-on="cr-additional-fn-3">
+<div class="trigger new-trigger" data-focus-on="cr-additional-fn-3" data-highlight="23-25">
 <div class="narrative">
 <p>Note that we can use the <code>arrange</code> function to sort the dataframe by more than one variable, allowing for a multi-level sort order. In the example below, we sort the data frame primarily by <code>flight_date</code> and secondarily by <code>dep_delay</code>, descending. This sorting order helps to organize the data chronologically while also categorizing flights by departure delay within each date, providing a structured view of flight operations over time.</p>
 </div>
@@ -688,17 +688,17 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </ul>
 <div class="cr-section cr-column-screen overlay-left">
 <div class="narrative-col">
-<div class="trigger new-trigger" data-highlight="5" data-focus-on="cr-additional-fn-4">
+<div class="trigger new-trigger" data-focus-on="cr-additional-fn-4" data-highlight="5">
 <div class="narrative">
 <p>Building on top of the dataset we obtained from preivous steps, we first use <code>mutate()</code> to create a new column, <code>day_of_week</code>, derived from <code>flight_date</code>. The <code>wday()</code> function from the <code>lubridate</code> package returns the day of the week as a factor, with labels like “Mon”, “Tue”, etc.</p>
 </div>
 </div>
-<div class="trigger new-trigger" data-highlight="3" data-focus-on="cr-additional-fn-5">
+<div class="trigger new-trigger" data-focus-on="cr-additional-fn-5" data-highlight="3">
 <div class="narrative">
 <p>We can also use <code>mutate()</code> to add a variable that classifies departure delays using <code>ifelse()</code>. In this case, we label flights as “On time or Early” if dep_delay &lt;= 0, and “Delayed” otherwise.</p>
 </div>
 </div>
-<div class="trigger new-trigger" data-highlight="2-8" data-focus-on="cr-additional-fn-6">
+<div class="trigger new-trigger" data-focus-on="cr-additional-fn-6" data-highlight="2-8">
 <div class="narrative">
 <p>For more complex logic, <code>case_when()</code> is useful. Here, we categorize departure delays into multiple cases:</p>
 <ul>
@@ -709,7 +709,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </ul>
 </div>
 </div>
-<div class="trigger new-trigger" data-highlight="2-10" data-focus-on="cr-additional-fn-7">
+<div class="trigger new-trigger" data-focus-on="cr-additional-fn-7" data-highlight="2-10">
 <div class="narrative">
 <p>Again, we typically apply all three filters in a single <code>mutate()</code> call.</p>
 </div>
