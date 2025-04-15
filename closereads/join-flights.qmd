@@ -1,0 +1,201 @@
+---
+title: Flights data joining other datasets example
+subtitle: Skeleton for the scrolly-telling project
+order: 3
+format:
+  closeread-html:
+    cr-section:
+      layout: overlay-left
+    cr-style:
+      narrative-background-color-overlay: transparent
+      narrative-background-color-sidebar: transparent
+      section-background-color: transparent
+      narrative-text-color-overlay: black
+knitr:
+  opts_chunk: 
+    dev.args:
+      bg: transparent
+comments:
+  hypothesis: true
+---
+
+**Adapted from sample document from <https://closeread.dev/gallery/demos/build-up-plots/>**
+
+**Weather data from: <https://www.wunderground.com/history/monthly/us/nc/durham/KRDU/date/2023-11>**
+
+
+# Join
+Next, we will explore the use of join operations, a technique that allows us to merge data from different sources based on common attributes. By applying join operations, we can enrich our dataset by combining related data from separate tables, thereby enhancing the depth and breadth of our analysis. We will demonstrate various types of JOINs and illustrate how they can be strategically employed to integrate and synchronize disparate data sources effectively.
+
+## Lookup table
+The first way of utilizing join we will explore is by employing it as a lookup table. This approach enhances our primary dataset by integrating additional information that expands upon existing data. Using a lookup table is particularly effective for associating concise data entries, such as codes or identifiers, with more descriptive attributes stored in a separate table. We will demonstrate this by joining our flights data with an `airline_codes` table, where airline identifiers are linked with their full names, transforming our dataset into a more reader-friendly format.
+
+Before we start, below is what the `airline_codes` table looks like:
+
+```{r}
+#| echo: false
+#| message: false
+
+library(tidyverse)
+library(janitor)
+
+flights <- read_csv(here::here("closereads", "data", "rdu-flights-23.csv"))
+
+flights_rdu <- flights |>
+  filter(
+    origin == "RDU",
+    dest_state %in% c("NC", "CA"), # NC and CA
+    month == 11
+  ) |>
+  select(
+    flight_date,
+    dest,
+    reporting_airline,
+    dep_delay,
+    arr_delay,
+    dest_state
+  ) |>
+  rename(
+    destination_state = dest_state
+  ) |>
+  relocate(
+    destination_state, .before = dep_delay
+  ) |>
+  arrange(
+    flight_date, desc(dep_delay)
+  )
+
+airline_codes <- read_csv("data/airline_codes.csv") |> 
+  clean_names() |>
+  filter(code != "HP")
+
+```
+
+```{r}
+airline_codes
+```
+
+::::{.cr-section}
+
+We use a `left_join` function from the `dplyr` package to merge the `flights_rdu` data frame with the `airline_codes` lookup table. It includes all records from the 'left' table (the `flights_rdu` table being passed down the pipeline), and the matched records from the 'right' table (`airline_codes`). If there is no match, the result is still a row in the output, but with NULL values in the columns of the 'right' table. [@cr-join-airlinecode-1]{highlight="2-3"}
+
+:::{#cr-join-airlinecode-1}
+```{r}
+#| echo: true
+flights_rdu_joined_airline <- flights_rdu |>
+  left_join(
+    airline_codes, 
+    by = join_by(reporting_airline == code)
+  )
+```
+:::
+
+This operation is based on matching the `reporting_airline` column from the `flights_rdu` dataframe with the `code` column in the `airline_codes` table. This type of join ensures that all records from the `flights_rdu` data frame are preserved, and corresponding airline names are added where available. The number of rows remains the same at 368, while the number of columns increases—from 9 to 10 after adding new airline description fields.[@cr-join-airlinecode-2]{highlight="4"}
+
+:::{#cr-join-airlinecode-2}
+```{r}
+#| echo: true
+flights_rdu_joined_airline <- flights_rdu |>
+  left_join(
+    airline_codes, 
+    by = join_by(reporting_airline == code)
+  ) |>
+  rename(
+    airline_name = description
+  ) |>
+  relocate(
+    airline_name, .after = reporting_airline
+  )
+
+flights_rdu_joined_airline
+```
+:::
+
+Note that after merging, we use the `rename` function to change the column name from `description` to `airline_name`, and move `airline_name` after `reporting_airline` using `relocate`, enhancing the readability of the dataframe.
+[@cr-join-airlinecode-3]{highlight="6-11"}
+
+:::{#cr-join-airlinecode-3}
+```{r}
+#| echo: true
+flights_rdu_joined_airline <- flights_rdu |>
+  left_join(
+    airline_codes, 
+    by = join_by(reporting_airline == code)
+  ) |>
+  rename(
+    airline_name = description
+  ) |>
+  relocate(
+    airline_name, .after = reporting_airline
+  )
+
+flights_rdu_joined_airline
+```
+:::
+::::
+
+## Finding unmatched codes using `anti_join`
+
+In some cases, it’s useful to identify which values from one dataset do not appear in another. For example, we might want to know which carriers listed in our `airline_codes` lookup table did not operate any flights in our filtered `flights_rdu` dataset.
+
+We can do this using `anti_join()`. It is a a join operation that returns all rows from the first (left) table that do not have a match in the second (right) table.
+
+::::{.cr-section}
+Here, we apply anti_join() to the `airline_codes` table using `flights_rdu` as the reference. The result is a list of carriers that are defined in the lookup table but are not present in our filtered flight data. The number of rows in the output indicates how many codes were not used. [@cr-join-airlinecode-4]{highlight="2-5"}
+
+:::{#cr-join-airlinecode-4}
+```{r}
+#| echo: true
+unused_airlines <- airline_codes |>
+  anti_join(
+    flights_rdu,
+    by = join_by(code == reporting_airline)
+  )
+
+unused_airlines
+```
+:::
+
+::::
+
+## Enriching dataframe by joining another table
+For this part of the analysis, we are merging weather data with our flight dataset to enrich it with environmental conditions that could impact flight schedules and performance. The `weather_df` data frame contains various weather metrics like temperature, dew point, humidity, wind speed, pressure, and precipitation, recorded on specific dates of November, 2023. The dateset is displayed below. Notice that the weather data for 2023-11-02 is missing.
+
+```{r}
+#| echo: false
+#| message: false
+
+weather_data <- read.csv("data/weather_data.csv") |> clean_names() |>
+  filter(time != "2023-11-02") |> # removed for demonstration purpose
+  mutate(time = date(time))
+```
+
+```{r}
+weather_data
+```
+
+::::{.cr-section}
+
+We use a `right_join` to combine `flights_rdu` with `weather_data.` The join is based on matching `flight_date` in the flights data with `time` in the weather data. This ensures that all dates present in the `weather_data` dataset are retained, along with corresponding flight information when available.[@cr-join-weather-1]{highlight="2-5"}
+
+:::{#cr-join-weather-1}
+```{r}
+#| echo: true
+flights_rdu_joined_weather <- flights_rdu |>
+  right_join(
+    weather_data, 
+    by = join_by(flight_date == time)
+  ) 
+```
+:::
+
+After performing the `right_join`, the resulting dataset changes from 368 rows and 10 columns to 355 rows and 15 columns. The increase in columns comes from the additional weather-related variables—such as temperature, humidity, wind speed, and precipitation—added from the `weather_data` table.
+The decrease in rows occurs because the flight date 2023-11-02 in `flights_rdu` did not have matching weather records, and since a `right_join` only keeps rows where the key exists in the right-hand table (`weather_data`), those unmatched flight rows are dropped.[@cr-join-weather-2]{highlight="1"}
+
+:::{#cr-join-weather-2}
+```{r}
+flights_rdu_joined_weather
+```
+:::
+
+::::

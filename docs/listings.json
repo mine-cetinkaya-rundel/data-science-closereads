@@ -3,7 +3,8 @@
     "listing": "/index.html",
     "items": [
       "/closereads/ggplot-story-flights.html",
-      "/closereads/data-transformation-flights.html"
+      "/closereads/data-transformation-flights.html",
+      "/closereads/join-flights.html"
     ]
   }
 ]

@@ -21,8 +21,6 @@ comments:
 
 **Adapted from sample document from <https://closeread.dev/gallery/demos/build-up-plots/>**
 
-**Weather data from: <https://www.wunderground.com/history/monthly/us/nc/durham/KRDU/date/2023-11>**
-
 
 ```{r}
 #| label: setup
@@ -56,6 +54,17 @@ We then load the data frame `flights`. This dataset is now ready for analysis or
 ```{r}
 #| echo: true
 #| message: false
+#| eval: false
+
+library(tidyverse)
+flights <- read_csv("rdu-flights-23.csv")
+
+flights # display the dataframe
+```
+
+```{r}
+#| echo: false
+#| message: false
 
 library(tidyverse)
 flights <- read_csv(here::here("closereads", "data", "rdu-flights-23.csv"))
@@ -64,7 +73,63 @@ flights # display the dataframe
 ```
 :::
 
-We use the `filter()` function to retain only those rows in the data frame where `Origin` is "RDU", `DestState` is either "NC" or "CA", and with month equals to 11, as we are only focusing the flights departing from RDU, with destinations in North Carolina or in California, in November 2023. Looking at the tibble, we notice that the number of rows is reduced to 368. We can see that the `year` column now only contains **2023**, and the `month` column only contains **11**. The filtering is also reflected in the `flight_date` column.  [@cr-dplyr-3]{highlight="4-8"}
+We use the `filter()` function to retain only those rows in the data frame where `Origin` is "RDU", `DestState` is either "NC" or "CA", and with month equals to 11, as we are only focusing the flights departing from RDU, with destinations in North Carolina or in California, in November 2023. 
+
+We first filter the dataset to only include flights that departed from RDU. This reduces the data to only those flights originating from Raleigh-Durham International Airport. This initial filter reduces the number of rows from 59,416 to 7,937, keeping only flights with `origin == "RDU"`. [@cr-dplyr-3a]{highlight="4-6"}
+
+:::{#cr-dplyr-3a}
+```{r}
+#| echo: true
+#| message: false
+
+library(tidyverse)
+
+flights_rdu <- flights |>
+  filter(
+    origin == "RDU"
+  )
+
+flights_rdu # display the dataframe
+```
+:::
+
+Next, we further narrow the dataset to include only those flights whose destinations are in North Carolina (NC) or California (CA). This ensures we are focusing on flights between RDU and a specific set of states. This reduces the dataset from 7,937 rows to 622. [@cr-dplyr-3b]{highlight="5"}
+
+:::{#cr-dplyr-3b}
+```{r}
+#| echo: true
+#| message: false
+
+library(tidyverse)
+
+flights_rdu <- flights |>
+  filter(
+    dest_state %in% c("NC", "CA")
+  )
+
+flights_rdu # display the dataframe
+```
+:::
+
+Finally, we filter the dataset by month, keeping only those flights that took place in November (`month == 11`). This restricts the dataset to a single month's worth of data for focused analysis. This brings the final row count down from 622 to 368, giving us the subset of interest: RDU departures to NC or CA in November 2023. [@cr-dplyr-3c]{highlight="5"}
+
+:::{#cr-dplyr-3c}
+```{r}
+#| echo: true
+#| message: false
+
+library(tidyverse)
+
+flights_rdu <- flights_rdu |>
+  filter(
+    month == 11
+  )
+
+flights_rdu
+```
+:::
+
+While we demonstrated the filtering process step by step to better understand the impact of each condition, it’s important to note that in practice, we typically apply all three filters in a single `filter()` call. [@cr-dplyr-3]{highlight="4-8"}
 
 :::{#cr-dplyr-3}
 ```{r}
@@ -136,7 +201,7 @@ flights_rdu <- flights |>
     dest_state
   ) |>
   rename(
-    "destination_state" = dest_state
+    destination_state = dest_state
   )
 
 flights_rdu # display the dataframe
@@ -167,7 +232,7 @@ flights_rdu <- flights |>
     dest_state
   ) |>
   rename(
-    "destination_state" = dest_state
+    destination_state = dest_state
   )
 
 flights_rdu
@@ -205,7 +270,7 @@ flights_rdu <- flights |>
     dest_state
   ) |>
   rename(
-    "destination_state" = dest_state
+    destination_state = dest_state
   ) |>
   relocate(
     destination_state, .before = dep_delay
@@ -239,7 +304,7 @@ flights_rdu <- flights |>
     dest_state
   ) |>
   rename(
-    "destination_state" = dest_state
+    destination_state = dest_state
   ) |>
   relocate(
     destination_state, .before = dep_delay
@@ -276,7 +341,7 @@ flights_rdu <- flights |>
     dest_state
   ) |>
   rename(
-    "destination_state" = dest_state
+    destination_state = dest_state
   ) |>
   relocate(
     destination_state, .before = dep_delay
@@ -290,101 +355,101 @@ flights_rdu
 :::
 ::::
 
-# Join
-Next, we will explore the use of join operations, a technique that allows us to merge data from different sources based on common attributes. By applying join operations, we can enrich our dataset by combining related data from separate tables, thereby enhancing the depth and breadth of our analysis. We will demonstrate various types of JOINs and illustrate how they can be strategically employed to integrate and synchronize disparate data sources effectively.
+# `mutate`
 
-## Lookup table
-The first way of utilizing join we will explore is by employing it as a lookup table. This approach enhances our primary dataset by integrating additional information that expands upon existing data. Using a lookup table is particularly effective for associating concise data entries, such as codes or identifiers, with more descriptive attributes stored in a separate table. We will demonstrate this by joining our flights data with an `airline_codes` table, where airline identifiers are linked with their full names, transforming our dataset into a more reader-friendly format.
+We now explore the use of the `mutate()` function from **dplyr**, which is used to create or transform variables in a data frame. We'll demonstrate two common use cases:
 
-Before we start, below is what the `airline_codes` looks like:
+* deriving new values using functions (e.g., extracting the day of the week), and
 
-```{r}
-#| echo: false
-#| message: false
-#| 
-library(janitor)
-airline_codes <- read.csv("data/Airline_Codes.csv") |> clean_names()
-```
-
-```{r}
-airline_codes
-```
+* creating categorical labels using logical conditions (e.g., classifying flight delays).
 
 ::::{.cr-section}
 
-We use a `left_join` function from the `dplyr` package to merge the `flights_rdu` data frame with the `airline_codes` lookup table. It includes all records from the 'left' table (the `flights_rdu` table being passed down the pipeline), and the matched records from the 'right' table (`airline_codes`). If there is no match, the result is still a row in the output, but with NULL values in the columns of the 'right' table. [@cr-join-airlinecode-1]{highlight="2-3"}
+Building on top of the dataset we obtained from preivous steps, we first use `mutate()` to create a new column, `day_of_week`, derived from `flight_date`. The `wday()` function from the `lubridate` package returns the day of the week as a factor, with labels like "Mon", "Tue", etc. [@cr-additional-fn-4]{highlight="5"}
 
-:::{#cr-join-airlinecode-1}
+:::{#cr-additional-fn-4}
 ```{r}
 #| echo: true
-flights_rdu_joined_airline <- flights_rdu |>
-  left_join(
-    airline_codes, 
-    by = c("reporting_airline" = "code")
-  )
-
-flights_rdu_joined_airline
-```
-:::
-
-This operation is based on matching the `reporting_airline` column from the `flights_rdu` dataframe with the `code` column in the `airline_codes` table. This type of join ensures that all records from the `flights_rdu` data frame are preserved, and corresponding airline names are added where available. [@cr-join-airlinecode-2]{highlight="4"}
-
-:::{#cr-join-airlinecode-2}
-```{r}
-#| echo: true
-flights_rdu_joined_airline <- flights_rdu |>
-  left_join(
-    airline_codes, 
-    by = c("reporting_airline" = "code")
-  )
-
-flights_rdu_joined_airline
-```
-:::
-
-After merging, we use the `rename` function to change the column name from `description` to `airline_name`, enhancing the readability of the dataframe. [@cr-join-airlinecode-3]{highlight="6-8"}
-
-:::{#cr-join-airlinecode-3}
-```{r}
-#| echo: true
-flights_rdu_joined_airline <- flights_rdu |>
-  left_join(
-    airline_codes, 
-    by = c("reporting_airline" = "code")
-  ) |>
-  rename(
-    airline_name = description
-  )
-
-flights_rdu_joined_airline
-```
-:::
-::::
-
-## Enriching dataframe by joining another table
-For this part of the analysis, we are merging weather data with our flight dataset to enrich it with environmental conditions that could impact flight schedules and performance. The `weather_df` data frame contains various weather metrics like temperature, dew point, humidity, wind speed, pressure, and precipitation, recorded on specific dates of November, 2023.
-
-```{r}
-#| echo: false
 #| message: false
 
-weather_data <- read.csv("data/weather_data.csv") |> clean_names() |>
-  mutate(time = date(time))
-```
+library(lubridate)
 
-::::{.cr-section}
+flights_rdu <- flights_rdu |>
+  mutate(
+    day_of_week = wday(flight_date, label = TRUE)
+  )
 
-We use a `right_join` to combine `flights_rdu` with `weather_data.` The join is based on matching `flight_date` in the flights data with `time` in the weather data. This method ensures all **date** is retained and supplemented with corresponding weather conditions and flight data where available.[@cr-join-weather-1]{highlight="2-5"}
-
-:::{#cr-join-weather-1}
-```{r}
-flights_rdu_joined_weather <- flights_rdu |>
-  right_join(
-    weather_data, 
-    by = c("flight_date" = "time")
-  ) 
-flights_rdu_joined_weather
+flights_rdu
 ```
 :::
 
+We can also use `mutate()` to add a variable that classifies departure delays using `ifelse()`. In this case, we label flights as "On time or Early" if dep_delay <= 0, and "Delayed" otherwise. [@cr-additional-fn-5]{highlight="3"}
+
+:::{#cr-additional-fn-5}
+```{r}
+#| echo: true
+#| message: false
+
+flights_rdu <- flights_rdu |>
+  mutate(
+    delay_status = ifelse(dep_delay <= 0, "On time or Early", "Delayed")
+  )
+
+flights_rdu
+```
+:::
+
+:::{focus-on="cr-additional-fn-6" highlight="2-8"}
+For more complex logic, `case_when()` is useful. Here, we categorize departure delays into multiple cases:
+
+* "Early" for negative delays,
+
+* "On Time" for 0-minute delay,
+
+* "Minor Delay" for delays up to 15 minutes, and
+
+* "Major Delay" for delays greater than 15 minutes.
+:::
+
+:::{#cr-additional-fn-6}
+```{r}
+#| echo: true
+#| message: false
+
+flights_rdu <- flights_rdu |>
+  mutate(
+    delay_category = case_when(
+      dep_delay < 0 ~ "Early",
+      dep_delay == 0 ~ "On Time",
+      dep_delay <= 15 ~ "Minor Delay",
+      dep_delay > 15 ~ "Major Delay"
+    )
+  )
+
+flights_rdu
+```
+:::
+
+Again, we typically apply all three filters in a single `mutate()` call.[@cr-additional-fn-7]{highlight="2-10"}
+
+:::{#cr-additional-fn-7}
+```{r}
+#| echo: true
+#| message: false
+
+flights_rdu <- flights_rdu |>
+  mutate(
+    day_of_week = wday(flight_date, label = TRUE),
+    delay_status = ifelse(dep_delay <= 0, "On time or Early", "Delayed"),
+    delay_category = case_when(
+      dep_delay < 0 ~ "Early",
+      dep_delay == 0 ~ "On Time",
+      dep_delay <= 15 ~ "Minor Delay",
+      dep_delay > 15 ~ "Major Delay"
+    )
+  )
+
+flights_rdu
+```
+:::
 ::::
