@@ -1,6 +1,6 @@
 ---
-title: Flights data joining other datasets example
-subtitle: Skeleton for the scrolly-telling project
+title: Joining RDU Flights Data with Other Datasets
+description: In this section, we explore how to combine information from multiple datasets to enrich our analysis.
 order: 3
 format:
   closeread-html:
@@ -19,13 +19,12 @@ comments:
   hypothesis: true
 ---
 
-**Adapted from sample document from <https://closeread.dev/gallery/demos/build-up-plots/>**
+# Introduction
+In this section, we explore how to combine information from multiple datasets to enrich our analysis. We will explore the use of join operations, a technique that allows us to merge data from different sources based on common attributes. By applying join operations, we can enrich our dataset by combining related data from separate tables, thereby enhancing the depth and breadth of our analysis. We will demonstrate various types of JOINs and illustrate how they can be strategically employed to integrate and synchronize disparate data sources effectively.
 
-**Weather data from: <https://www.wunderground.com/history/monthly/us/nc/durham/KRDU/date/2023-11>**
+## Data
+This project uses data from the American Statistical Association's Data Expo, which provides comprehensive flight information covering various aspects of flight operations. The dataset contains data about flights across the United States, recording details such as departure times, scheduled and actual arrival times, flight durations, distances, and reasons for delays. The dataset used in this story consists of flights departing from Raleigh-Durham International Airport (RDU) in November 2023, headed to destinations in North Carolina and California. We join the flights data with an airline codes lookup table to translate carrier abbreviations into full airline names. We also demonstrate how to merge it with a daily weather dataset to bring in relevant weather conditions, helping us explore how environmental factors might relate to flight delays.
 
-
-# Join
-Next, we will explore the use of join operations, a technique that allows us to merge data from different sources based on common attributes. By applying join operations, we can enrich our dataset by combining related data from separate tables, thereby enhancing the depth and breadth of our analysis. We will demonstrate various types of JOINs and illustrate how they can be strategically employed to integrate and synchronize disparate data sources effectively.
 
 ## Lookup table
 The first way of utilizing join we will explore is by employing it as a lookup table. This approach enhances our primary dataset by integrating additional information that expands upon existing data. Using a lookup table is particularly effective for associating concise data entries, such as codes or identifiers, with more descriptive attributes stored in a separate table. We will demonstrate this by joining our flights data with an `airline_codes` table, where airline identifiers are linked with their full names, transforming our dataset into a more reader-friendly format.
@@ -38,6 +37,7 @@ Before we start, below is what the `airline_codes` table looks like:
 
 library(tidyverse)
 library(janitor)
+library(knitr)
 
 flights <- read_csv(here::here("closereads", "data", "rdu-flights-23.csv"))
 
@@ -72,12 +72,16 @@ airline_codes <- read_csv("data/airline_codes.csv") |>
 ```
 
 ```{r}
-print(airline_codes)
+kable(airline_codes)
 ```
 
 ::::{.cr-section}
 
-We use a `left_join` function from the `dplyr` package to merge the `flights_rdu` data frame with the `airline_codes` lookup table. It includes all records from the 'left' table (the `flights_rdu` table being passed down the pipeline), and the matched records from the 'right' table (`airline_codes`). If there is no match, the result is still a row in the output, but with NULL values in the columns of the 'right' table. [@cr-join-airlinecode-1]{highlight="2-3, 5"}
+:::{focus-on="cr-join-airlinecode-1" highlight="2-3,5"}
+We use a `left_join` function from the `dplyr` package to merge the `flights_rdu` data frame with the `airline_codes` lookup table. It includes all records from the 'left' table (the `flights_rdu` table being passed down the pipeline), and the matched records from the 'right' table (`airline_codes`). If there is no match, the result is still a row in the output, but with NULL values in the columns of the 'right' table.
+
+![Left join graphic demonstration](images/joins/left-join.png){width=2in}
+:::
 
 :::{#cr-join-airlinecode-1}
 ```{r}
@@ -90,7 +94,7 @@ flights_rdu_joined_airline <- flights_rdu |>
 ```
 :::
 
-This operation is based on matching the `reporting_airline` column from the `flights_rdu` dataframe with the `code` column in the `airline_codes` table. This type of join ensures that all records from the `flights_rdu` data frame are preserved, and corresponding airline names are added where available. The number of rows remains the same at 368, while the number of columns increases—from 6 to 7 after adding new airline description fields. Note that after merging, we move `airline_name` after `reporting_airline` using `relocate`, enhancing the readability of the dataframe.[@cr-join-airlinecode-2]{highlight="4"}
+This operation is based on matching the `reporting_airline` column from the `flights_rdu` data frame with the `code` column in the `airline_codes` table. In the `join_by()` syntax, this reads as: **"join by: where reporting_airline is equal to code."** This type of left join ensures that all records from `flights_rdu` are preserved, and additional information, such as the full airline name, is added where a match is found in `airline_codes`. The number of rows remains unchanged at 368, since all flight records are retained. The number of columns increases from 6 to 7, with the addition of a new descriptive field for the airline. Note that to improve the readability of the resulting data frame, we use `relocate()` to move the new airline_name column immediately after reporting_airline.[@cr-join-airlinecode-2]{highlight="4"}
 
 :::{#cr-join-airlinecode-2}
 ```{r}
@@ -114,7 +118,11 @@ In some cases, it’s useful to identify which values from one dataset do not ap
 We can do this using `anti_join()`. It is a a join operation that returns all rows from the first (left) table that do not have a match in the second (right) table.
 
 ::::{.cr-section}
-Here, we apply anti_join() to the `airline_codes` table using `flights_rdu` as the reference. The result is a list of carriers that are defined in the lookup table but are not present in our filtered flight data. The number of rows in the output indicates how many codes were not used. [@cr-join-airlinecode-4]{highlight="2-5"}
+:::{focus-on="cr-join-airlinecode-4" highlight="2-5"}
+Here, we apply anti_join() to the `airline_codes` table using `flights_rdu` as the reference. The result is a list of carriers that are defined in the lookup table but are not present in our filtered flight data. The number of rows in the output indicates how many codes were not used.
+
+![Anti-join graphic demonstration](images/joins/anti-join.png){width=2in}
+:::
 
 :::{#cr-join-airlinecode-4}
 ```{r}
@@ -144,12 +152,16 @@ weather_data <- read.csv("data/weather_data.csv") |> clean_names() |>
 ```
 
 ```{r}
-print(weather_data)
+kable(weather_data)
 ```
 
 ::::{.cr-section}
 
-We use a `right_join` to combine `flights_rdu` with `weather_data.` The join is based on matching `flight_date` in the flights data with `time` in the weather data. This ensures that all dates present in the `weather_data` dataset are retained, along with corresponding flight information when available.[@cr-join-weather-1]{highlight="2-5"}
+:::{focus-on="cr-join-weather-1" highlight="2-5"}
+We use a `right_join` to combine `flights_rdu` with `weather_data.` The join is based on matching `flight_date` in the flights data with `time` in the weather data. This ensures that all dates present in the `weather_data` dataset are retained, along with corresponding flight information when available.
+
+![Right join graphic demonstration](images/joins/right-join.png){width=2in}
+:::
 
 :::{#cr-join-weather-1}
 ```{r}
@@ -171,3 +183,13 @@ flights_rdu_joined_weather
 :::
 
 ::::
+
+# Reflection
+In this section, we demonstrated how to enhance and extend a flight dataset by joining it with additional data sources using tools from the dplyr package. You explored several types of join operations. Each join type served a specific purpose in the data cleaning and enrichment workflow, enabling us to create a more informative and analysis-ready dataset. These techniques are essential for integrating disparate datasets in real-world data science projects, where combining context from multiple sources often reveals deeper insights. As we wrap up, take a moment to reflect on and note down what you've learned from this example:
+
+<input type="text" id="inputText" name="inputText" placeholder="Type something..." style="width: 50%; height: 200px; font-size: 20px; padding: 10px; border: 2px solid #000000; border-radius: 4px;">
+
+# Sources
+Weather data: <https://www.wunderground.com/history/monthly/us/nc/durham/KRDU/date/2023-11>
+
+Visual explaining JOINs: <https://anderfernandez.com/en/blog/dplyr-tutorial/>

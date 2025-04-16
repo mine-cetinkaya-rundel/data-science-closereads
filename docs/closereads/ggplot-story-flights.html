@@ -6,7 +6,7 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
-<meta name="description" content="Add a description">
+<meta name="description" content="This section focuses on exploring flight delay patterns using the ggplot2 visualization system">
 
 <title>Visualizing RDU flights</title>
 <style>
@@ -129,10 +129,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       <!-- user-provided yaml closeread style options -->
       <style>
         :root {
-          --cr-narrative-background-color-overlay: transparent;
---cr-narrative-background-color-sidebar: transparent;
---cr-section-background-color: transparent;
+          --cr-narrative-background-color-sidebar: transparent;
 --cr-narrative-text-color-overlay: black;
+--cr-section-background-color: transparent;
+--cr-narrative-background-color-overlay: transparent;
         }
       </style>
     
@@ -140,12 +140,11 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
 <h1 class="title">Visualizing RDU flights</h1>
-<p class="subtitle lead">An introduction to ggplot2</p>
 </div>
 
 <div>
   <div class="description">
-    Add a description
+    This section focuses on exploring flight delay patterns using the ggplot2 visualization system
   </div>
 </div>
 
@@ -163,13 +162,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 
 <!-- Data Dictionary: <https://www.transtats.bts.gov/Fields.asp?gnoyr_VQ=FGJ> -->
-<section id="introduction" class="level2">
-<h2 class="anchored" data-anchor-id="introduction">Introduction</h2>
-<p>This project uses a dataset from the American Statistical Association’s Data Expo, which provides comprehensive flight information covering various aspects of flight operations. The dataset contains data about flights across the United States, recording details such as departure times, scheduled and actual arrival times, flight durations, distances, and reasons for delays.</p>
-</section>
+<section id="introduction" class="level1">
+<h1>Introduction</h1>
+<p>This section focuses on exploring flight delay patterns using the <strong>ggplot2</strong> visualization system. You’ll learn how to visualize data to uncover patterns in departure and arrival delays. By the end of this tutorial, you should be able to craft visual narratives that are informative and visually appealing, providing you with a fundamental skill set critical in the field of data science.</p>
 <section id="data" class="level2">
 <h2 class="anchored" data-anchor-id="data">Data</h2>
-<p>In this tutorial, we’ll focus specifically on the flights departing from Raleigh-Durham International Airport (RDU) and heading to destinations in North Carolina and California. You’ll learn how to visualize data to uncover patterns in departure and arrival delays. By the end of this tutorial, you should be able to craft visual narratives that are informative and visually appealing, providing you with a fundamental skill set critical in the field of data science.</p>
+<p>This project uses data from the American Statistical Association’s Data Expo, which provides comprehensive flight information covering various aspects of flight operations. The dataset contains data about flights across the United States, recording details such as departure times, scheduled and actual arrival times, flight durations, distances, and reasons for delays. The dataset used in this story consists of flights departing from Raleigh-Durham International Airport (RDU) in November 2023, headed to destinations in North Carolina and California. It includes key variables such as departure and arrival delays, destination airport codes, airline names, and dates of travel. Prior to visualization, the dataset was filtered and transformed to focus on a clean and meaningful subset of flights, enabling a more focused and compelling narrative.</p>
 <p>The packages we used in this tutorial for plotting include <strong>ggplot2</strong> and <strong>ggthemes</strong>.</p>
 <p>In our visualization, we explore the relationship between departure delays (<code>dep_delay</code>) and arrival delays (<code>arr_delay</code>) for flights from Raleigh-Durham International Airport (RDU) to destinations in North Carolina and California. The graph you will learn to create visually compares the length of departure delays to arrival delays.</p>
 <div class="cell">
@@ -929,9 +927,10 @@ date  (1): flight_date
 </div>
 </div>
 </section>
-<section id="reflection" class="level2">
-<h2 class="anchored" data-anchor-id="reflection">Reflection</h2>
-<p>In this demonstration, you explored how to create a ggplot using the RDU flights dataset. As we wrap up, take a moment to reflect on and note down what you’ve learned from this example:</p>
+</section>
+<section id="reflection" class="level1">
+<h1>Reflection</h1>
+<p>Through this ggplot-based data story, we’ve explored a structured approach to building data visualizations using <strong>ggplot2</strong> in R. Starting from basic scatterplots and bar charts, we incrementally built visualizations by layering components such as geometries, scales, themes, and labels. We incorporated <strong>ggthemes</strong> to enhance the look of the plot. As we wrap up, take a moment to reflect on and note down what you’ve learned from this example:</p>
 <p><input type="text" id="inputText" name="inputText" placeholder="Type something..." style="width: 50%; height: 200px; font-size: 20px; padding: 10px; border: 2px solid #000000; border-radius: 4px;"></p>
 
 

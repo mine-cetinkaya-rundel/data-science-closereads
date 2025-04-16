@@ -6,8 +6,9 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
+<meta name="description" content="In this section, we explore how to combine information from multiple datasets to enrich our analysis.">
 
-<title>Flights data joining other datasets example</title>
+<title>Joining RDU Flights Data with Other Datasets</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -128,9 +129,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       <!-- user-provided yaml closeread style options -->
       <style>
         :root {
-          --cr-narrative-background-color-sidebar: transparent;
---cr-narrative-background-color-overlay: transparent;
+          --cr-narrative-background-color-overlay: transparent;
 --cr-section-background-color: transparent;
+--cr-narrative-background-color-sidebar: transparent;
 --cr-narrative-text-color-overlay: black;
         }
       </style>
@@ -138,10 +139,14 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">Flights data joining other datasets example</h1>
-<p class="subtitle lead">Skeleton for the scrolly-telling project</p>
+<h1 class="title">Joining RDU Flights Data with Other Datasets</h1>
 </div>
 
+<div>
+  <div class="description">
+    In this section, we explore how to combine information from multiple datasets to enrich our analysis.
+  </div>
+</div>
 
 
 <div class="quarto-title-meta column-page">
@@ -156,43 +161,179 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </header>
 
 
-<p><strong>Adapted from sample document from <a href="https://closeread.dev/gallery/demos/build-up-plots/" class="uri">https://closeread.dev/gallery/demos/build-up-plots/</a></strong></p>
-<p><strong>Weather data from: <a href="https://www.wunderground.com/history/monthly/us/nc/durham/KRDU/date/2023-11" class="uri">https://www.wunderground.com/history/monthly/us/nc/durham/KRDU/date/2023-11</a></strong></p>
-<section id="join" class="level1">
-<h1>Join</h1>
-<p>Next, we will explore the use of join operations, a technique that allows us to merge data from different sources based on common attributes. By applying join operations, we can enrich our dataset by combining related data from separate tables, thereby enhancing the depth and breadth of our analysis. We will demonstrate various types of JOINs and illustrate how they can be strategically employed to integrate and synchronize disparate data sources effectively.</p>
+<section id="introduction" class="level1">
+<h1>Introduction</h1>
+<p>In this section, we explore how to combine information from multiple datasets to enrich our analysis. We will explore the use of join operations, a technique that allows us to merge data from different sources based on common attributes. By applying join operations, we can enrich our dataset by combining related data from separate tables, thereby enhancing the depth and breadth of our analysis. We will demonstrate various types of JOINs and illustrate how they can be strategically employed to integrate and synchronize disparate data sources effectively.</p>
+<section id="data" class="level2">
+<h2 class="anchored" data-anchor-id="data">Data</h2>
+<p>This project uses data from the American Statistical Association’s Data Expo, which provides comprehensive flight information covering various aspects of flight operations. The dataset contains data about flights across the United States, recording details such as departure times, scheduled and actual arrival times, flight durations, distances, and reasons for delays. The dataset used in this story consists of flights departing from Raleigh-Durham International Airport (RDU) in November 2023, headed to destinations in North Carolina and California. We join the flights data with an airline codes lookup table to translate carrier abbreviations into full airline names. We also demonstrate how to merge it with a daily weather dataset to bring in relevant weather conditions, helping us explore how environmental factors might relate to flight delays.</p>
+</section>
 <section id="lookup-table" class="level2">
 <h2 class="anchored" data-anchor-id="lookup-table">Lookup table</h2>
 <p>The first way of utilizing join we will explore is by employing it as a lookup table. This approach enhances our primary dataset by integrating additional information that expands upon existing data. Using a lookup table is particularly effective for associating concise data entries, such as codes or identifiers, with more descriptive attributes stored in a separate table. We will demonstrate this by joining our flights data with an <code>airline_codes</code> table, where airline identifiers are linked with their full names, transforming our dataset into a more reader-friendly format.</p>
 <p>Before we start, below is what the <code>airline_codes</code> table looks like:</p>
 <div class="cell">
-<div class="cell-output cell-output-stdout">
-<pre><code># A tibble: 33 × 2
-   code  airline_name                      
-   &lt;chr&gt; &lt;chr&gt;                             
- 1 9E    Endeavor Air Inc.                 
- 2 AA    American Airlines Inc.            
- 3 AS    Alaska Airlines Inc.              
- 4 B6    JetBlue Airways                   
- 5 CO    Continental Air Lines Inc.        
- 6 DH    Independence Air                  
- 7 DL    Delta Air Lines Inc.              
- 8 EA    Eastern Air Lines Inc.            
- 9 EV    ExpressJet Airlines LLC d/b/a aha!
-10 F9    Frontier Airlines Inc.            
-# ℹ 23 more rows</code></pre>
+<div class="cell-output-display">
+<table class="caption-top table table-sm table-striped small">
+<thead>
+<tr class="header">
+<th style="text-align: left;">code</th>
+<th style="text-align: left;">airline_name</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">9E</td>
+<td style="text-align: left;">Endeavor Air Inc.</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">AA</td>
+<td style="text-align: left;">American Airlines Inc.</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">AS</td>
+<td style="text-align: left;">Alaska Airlines Inc.</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">B6</td>
+<td style="text-align: left;">JetBlue Airways</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">CO</td>
+<td style="text-align: left;">Continental Air Lines Inc.</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">DH</td>
+<td style="text-align: left;">Independence Air</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">DL</td>
+<td style="text-align: left;">Delta Air Lines Inc.</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">EA</td>
+<td style="text-align: left;">Eastern Air Lines Inc.</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">EV</td>
+<td style="text-align: left;">ExpressJet Airlines LLC d/b/a aha!</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">F9</td>
+<td style="text-align: left;">Frontier Airlines Inc.</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">FL</td>
+<td style="text-align: left;">AirTran Airways Corporation</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">G4</td>
+<td style="text-align: left;">Allegiant Air</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">HA</td>
+<td style="text-align: left;">Hawaiian Airlines Inc.</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">KH</td>
+<td style="text-align: left;">Aloha Air Cargo</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">ML (1)</td>
+<td style="text-align: left;">Midway Airlines Inc.&nbsp;(1)</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">MQ</td>
+<td style="text-align: left;">Envoy Air</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">NK</td>
+<td style="text-align: left;">Spirit Air Lines</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">NW</td>
+<td style="text-align: left;">Northwest Airlines Inc.</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">OH</td>
+<td style="text-align: left;">PSA Airlines Inc.</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">OO</td>
+<td style="text-align: left;">SkyWest Airlines Inc.</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">PA (1)</td>
+<td style="text-align: left;">Pan American World Airways (1)</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">PI</td>
+<td style="text-align: left;">Piedmont Aviation Inc.</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">PS</td>
+<td style="text-align: left;">Ukraine International Airlines</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">QX</td>
+<td style="text-align: left;">Horizon Air</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">TW</td>
+<td style="text-align: left;">Trans World Airways LLC</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">TZ</td>
+<td style="text-align: left;">ATA Airlines d/b/a ATA</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">UA</td>
+<td style="text-align: left;">United Air Lines Inc.</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">US</td>
+<td style="text-align: left;">US Airways Inc.</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">VX</td>
+<td style="text-align: left;">Virgin America</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">WN</td>
+<td style="text-align: left;">Southwest Airlines Co.</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">XE</td>
+<td style="text-align: left;">ExpressJet Airlines Inc.</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">YV</td>
+<td style="text-align: left;">Mesa Airlines Inc.</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">YX</td>
+<td style="text-align: left;">Republic Airline</td>
+</tr>
+</tbody>
+</table>
 </div>
 </div>
 <div class="cr-section cr-column-screen overlay-left">
 <div class="narrative-col">
-<div class="trigger new-trigger" data-highlight="2-3, 5" data-focus-on="cr-join-airlinecode-1">
+<div class="trigger new-trigger" data-highlight="2-3,5" data-focus-on="cr-join-airlinecode-1">
 <div class="narrative">
 <p>We use a <code>left_join</code> function from the <code>dplyr</code> package to merge the <code>flights_rdu</code> data frame with the <code>airline_codes</code> lookup table. It includes all records from the ‘left’ table (the <code>flights_rdu</code> table being passed down the pipeline), and the matched records from the ‘right’ table (<code>airline_codes</code>). If there is no match, the result is still a row in the output, but with NULL values in the columns of the ‘right’ table.</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="images/joins/left-join.png" class="img-fluid figure-img" style="width:2in"></p>
+<figcaption>Left join graphic demonstration</figcaption>
+</figure>
+</div>
 </div>
 </div>
 <div class="trigger new-trigger" data-highlight="4" data-focus-on="cr-join-airlinecode-2">
 <div class="narrative">
-<p>This operation is based on matching the <code>reporting_airline</code> column from the <code>flights_rdu</code> dataframe with the <code>code</code> column in the <code>airline_codes</code> table. This type of join ensures that all records from the <code>flights_rdu</code> data frame are preserved, and corresponding airline names are added where available. The number of rows remains the same at 368, while the number of columns increases—from 6 to 7 after adding new airline description fields. Note that after merging, we move <code>airline_name</code> after <code>reporting_airline</code> using <code>relocate</code>, enhancing the readability of the dataframe.</p>
+<p>This operation is based on matching the <code>reporting_airline</code> column from the <code>flights_rdu</code> data frame with the <code>code</code> column in the <code>airline_codes</code> table. In the <code>join_by()</code> syntax, this reads as: <strong>“join by: where reporting_airline is equal to code.”</strong> This type of left join ensures that all records from <code>flights_rdu</code> are preserved, and additional information, such as the full airline name, is added where a match is found in <code>airline_codes</code>. The number of rows remains unchanged at 368, since all flight records are retained. The number of columns increases from 6 to 7, with the addition of a new descriptive field for the airline. Note that to improve the readability of the resulting data frame, we use <code>relocate()</code> to move the new airline_name column immediately after reporting_airline.</p>
 </div>
 </div>
 </div>
@@ -200,23 +341,23 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div class="sticky-col-stack">
 <div id="cr-join-airlinecode-1" class="sticky">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>flights_rdu_joined_airline <span class="ot">&lt;-</span> flights_rdu <span class="sc">|&gt;</span></span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">left_join</span>(</span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>    airline_codes, </span>
-<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">by =</span> <span class="fu">join_by</span>(reporting_airline <span class="sc">==</span> code)</span>
-<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>  )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>flights_rdu_joined_airline <span class="ot">&lt;-</span> flights_rdu <span class="sc">|&gt;</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">left_join</span>(</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>    airline_codes, </span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">by =</span> <span class="fu">join_by</span>(reporting_airline <span class="sc">==</span> code)</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>  )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </div>
 <div id="cr-join-airlinecode-2" class="sticky">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>flights_rdu_joined_airline <span class="ot">&lt;-</span> flights_rdu <span class="sc">|&gt;</span></span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">left_join</span>(</span>
-<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>    airline_codes, </span>
-<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">by =</span> <span class="fu">join_by</span>(reporting_airline <span class="sc">==</span> code)</span>
-<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">|&gt;</span></span>
-<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">relocate</span>(airline_name, <span class="at">.after =</span> reporting_airline)</span>
-<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>flights_rdu_joined_airline</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>flights_rdu_joined_airline <span class="ot">&lt;-</span> flights_rdu <span class="sc">|&gt;</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">left_join</span>(</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>    airline_codes, </span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">by =</span> <span class="fu">join_by</span>(reporting_airline <span class="sc">==</span> code)</span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">|&gt;</span></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">relocate</span>(airline_name, <span class="at">.after =</span> reporting_airline)</span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>flights_rdu_joined_airline</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 368 × 7
    flight_date dest  reporting_airline airline_name  destination_state dep_delay
@@ -249,6 +390,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div class="trigger new-trigger" data-highlight="2-5" data-focus-on="cr-join-airlinecode-4">
 <div class="narrative">
 <p>Here, we apply anti_join() to the <code>airline_codes</code> table using <code>flights_rdu</code> as the reference. The result is a list of carriers that are defined in the lookup table but are not present in our filtered flight data. The number of rows in the output indicates how many codes were not used.</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="images/joins/anti-join.png" class="img-fluid figure-img" style="width:2in"></p>
+<figcaption>Anti-join graphic demonstration</figcaption>
+</figure>
+</div>
 </div>
 </div>
 </div>
@@ -256,13 +403,13 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div class="sticky-col-stack">
 <div id="cr-join-airlinecode-4" class="sticky">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>unused_airlines <span class="ot">&lt;-</span> airline_codes <span class="sc">|&gt;</span></span>
-<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">anti_join</span>(</span>
-<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>    flights_rdu,</span>
-<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">by =</span> <span class="fu">join_by</span>(code <span class="sc">==</span> reporting_airline)</span>
-<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>  )</span>
-<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>unused_airlines</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>unused_airlines <span class="ot">&lt;-</span> airline_codes <span class="sc">|&gt;</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">anti_join</span>(</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>    flights_rdu,</span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">by =</span> <span class="fu">join_by</span>(code <span class="sc">==</span> reporting_airline)</span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>unused_airlines</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 30 × 2
    code  airline_name                      
@@ -289,37 +436,292 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <h2 class="anchored" data-anchor-id="enriching-dataframe-by-joining-another-table">Enriching dataframe by joining another table</h2>
 <p>For this part of the analysis, we are merging weather data with our flight dataset to enrich it with environmental conditions that could impact flight schedules and performance. The <code>weather_df</code> data frame contains various weather metrics like temperature, dew point, humidity, wind speed, pressure, and precipitation, recorded on specific dates of November, 2023. The dateset is displayed below. Notice that the weather data for 2023-11-02 is missing.</p>
 <div class="cell">
-<div class="cell-output cell-output-stdout">
-<pre><code>         time temperature dew_point humidity wind_speed pressure precipitation
-1  2023-11-01        43.8      29.6     58.7        9.6     30.0          0.06
-2  2023-11-03        45.0      29.8     64.8        2.4     30.0          0.00
-3  2023-11-04        50.7      29.1     65.3        1.3     29.8          0.00
-4  2023-11-05        55.4      39.9     73.2        3.9     29.7          0.00
-5  2023-11-06        59.7      43.7     75.3        7.4     29.7          0.00
-6  2023-11-07        64.4      47.0     65.7        9.3     29.7          0.00
-7  2023-11-08        65.2      50.6     63.6        7.6     29.7          0.00
-8  2023-11-09        69.0      55.6     73.9       10.6     29.7          0.00
-9  2023-11-10        59.6      42.5     53.8        6.8     29.7          0.00
-10 2023-11-11        52.5      40.9     65.1        7.2     29.9          0.01
-11 2023-11-12        53.4      38.9     59.8        9.1     30.0          0.01
-12 2023-11-13        48.8      37.7     64.1        5.1     30.0          0.00
-13 2023-11-14        51.4      31.6     52.9        5.4     29.9          0.00
-14 2023-11-15        51.0      36.5     58.7        4.3     30.0          0.00
-15 2023-11-16        56.9      44.2     65.0        5.4     30.0          0.00
-16 2023-11-17        61.8      52.8     73.2        3.9     29.7          0.00
-17 2023-11-18        63.5      47.6     73.7        5.8     29.6          0.00
-18 2023-11-19        48.7      29.7     51.3        3.5     29.5          0.00
-19 2023-11-20        50.9      33.2     55.1        7.7     29.9          0.00
-20 2023-11-21        58.2      54.0     86.1       10.4     29.9          0.00
-21 2023-11-22        59.7      53.3     80.7        7.2     29.5          1.38
-22 2023-11-23        48.3      36.2     64.8        5.6     29.7          0.04
-23 2023-11-24        45.8      38.5     77.6        5.6     29.8          0.00
-24 2023-11-25        44.0      28.5     54.0        7.4     29.8          0.00
-25 2023-11-26        45.2      36.3     71.4        6.6     29.8          0.00
-26 2023-11-27        48.5      34.7     68.6        6.1     29.6          0.05
-27 2023-11-28        39.2      18.3     45.6        3.2     29.9          0.00
-28 2023-11-29        35.8      14.3     43.5        7.0     29.9          0.00
-29 2023-11-30        45.9      26.0     48.3        6.6     29.8          0.00</code></pre>
+<div class="cell-output-display">
+<table class="caption-top table table-sm table-striped small">
+<colgroup>
+<col style="width: 14%">
+<col style="width: 15%">
+<col style="width: 13%">
+<col style="width: 11%">
+<col style="width: 14%">
+<col style="width: 11%">
+<col style="width: 18%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">time</th>
+<th style="text-align: right;">temperature</th>
+<th style="text-align: right;">dew_point</th>
+<th style="text-align: right;">humidity</th>
+<th style="text-align: right;">wind_speed</th>
+<th style="text-align: right;">pressure</th>
+<th style="text-align: right;">precipitation</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">2023-11-01</td>
+<td style="text-align: right;">43.8</td>
+<td style="text-align: right;">29.6</td>
+<td style="text-align: right;">58.7</td>
+<td style="text-align: right;">9.6</td>
+<td style="text-align: right;">30.0</td>
+<td style="text-align: right;">0.06</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">2023-11-03</td>
+<td style="text-align: right;">45.0</td>
+<td style="text-align: right;">29.8</td>
+<td style="text-align: right;">64.8</td>
+<td style="text-align: right;">2.4</td>
+<td style="text-align: right;">30.0</td>
+<td style="text-align: right;">0.00</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">2023-11-04</td>
+<td style="text-align: right;">50.7</td>
+<td style="text-align: right;">29.1</td>
+<td style="text-align: right;">65.3</td>
+<td style="text-align: right;">1.3</td>
+<td style="text-align: right;">29.8</td>
+<td style="text-align: right;">0.00</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">2023-11-05</td>
+<td style="text-align: right;">55.4</td>
+<td style="text-align: right;">39.9</td>
+<td style="text-align: right;">73.2</td>
+<td style="text-align: right;">3.9</td>
+<td style="text-align: right;">29.7</td>
+<td style="text-align: right;">0.00</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">2023-11-06</td>
+<td style="text-align: right;">59.7</td>
+<td style="text-align: right;">43.7</td>
+<td style="text-align: right;">75.3</td>
+<td style="text-align: right;">7.4</td>
+<td style="text-align: right;">29.7</td>
+<td style="text-align: right;">0.00</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">2023-11-07</td>
+<td style="text-align: right;">64.4</td>
+<td style="text-align: right;">47.0</td>
+<td style="text-align: right;">65.7</td>
+<td style="text-align: right;">9.3</td>
+<td style="text-align: right;">29.7</td>
+<td style="text-align: right;">0.00</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">2023-11-08</td>
+<td style="text-align: right;">65.2</td>
+<td style="text-align: right;">50.6</td>
+<td style="text-align: right;">63.6</td>
+<td style="text-align: right;">7.6</td>
+<td style="text-align: right;">29.7</td>
+<td style="text-align: right;">0.00</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">2023-11-09</td>
+<td style="text-align: right;">69.0</td>
+<td style="text-align: right;">55.6</td>
+<td style="text-align: right;">73.9</td>
+<td style="text-align: right;">10.6</td>
+<td style="text-align: right;">29.7</td>
+<td style="text-align: right;">0.00</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">2023-11-10</td>
+<td style="text-align: right;">59.6</td>
+<td style="text-align: right;">42.5</td>
+<td style="text-align: right;">53.8</td>
+<td style="text-align: right;">6.8</td>
+<td style="text-align: right;">29.7</td>
+<td style="text-align: right;">0.00</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">2023-11-11</td>
+<td style="text-align: right;">52.5</td>
+<td style="text-align: right;">40.9</td>
+<td style="text-align: right;">65.1</td>
+<td style="text-align: right;">7.2</td>
+<td style="text-align: right;">29.9</td>
+<td style="text-align: right;">0.01</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">2023-11-12</td>
+<td style="text-align: right;">53.4</td>
+<td style="text-align: right;">38.9</td>
+<td style="text-align: right;">59.8</td>
+<td style="text-align: right;">9.1</td>
+<td style="text-align: right;">30.0</td>
+<td style="text-align: right;">0.01</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">2023-11-13</td>
+<td style="text-align: right;">48.8</td>
+<td style="text-align: right;">37.7</td>
+<td style="text-align: right;">64.1</td>
+<td style="text-align: right;">5.1</td>
+<td style="text-align: right;">30.0</td>
+<td style="text-align: right;">0.00</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">2023-11-14</td>
+<td style="text-align: right;">51.4</td>
+<td style="text-align: right;">31.6</td>
+<td style="text-align: right;">52.9</td>
+<td style="text-align: right;">5.4</td>
+<td style="text-align: right;">29.9</td>
+<td style="text-align: right;">0.00</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">2023-11-15</td>
+<td style="text-align: right;">51.0</td>
+<td style="text-align: right;">36.5</td>
+<td style="text-align: right;">58.7</td>
+<td style="text-align: right;">4.3</td>
+<td style="text-align: right;">30.0</td>
+<td style="text-align: right;">0.00</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">2023-11-16</td>
+<td style="text-align: right;">56.9</td>
+<td style="text-align: right;">44.2</td>
+<td style="text-align: right;">65.0</td>
+<td style="text-align: right;">5.4</td>
+<td style="text-align: right;">30.0</td>
+<td style="text-align: right;">0.00</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">2023-11-17</td>
+<td style="text-align: right;">61.8</td>
+<td style="text-align: right;">52.8</td>
+<td style="text-align: right;">73.2</td>
+<td style="text-align: right;">3.9</td>
+<td style="text-align: right;">29.7</td>
+<td style="text-align: right;">0.00</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">2023-11-18</td>
+<td style="text-align: right;">63.5</td>
+<td style="text-align: right;">47.6</td>
+<td style="text-align: right;">73.7</td>
+<td style="text-align: right;">5.8</td>
+<td style="text-align: right;">29.6</td>
+<td style="text-align: right;">0.00</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">2023-11-19</td>
+<td style="text-align: right;">48.7</td>
+<td style="text-align: right;">29.7</td>
+<td style="text-align: right;">51.3</td>
+<td style="text-align: right;">3.5</td>
+<td style="text-align: right;">29.5</td>
+<td style="text-align: right;">0.00</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">2023-11-20</td>
+<td style="text-align: right;">50.9</td>
+<td style="text-align: right;">33.2</td>
+<td style="text-align: right;">55.1</td>
+<td style="text-align: right;">7.7</td>
+<td style="text-align: right;">29.9</td>
+<td style="text-align: right;">0.00</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">2023-11-21</td>
+<td style="text-align: right;">58.2</td>
+<td style="text-align: right;">54.0</td>
+<td style="text-align: right;">86.1</td>
+<td style="text-align: right;">10.4</td>
+<td style="text-align: right;">29.9</td>
+<td style="text-align: right;">0.00</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">2023-11-22</td>
+<td style="text-align: right;">59.7</td>
+<td style="text-align: right;">53.3</td>
+<td style="text-align: right;">80.7</td>
+<td style="text-align: right;">7.2</td>
+<td style="text-align: right;">29.5</td>
+<td style="text-align: right;">1.38</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">2023-11-23</td>
+<td style="text-align: right;">48.3</td>
+<td style="text-align: right;">36.2</td>
+<td style="text-align: right;">64.8</td>
+<td style="text-align: right;">5.6</td>
+<td style="text-align: right;">29.7</td>
+<td style="text-align: right;">0.04</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">2023-11-24</td>
+<td style="text-align: right;">45.8</td>
+<td style="text-align: right;">38.5</td>
+<td style="text-align: right;">77.6</td>
+<td style="text-align: right;">5.6</td>
+<td style="text-align: right;">29.8</td>
+<td style="text-align: right;">0.00</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">2023-11-25</td>
+<td style="text-align: right;">44.0</td>
+<td style="text-align: right;">28.5</td>
+<td style="text-align: right;">54.0</td>
+<td style="text-align: right;">7.4</td>
+<td style="text-align: right;">29.8</td>
+<td style="text-align: right;">0.00</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">2023-11-26</td>
+<td style="text-align: right;">45.2</td>
+<td style="text-align: right;">36.3</td>
+<td style="text-align: right;">71.4</td>
+<td style="text-align: right;">6.6</td>
+<td style="text-align: right;">29.8</td>
+<td style="text-align: right;">0.00</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">2023-11-27</td>
+<td style="text-align: right;">48.5</td>
+<td style="text-align: right;">34.7</td>
+<td style="text-align: right;">68.6</td>
+<td style="text-align: right;">6.1</td>
+<td style="text-align: right;">29.6</td>
+<td style="text-align: right;">0.05</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">2023-11-28</td>
+<td style="text-align: right;">39.2</td>
+<td style="text-align: right;">18.3</td>
+<td style="text-align: right;">45.6</td>
+<td style="text-align: right;">3.2</td>
+<td style="text-align: right;">29.9</td>
+<td style="text-align: right;">0.00</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">2023-11-29</td>
+<td style="text-align: right;">35.8</td>
+<td style="text-align: right;">14.3</td>
+<td style="text-align: right;">43.5</td>
+<td style="text-align: right;">7.0</td>
+<td style="text-align: right;">29.9</td>
+<td style="text-align: right;">0.00</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">2023-11-30</td>
+<td style="text-align: right;">45.9</td>
+<td style="text-align: right;">26.0</td>
+<td style="text-align: right;">48.3</td>
+<td style="text-align: right;">6.6</td>
+<td style="text-align: right;">29.8</td>
+<td style="text-align: right;">0.00</td>
+</tr>
+</tbody>
+</table>
 </div>
 </div>
 <div class="cr-section cr-column-screen overlay-left">
@@ -327,16 +729,17 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div class="trigger new-trigger" data-highlight="2-5" data-focus-on="cr-join-weather-1">
 <div class="narrative">
 <p>We use a <code>right_join</code> to combine <code>flights_rdu</code> with <code>weather_data.</code> The join is based on matching <code>flight_date</code> in the flights data with <code>time</code> in the weather data. This ensures that all dates present in the <code>weather_data</code> dataset are retained, along with corresponding flight information when available.</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="images/joins/right-join.png" class="img-fluid figure-img" style="width:2in"></p>
+<figcaption>Right join graphic demonstration</figcaption>
+</figure>
 </div>
-</div>
-<div class="trigger">
-<div class="narrative">
-<p>After performing the <code>right_join</code>, the resulting dataset changes from 368 rows and 6 columns to 355 rows and 12 columns. The increase in columns comes from the additional weather-related variables—such as temperature, humidity, wind speed, and precipitation—added from the <code>weather_data</code> table.</p>
 </div>
 </div>
 <div class="trigger new-trigger" data-highlight="1" data-focus-on="cr-join-weather-2">
 <div class="narrative">
-<p>The decrease in rows occurs because the flight date 2023-11-02 in <code>flights_rdu</code> did not have matching weather records, and since a <code>right_join</code> only keeps rows where the key exists in the right-hand table (<code>weather_data</code>), those unmatched flight rows are dropped.</p>
+<p>After performing the <code>right_join</code>, the resulting dataset changes from 368 rows and 6 columns to 355 rows and 12 columns. The increase in columns comes from the additional weather-related variables—such as temperature, humidity, wind speed, and precipitation—added from the <code>weather_data</code> table. The decrease in rows occurs because the flight date 2023-11-02 in <code>flights_rdu</code> did not have matching weather records, and since a <code>right_join</code> only keeps rows where the key exists in the right-hand table (<code>weather_data</code>), those unmatched flight rows are dropped.</p>
 </div>
 </div>
 </div>
@@ -344,11 +747,11 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div class="sticky-col-stack">
 <div id="cr-join-weather-1" class="sticky">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>flights_rdu_joined_weather <span class="ot">&lt;-</span> flights_rdu <span class="sc">|&gt;</span></span>
-<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">right_join</span>(</span>
-<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>    weather_data, </span>
-<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">by =</span> <span class="fu">join_by</span>(flight_date <span class="sc">==</span> time)</span>
-<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>  ) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>flights_rdu_joined_weather <span class="ot">&lt;-</span> flights_rdu <span class="sc">|&gt;</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">right_join</span>(</span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>    weather_data, </span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">by =</span> <span class="fu">join_by</span>(flight_date <span class="sc">==</span> time)</span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>  ) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </div>
 <div id="cr-join-weather-2" class="sticky">
@@ -376,9 +779,19 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 </div>
-
-
 </section>
+</section>
+<section id="reflection" class="level1">
+<h1>Reflection</h1>
+<p>In this section, we demonstrated how to enhance and extend a flight dataset by joining it with additional data sources using tools from the dplyr package. You explored several types of join operations. Each join type served a specific purpose in the data cleaning and enrichment workflow, enabling us to create a more informative and analysis-ready dataset. These techniques are essential for integrating disparate datasets in real-world data science projects, where combining context from multiple sources often reveals deeper insights. As we wrap up, take a moment to reflect on and note down what you’ve learned from this example:</p>
+<p><input type="text" id="inputText" name="inputText" placeholder="Type something..." style="width: 50%; height: 200px; font-size: 20px; padding: 10px; border: 2px solid #000000; border-radius: 4px;"></p>
+</section>
+<section id="sources" class="level1">
+<h1>Sources</h1>
+<p>Weather data: <a href="https://www.wunderground.com/history/monthly/us/nc/durham/KRDU/date/2023-11" class="uri">https://www.wunderground.com/history/monthly/us/nc/durham/KRDU/date/2023-11</a></p>
+<p>Visual explaining JOINs: <a href="https://anderfernandez.com/en/blog/dplyr-tutorial/" class="uri">https://anderfernandez.com/en/blog/dplyr-tutorial/</a></p>
+
+
 </section>
 
 </main> <!-- /main -->

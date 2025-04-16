@@ -1,7 +1,9 @@
 ---
-title: Flights Data Transformation Example
-subtitle: Skeleton for the scrolly-telling project
+title: RDU Flights Data Transformation
+description: This section focuses on preparing the raw flight dataset for analysis through a series of data transformation steps.
 order: 2
+image: images/dplyr-logo.png
+image-alt: dplyr logo
 format:
   closeread-html:
     cr-section:
@@ -19,6 +21,14 @@ comments:
   hypothesis: true
 ---
 
+# Introduction
+
+This section focuses on preparing the raw flight dataset for analysis through a series of data transformation steps. Using the **dplyr** package from the **tidyverse**, we demonstrate how to filter, select, rename, and mutate variables to clean and structure the data. These operations are essential for shaping the dataset into a form suitable for downstream analysis and visualization.
+
+## Data
+
+This project uses a dataset from the American Statistical Association's Data Expo, which provides comprehensive flight information covering various aspects of flight operations. The dataset contains data about flights across the United States, recording details such as departure times, scheduled and actual arrival times, flight durations, distances, and reasons for delays.
+
 **Adapted from sample document from <https://closeread.dev/gallery/demos/build-up-plots/>**
 
 
@@ -31,7 +41,7 @@ library(arrow)
 ```
 
 
-# Recreating the dataframe used in the ggplot story
+## Recreating the dataframe used in the ggplot story
 
 Starting with a broad dataset of flight records, we refine our data to concentrate on flights departing from Raleigh-Durham International Airport (RDU) to North Carolina and California in November 2023. This process includes filtering, selecting, and renaming key variables to enhance clarity and utility. These steps are executed through a concise series of dplyr functions linked in a pipeline, which transforms the data to the dataset that supports our subsequent analysis in the **ggplot closeread story**.
 
@@ -240,7 +250,7 @@ flights_rdu
 :::
 ::::
 
-# Other functions: `arrange`, `relocate`
+## Other functions: `arrange`, `relocate`
 
 In the following section, we build on top of the current dataset and explore the utilization of two additional **dplyr** functions: `arrange` and `relocate.` `arrange` is used to sort data frames based on one or more columns, providing a logical sequence that can facilitate more insightful analysis. On the other hand, `relocate` is employed to adjust the order of columns within the data frame, enhancing readability and accessibility when navigating through the data.
 
@@ -355,7 +365,7 @@ flights_rdu
 :::
 ::::
 
-# `mutate`
+## One more function: `mutate`
 
 We now explore the use of the `mutate()` function from **dplyr**, which is used to create or transform variables in a data frame. We'll demonstrate two common use cases:
 
@@ -453,3 +463,8 @@ flights_rdu
 ```
 :::
 ::::
+
+# Reflection
+Along the way, we applied a variety of data transformation techniques using **dplyr**, such as `filter()`, `mutate()`, `select()`, and `arrange()`, to shape the dataset into a form suitable for further analysis. We also used functions like `case_when()` and `wday()` to create new derived variables that added context to the dataset. As we wrap up, take a moment to reflect on and note down what you've learned from this example:
+
+<input type="text" id="inputText" name="inputText" placeholder="Type something..." style="width: 50%; height: 200px; font-size: 20px; padding: 10px; border: 2px solid #000000; border-radius: 4px;">

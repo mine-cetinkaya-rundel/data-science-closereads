@@ -1,7 +1,6 @@
 ---
 title: Visualizing RDU flights
-subtitle: An introduction to ggplot2
-description: Add a description
+description: This section focuses on exploring flight delay patterns using the ggplot2 visualization system
 order: 1
 format:
   closeread-html:
@@ -22,13 +21,14 @@ comments:
 
 <!-- Data Dictionary: <https://www.transtats.bts.gov/Fields.asp?gnoyr_VQ=FGJ> -->
 
-## Introduction
+# Introduction
 
-This project uses a dataset from the American Statistical Association's Data Expo, which provides comprehensive flight information covering various aspects of flight operations. The dataset contains data about flights across the United States, recording details such as departure times, scheduled and actual arrival times, flight durations, distances, and reasons for delays.
+This section focuses on exploring flight delay patterns using the **ggplot2** visualization system. You'll learn how to visualize data to uncover patterns in departure and arrival delays. By the end of this tutorial, you should be able to craft visual narratives that are informative and visually appealing, providing you with a fundamental skill set critical in the field of data science.
+
 
 ## Data
 
-In this tutorial, we'll focus specifically on the flights departing from Raleigh-Durham International Airport (RDU) and heading to destinations in North Carolina and California. You'll learn how to visualize data to uncover patterns in departure and arrival delays. By the end of this tutorial, you should be able to craft visual narratives that are informative and visually appealing, providing you with a fundamental skill set critical in the field of data science.
+This project uses data from the American Statistical Association's Data Expo, which provides comprehensive flight information covering various aspects of flight operations. The dataset contains data about flights across the United States, recording details such as departure times, scheduled and actual arrival times, flight durations, distances, and reasons for delays. The dataset used in this story consists of flights departing from Raleigh-Durham International Airport (RDU) in November 2023, headed to destinations in North Carolina and California. It includes key variables such as departure and arrival delays, destination airport codes, airline names, and dates of travel. Prior to visualization, the dataset was filtered and transformed to focus on a clean and meaningful subset of flights, enabling a more focused and compelling narrative.
 
 The packages we used in this tutorial for plotting include **ggplot2** and **ggthemes**. 
 
@@ -1000,8 +1000,8 @@ ggplot(
 :::
 ::::
 
-## Reflection
+# Reflection
 
-In this demonstration, you explored how to create a ggplot using the RDU flights dataset. As we wrap up, take a moment to reflect on and note down what you've learned from this example:
+Through this ggplot-based data story, we've explored a structured approach to building data visualizations using **ggplot2** in R. Starting from basic scatterplots and bar charts, we incrementally built visualizations by layering components such as geometries, scales, themes, and labels. We incorporated **ggthemes** to enhance the look of the plot. As we wrap up, take a moment to reflect on and note down what you've learned from this example:
 
 <input type="text" id="inputText" name="inputText" placeholder="Type something..." style="width: 50%; height: 200px; font-size: 20px; padding: 10px; border: 2px solid #000000; border-radius: 4px;">

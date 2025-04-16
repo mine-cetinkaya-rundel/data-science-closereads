@@ -6,8 +6,9 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
+<meta name="description" content="This section focuses on preparing the raw flight dataset for analysis through a series of data transformation steps.">
 
-<title>Flights Data Transformation Example</title>
+<title>RDU Flights Data Transformation</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -129,19 +130,23 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       <style>
         :root {
           --cr-narrative-text-color-overlay: black;
---cr-narrative-background-color-overlay: transparent;
 --cr-section-background-color: transparent;
 --cr-narrative-background-color-sidebar: transparent;
+--cr-narrative-background-color-overlay: transparent;
         }
       </style>
     
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">Flights Data Transformation Example</h1>
-<p class="subtitle lead">Skeleton for the scrolly-telling project</p>
+<h1 class="title">RDU Flights Data Transformation</h1>
 </div>
 
+<div>
+  <div class="description">
+    This section focuses on preparing the raw flight dataset for analysis through a series of data transformation steps.
+  </div>
+</div>
 
 
 <div class="quarto-title-meta column-page">
@@ -156,9 +161,16 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </header>
 
 
+<section id="introduction" class="level1">
+<h1>Introduction</h1>
+<p>This section focuses on preparing the raw flight dataset for analysis through a series of data transformation steps. Using the <strong>dplyr</strong> package from the <strong>tidyverse</strong>, we demonstrate how to filter, select, rename, and mutate variables to clean and structure the data. These operations are essential for shaping the dataset into a form suitable for downstream analysis and visualization.</p>
+<section id="data" class="level2">
+<h2 class="anchored" data-anchor-id="data">Data</h2>
+<p>This project uses a dataset from the American Statistical Association’s Data Expo, which provides comprehensive flight information covering various aspects of flight operations. The dataset contains data about flights across the United States, recording details such as departure times, scheduled and actual arrival times, flight durations, distances, and reasons for delays.</p>
 <p><strong>Adapted from sample document from <a href="https://closeread.dev/gallery/demos/build-up-plots/" class="uri">https://closeread.dev/gallery/demos/build-up-plots/</a></strong></p>
-<section id="recreating-the-dataframe-used-in-the-ggplot-story" class="level1">
-<h1>Recreating the dataframe used in the ggplot story</h1>
+</section>
+<section id="recreating-the-dataframe-used-in-the-ggplot-story" class="level2">
+<h2 class="anchored" data-anchor-id="recreating-the-dataframe-used-in-the-ggplot-story">Recreating the dataframe used in the ggplot story</h2>
 <p>Starting with a broad dataset of flight records, we refine our data to concentrate on flights departing from Raleigh-Durham International Airport (RDU) to North Carolina and California in November 2023. This process includes filtering, selecting, and renaming key variables to enhance clarity and utility. These steps are executed through a concise series of dplyr functions linked in a pipeline, which transforms the data to the dataset that supports our subsequent analysis in the <strong>ggplot closeread story</strong>.</p>
 <div class="cr-section cr-column-screen overlay-left">
 <div class="narrative-col">
@@ -514,8 +526,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 </section>
-<section id="other-functions-arrange-relocate" class="level1">
-<h1>Other functions: <code>arrange</code>, <code>relocate</code></h1>
+<section id="other-functions-arrange-relocate" class="level2">
+<h2 class="anchored" data-anchor-id="other-functions-arrange-relocate">Other functions: <code>arrange</code>, <code>relocate</code></h2>
 <p>In the following section, we build on top of the current dataset and explore the utilization of two additional <strong>dplyr</strong> functions: <code>arrange</code> and <code>relocate.</code> <code>arrange</code> is used to sort data frames based on one or more columns, providing a logical sequence that can facilitate more insightful analysis. On the other hand, <code>relocate</code> is employed to adjust the order of columns within the data frame, enhancing readability and accessibility when navigating through the data.</p>
 <div class="cr-section cr-column-screen overlay-left">
 <div class="narrative-col">
@@ -679,8 +691,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 </section>
-<section id="mutate" class="level1">
-<h1><code>mutate</code></h1>
+<section id="one-more-function-mutate" class="level2">
+<h2 class="anchored" data-anchor-id="one-more-function-mutate">One more function: <code>mutate</code></h2>
 <p>We now explore the use of the <code>mutate()</code> function from <strong>dplyr</strong>, which is used to create or transform variables in a data frame. We’ll demonstrate two common use cases:</p>
 <ul>
 <li><p>deriving new values using functions (e.g., extracting the day of the week), and</p></li>
@@ -844,6 +856,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 </div>
+</section>
+</section>
+<section id="reflection" class="level1">
+<h1>Reflection</h1>
+<p>Along the way, we applied a variety of data transformation techniques using <strong>dplyr</strong>, such as <code>filter()</code>, <code>mutate()</code>, <code>select()</code>, and <code>arrange()</code>, to shape the dataset into a form suitable for further analysis. We also used functions like <code>case_when()</code> and <code>wday()</code> to create new derived variables that added context to the dataset. As we wrap up, take a moment to reflect on and note down what you’ve learned from this example:</p>
+<p><input type="text" id="inputText" name="inputText" placeholder="Type something..." style="width: 50%; height: 200px; font-size: 20px; padding: 10px; border: 2px solid #000000; border-radius: 4px;"></p>
 
 
 </section>
