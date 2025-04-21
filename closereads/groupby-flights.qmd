@@ -112,6 +112,7 @@ flights |>
 :::
 
 After defining the time periods, we apply `group_by()` with both `reporting_airline` and our newly derived variable `time_of_day`.[@cr-groupby-3b]{highlight=10}
+
 :::{#cr-groupby-3b}
 ```{r}
 flights |>
