@@ -2,8 +2,8 @@
 title: RDU Flights Data Transformation
 description: This section focuses on preparing the raw flight dataset for analysis through a series of data transformation steps.
 order: 2
-image: images/dplyr-logo.png
-image-alt: dplyr logo
+image: images/cover/data-transformation.png
+image-alt: data transformation illustration
 format:
   closeread-html:
     cr-section:
@@ -99,7 +99,7 @@ flights_rdu <- flights |>
     origin == "RDU"
   )
 
-flights_rdu # display the dataframe
+flights_rdu
 ```
 :::
 
@@ -117,7 +117,7 @@ flights_rdu <- flights |>
     dest_state %in% c("NC", "CA")
   )
 
-flights_rdu # display the dataframe
+flights_rdu
 ```
 :::
 
@@ -151,11 +151,11 @@ library(tidyverse)
 flights_rdu <- flights |>
   filter(
     origin == "RDU",
-    dest_state %in% c("NC", "CA"), # NC and CA
+    dest_state %in% c("NC", "CA"),
     month == 11
   )
 
-flights_rdu # display the dataframe
+flights_rdu
 ```
 :::
 
@@ -171,7 +171,7 @@ library(tidyverse)
 flights_rdu <- flights |>
   filter(
     origin == "RDU",
-    dest_state %in% c("NC", "CA"), # NC and CA
+    dest_state %in% c("NC", "CA"),
     month == 11
   ) |>
   select(
@@ -183,7 +183,7 @@ flights_rdu <- flights |>
     dest_state
   )
 
-flights_rdu # display the dataframe
+flights_rdu
 ```
 :::
 
@@ -199,7 +199,7 @@ library(tidyverse)
 flights_rdu <- flights |>
   filter(
     origin == "RDU",
-    dest_state %in% c("NC", "CA"), # NC and CA
+    dest_state %in% c("NC", "CA"),
     month == 11
   ) |>
   select(
@@ -214,7 +214,7 @@ flights_rdu <- flights |>
     destination_state = dest_state
   )
 
-flights_rdu # display the dataframe
+flights_rdu
 ```
 :::
 
@@ -230,7 +230,7 @@ library(tidyverse)
 flights_rdu <- flights |>
   filter(
     origin == "RDU",
-    dest_state %in% c("NC", "CA"), # NC and CA
+    dest_state %in% c("NC", "CA"),
     month == 11
   ) |>
   select(
@@ -268,7 +268,7 @@ The `relocate` function is being used here to adjust the position of the `destin
 flights_rdu <- flights |>
   filter(
     origin == "RDU",
-    dest_state %in% c("NC", "CA"), # NC and CA
+    dest_state %in% c("NC", "CA"),
     month == 11
   ) |>
   select(
@@ -302,7 +302,7 @@ The `arrange` function is then utilized to sort the dataframe based on the `dep_
 flights_rdu <- flights |>
   filter(
     origin == "RDU",
-    dest_state %in% c("NC", "CA"), # NC and CA
+    dest_state %in% c("NC", "CA"),
     month == 11
   ) |>
   select(
@@ -339,7 +339,7 @@ Note that we can use the `arrange` function to sort the dataframe by more than o
 flights_rdu <- flights |>
   filter(
     origin == "RDU",
-    dest_state %in% c("NC", "CA"), # NC and CA
+    dest_state %in% c("NC", "CA"),
     month == 11
   ) |>
   select(

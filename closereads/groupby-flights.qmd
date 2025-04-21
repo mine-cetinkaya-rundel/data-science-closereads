@@ -2,6 +2,8 @@
 title: Group by
 description: In this section, we focus on summarizing flight data to uncover broader patterns and trends.
 order: 4
+image: images/cover/groupby.png
+image-alt: group_by illustration
 format:
   closeread-html:
     cr-section:
@@ -52,6 +54,7 @@ First, let's look at the dataset that we will be using for the analysis.[@cr-gro
 
 :::{#cr-grouby-0}
 ```{r}
+#| echo: true
 flights_rdu
 ```
 :::
@@ -60,6 +63,7 @@ We begin with a simple example: counting the number of flights on each day of th
 
 :::{#cr-groupby-1a}
 ```{r}
+#| echo: true
 flights_rdu |>
   group_by(day_of_week)
 ```
@@ -69,6 +73,7 @@ The `group_by()` function is followed by `summarize()` to count the number of re
 
 :::{#cr-groupby-1b}
 ```{r}
+#| echo: true
 flights |>
   group_by(day_of_week) |>
   summarize(flight_count = n())
@@ -79,6 +84,7 @@ In our next example, we group data by month and cancellation code to see trends 
 
 :::{#cr-groupby-2a}
 ```{r}
+#| echo: true
 flights |>
   group_by(month, cancellation_code)
 ```
@@ -88,6 +94,7 @@ This enables us to count how many cancellations occurred for each reason in each
 
 :::{#cr-groupby-2b}
 ```{r}
+#| echo: true
 flights |>
   group_by(month, cancellation_code) |>
   summarize(cancellation = n(), .groups = "drop")
@@ -99,6 +106,7 @@ Next, we analyze how flight performance varies across different times of the day
 
 :::{#cr-groupby-3a}
 ```{r}
+#| echo: true
 flights |>
   mutate(
     time_of_day = case_when(
@@ -115,6 +123,7 @@ After defining the time periods, we apply `group_by()` with both `reporting_airl
 
 :::{#cr-groupby-3b}
 ```{r}
+#| echo: true
 flights |>
   mutate(
     time_of_day = case_when(
@@ -132,6 +141,7 @@ We can then use `summarize()` to calculate two key metrics: `average_delay`: The
 
 :::{#cr-groupby-3c}
 ```{r}
+#| echo: true
 flights |>
   mutate(
     time_of_day = case_when(

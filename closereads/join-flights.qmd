@@ -2,6 +2,8 @@
 title: Joining RDU Flights Data with Other Datasets
 description: In this section, we explore how to combine information from multiple datasets to enrich our analysis.
 order: 3
+image: images/cover/join.png
+image-alt: join illustration
 format:
   closeread-html:
     cr-section:

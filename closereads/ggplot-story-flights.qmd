@@ -2,6 +2,8 @@
 title: Visualizing RDU flights
 description: This story explores flight delay pattern using visualizations built with ggplot2.
 order: 1
+image: images/cover/ggplot.png
+image-alt: ggplot illustration
 format:
   closeread-html:
     cr-section:
