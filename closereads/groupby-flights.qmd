@@ -20,15 +20,16 @@ comments:
 ---
 
 # Introduction
+
 In this section, we focus on summarizing flight data to uncover broader patterns and trends. The goal here is to aggregate the data: grouping flights by meaningful categories such as day of the week, airline, or time of day. This allows us to answer higher-level questions like *Which days are busiest?, When do delays happen most often?*, or *What are the main reasons for cancellations over time?* By grouping the data and calculating summary statistics, we can efficiently condense large datasets into interpretable insight.
 
 ## Data
+
 This project uses data from the American Statistical Association's Data Expo, which provides comprehensive flight information covering various aspects of flight operations. The dataset contains data about flights across the United States, recording details such as departure times, scheduled and actual arrival times, flight durations, distances, and reasons for delays. The dataset used in this story consists of flights departing from Raleigh-Durham International Airport (RDU) in November 2023, headed to destinations in North Carolina and California.
 
 ```{r}
 #| echo: false
 #| message: false
-
 library(tidyverse)
 library(janitor)
 library(knitr)
@@ -38,7 +39,7 @@ flights <- read_csv(here::here("closereads", "data", "rdu-flights-23.csv"))
 flights_rdu <- flights |>
   filter(
     origin == "RDU",
-    dest_state %in% c("NC", "CA"), # NC and CA
+    dest_state %in% c("NC", "CA"),
     month == 11
   )
 ```
@@ -55,7 +56,7 @@ flights_rdu
 ```
 :::
 
-We begin with a simple example: counting the number of flights on each day of the week. To do this, we use the `group_by()` function to group the data by the `day_of_week` variable. It’s important to note that when `group_by()` is used on its own, the output looks identical to the original data frame, with no visible change occurs. That’s because group_by() doesn’t modify the data directly. This grouping only becomes meaningful when combined with a function like `summarise()`, which uses that metadata to compute statistics for each group.[@cr-groupby-1a]{highlight="3"}
+We begin with a simple example: counting the number of flights on each day of the week. To do this, we use the `group_by()` function to group the data by the `day_of_week` variable. It’s important to note that when `group_by()` is used on its own, the output looks identical to the original data frame, with no visible change occurs. That’s because group_by() doesn’t modify the data directly. This grouping only becomes meaningful when combined with a function like `summarize()`, which uses that metadata to compute statistics for each group.[@cr-groupby-1a]{highlight="3"}
 
 :::{#cr-groupby-1a}
 ```{r}
@@ -70,7 +71,7 @@ The `group_by()` function is followed by `summarize()` to count the number of re
 ```{r}
 flights |>
   group_by(day_of_week) |>
-  summarise(flight_count = n())
+  summarize(flight_count = n())
 ```
 :::
 
@@ -83,13 +84,13 @@ flights |>
 ```
 :::
 
-This enables us to count how many cancellations occurred for each reason in each month using `summarise()` and `n()`. After summarization, we use `.groups = "drop"` to remove the grouping structure, so the output is returned as a regular, ungrouped dataframe. [@cr-groupby-2b]{highlight="3"}
+This enables us to count how many cancellations occurred for each reason in each month using `summarize()` and `n()`. After summarization, we use `.groups = "drop"` to remove the grouping structure, so the output is returned as a regular, ungrouped dataframe. [@cr-groupby-2b]{highlight="3"}
 
 :::{#cr-groupby-2b}
 ```{r}
 flights |>
   group_by(month, cancellation_code) |>
-  summarise(cancellation = n(), .groups = "drop")
+  summarize(cancellation = n(), .groups = "drop")
 ```
 :::
 
@@ -111,6 +112,7 @@ flights |>
 :::
 
 After defining the time periods, we apply `group_by()` with both `reporting_airline` and our newly derived variable `time_of_day`.[@cr-groupby-3b]{highlight=10}
+
 :::{#cr-groupby-3b}
 ```{r}
 flights |>
@@ -126,7 +128,7 @@ flights |>
 ```
 :::
 
-We can then use `summarise()` to calculate two key metrics: `average_delay`: The mean departure delay within each group; `on_time_rate`: The proportion of flights that departed on time or early. We also use `.groups = "drop"` to return the result as an ungrouped data frame.
+We can then use `summarize()` to calculate two key metrics: `average_delay`: The mean departure delay within each group; `on_time_rate`: The proportion of flights that departed on time or early. We also use `.groups = "drop"` to return the result as an ungrouped data frame.
 
 :::{#cr-groupby-3c}
 ```{r}
@@ -140,17 +142,18 @@ flights |>
     )
   ) |>
   group_by(reporting_airline, time_of_day) |>
-  summarise(
+  summarize(
     average_delay = mean(dep_delay, na.rm = TRUE),
     on_time_rate = mean(dep_delay <= 0, na.rm = TRUE),
     .groups = "drop"
   )
 ```
 :::
+
 ::::
 
 # Summary
-In this section, we explored how to use `group_by()` to gain grouped insights. By pairing `group_by()` with `summarise()`, we were able to condense individual flight records into summaries, such as flight counts by day, cancellation reasons by month, and delay patterns across different times of day.
+In this section, we explored how to use `group_by()` to gain grouped insights. By pairing `group_by()` with `summarize()`, we were able to condense individual flight records into summaries, such as flight counts by day, cancellation reasons by month, and delay patterns across different times of day.
 
 We also highlighted the power of `mutate()` in grouped workflows. Before summarizing, `mutate()` allowed us to define new variables like `time_of_day`, giving context to the data and enabling more meaningful groupings.
 
