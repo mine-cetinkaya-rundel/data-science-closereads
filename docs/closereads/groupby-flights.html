@@ -130,9 +130,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       <style>
         :root {
           --cr-section-background-color: transparent;
+--cr-narrative-text-color-overlay: black;
 --cr-narrative-background-color-overlay: transparent;
 --cr-narrative-background-color-sidebar: transparent;
---cr-narrative-text-color-overlay: black;
         }
       </style>
     
@@ -172,37 +172,37 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <h2 class="anchored" data-anchor-id="examples">Examples</h2>
 <div class="cr-section cr-column-screen overlay-left">
 <div class="narrative-col">
-<div class="trigger new-trigger" data-highlight="1" data-focus-on="cr-grouby-0">
+<div class="trigger new-trigger" data-focus-on="cr-grouby-0" data-highlight="1">
 <div class="narrative">
 <p>First, let’s look at the dataset that we will be using for the analysis.</p>
 </div>
 </div>
-<div class="trigger new-trigger" data-highlight="3" data-focus-on="cr-groupby-1a">
+<div class="trigger new-trigger" data-focus-on="cr-groupby-1a" data-highlight="3">
 <div class="narrative">
 <p>We begin with a simple example: counting the number of flights on each day of the week. To do this, we use the <code>group_by()</code> function to group the data by the <code>day_of_week</code> variable. It’s important to note that when <code>group_by()</code> is used on its own, the output looks identical to the original data frame, with no visible change occurs. That’s because group_by() doesn’t modify the data directly. This grouping only becomes meaningful when combined with a function like <code>summarize()</code>, which uses that metadata to compute statistics for each group.</p>
 </div>
 </div>
-<div class="trigger new-trigger" data-highlight="3" data-focus-on="cr-groupby-1b">
+<div class="trigger new-trigger" data-focus-on="cr-groupby-1b" data-highlight="3">
 <div class="narrative">
 <p>The <code>group_by()</code> function is followed by <code>summarize()</code> to count the number of records within each group. In this example, <code>n()</code> is used to count the number of rows in each group, giving us a frequency count of flights by day of the week.</p>
 </div>
 </div>
-<div class="trigger new-trigger" data-highlight="2" data-focus-on="cr-groupby-2a">
+<div class="trigger new-trigger" data-focus-on="cr-groupby-2a" data-highlight="2">
 <div class="narrative">
 <p>In our next example, we group data by month and cancellation code to see trends over the year in terms of why flights are cancelled, showing problematic months or operational challenges during certain periods. By applying <code>group_by(month, cancellation_code)</code>, we create grouped combinations of each month and cancellation reason.</p>
 </div>
 </div>
-<div class="trigger new-trigger" data-highlight="3" data-focus-on="cr-groupby-2b">
+<div class="trigger new-trigger" data-focus-on="cr-groupby-2b" data-highlight="3">
 <div class="narrative">
 <p>This enables us to count how many cancellations occurred for each reason in each month using <code>summarize()</code> and <code>n()</code>. After summarization, we use <code>.groups = "drop"</code> to remove the grouping structure, so the output is returned as a regular, ungrouped dataframe.</p>
 </div>
 </div>
-<div class="trigger new-trigger" data-highlight="2-9" data-focus-on="cr-groupby-3a">
+<div class="trigger new-trigger" data-focus-on="cr-groupby-3a" data-highlight="2-9">
 <div class="narrative">
 <p>Next, we analyze how flight performance varies across different times of the day, grouped by airline. We begin by using <code>mutate()</code> along with <code>case_when()</code> to create a new categorical variable, <code>time_of_day</code>, derived from <code>crs_dep_time</code> (the scheduled departure time). Each flight is categorized into one of four time blocks.</p>
 </div>
 </div>
-<div class="trigger new-trigger" data-highlight="10" data-focus-on="cr-groupby-3b">
+<div class="trigger new-trigger" data-focus-on="cr-groupby-3b" data-highlight="10">
 <div class="narrative">
 <p>After defining the time periods, we apply <code>group_by()</code> with both <code>reporting_airline</code> and our newly derived variable <code>time_of_day</code>.</p>
 </div>

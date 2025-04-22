@@ -1,5 +1,6 @@
 ---
 title: "Data science closereads"
+description: "Cover images were generated using DALL·E. The introduction of each story was provided to DALL·E, and the prompt used was 'cartoon-style educational illustration', with fine-tuning applied."
 listing: 
   contents: closereads
   type: grid
